@@ -1,4 +1,8 @@
+import './styles/index.css';
+import { HomePage } from '@/pages/home';
+
 function App() {
-	return null;
+	return <HomePage />;
 }
+
 export default App;
