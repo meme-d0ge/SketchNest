@@ -1,16 +1,21 @@
 import { FastLayer, Stage } from 'react-konva';
+import { ToolsEnum, useToolsStore } from '@/entities/tools/useToolsStore.ts';
 import { CanvasMenu } from '@/features/canvas-menu';
 import { CanvasTools } from '@/features/canvas-tools';
-import { useDrawingTools } from '@/features/drawing-tools';
+import { useStageEventListener } from '@/features/drawing-tools';
 import { HistoryPanel } from '@/features/history-panel';
 import { RenderHistory } from '@/features/render-history';
 import { RenderPreview } from '@/features/render-preview';
 
 export const HomePage = () => {
-	const { handleMouseUp, handleMouseMove, handleMouseDown } = useDrawingTools();
+	const { handleMouseUp, handleMouseMove, handleMouseDown } =
+		useStageEventListener();
+	const { tool } = useToolsStore();
+
 	return (
 		<div className="relative">
 			<Stage
+				draggable={tool === ToolsEnum.Hand}
 				width={window.innerWidth}
 				height={window.innerHeight}
 				onMouseDown={handleMouseDown}

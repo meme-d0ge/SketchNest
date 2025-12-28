@@ -1,1 +1,1 @@
-export { useDrawingTools } from './hooks/drawing-tools';
+export { useStageEventListener } from './hooks/stage-event-listener.ts';

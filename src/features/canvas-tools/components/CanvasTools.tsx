@@ -1,4 +1,11 @@
-import { Circle, Hand, MousePointer2, Square } from 'lucide-react';
+import {
+	Circle,
+	Eraser,
+	Hand,
+	MousePointer2,
+	Pencil,
+	Square,
+} from 'lucide-react';
 import { memo, useCallback } from 'react';
 import {
 	ToolsEnum,
@@ -35,9 +42,9 @@ export const CanvasTools = memo(({ className }: { className?: string }) => {
 				<Hand className="h-4 w-4" />
 			</ToggleGroupItem>
 			<ToggleGroupItem
-				value={ToolsEnum.Cursor}
+				value={ToolsEnum.Selection}
 				aria-label="Toggle mouse pointer"
-				disabled={tool === ToolsEnum.Cursor}
+				disabled={tool === ToolsEnum.Selection}
 				className="cursor-pointer"
 			>
 				<MousePointer2 className="h-4 w-4" />
@@ -57,6 +64,22 @@ export const CanvasTools = memo(({ className }: { className?: string }) => {
 				className="cursor-pointer"
 			>
 				<Circle className="h-4 w-4" />
+			</ToggleGroupItem>
+			<ToggleGroupItem
+				value={ToolsEnum.Draw}
+				aria-label="Toggle draw"
+				disabled={tool === ToolsEnum.Draw}
+				className="cursor-pointer"
+			>
+				<Pencil className="h-4 w-4" />
+			</ToggleGroupItem>
+			<ToggleGroupItem
+				value={ToolsEnum.Eraser}
+				aria-label="Toggle eraser"
+				disabled={tool === ToolsEnum.Eraser}
+				className="cursor-pointer"
+			>
+				<Eraser className="h-4 w-4" />
 			</ToggleGroupItem>
 		</ToggleGroup>
 	);
