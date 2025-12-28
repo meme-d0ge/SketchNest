@@ -15,7 +15,11 @@ export const useFreehandDrawing = () => {
 			isDrawing.current = true;
 			const pos = e.target.getStage()?.getPointerPosition();
 			if (isVector2d(pos)) {
-				line.current = [...line.current, pos.x, pos.y];
+				line.current = [
+					...line.current,
+					(pos.x - e.target.x()) / e.target.scaleX(),
+					(pos.y - e.target.y()) / e.target.scaleY(),
+				];
 				setPreview({ type: 'line', data: { points: line.current } });
 			}
 		},
@@ -27,8 +31,14 @@ export const useFreehandDrawing = () => {
 				return;
 			}
 			const pos = e.target.getStage()?.getPointerPosition();
+
+			e.target.scaleX();
 			if (isVector2d(pos)) {
-				line.current = [...line.current, pos.x, pos.y];
+				line.current = [
+					...line.current,
+					(pos.x - e.target.x()) / e.target.scaleX(),
+					(pos.y - e.target.y()) / e.target.scaleY(),
+				];
 				setPreview({ type: 'line', data: { points: line.current } });
 			}
 		},
