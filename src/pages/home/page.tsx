@@ -36,9 +36,9 @@ export const HomePage = () => {
 					<RenderPreview />
 				</FastLayer>
 			</Stage>
-			<CanvasMenu className="cursor-pointer absolute max-w-max max-h-max top-4 left-4 z-50" />
-			<HistoryPanel className="absolute max-w-max max-h-max bottom-4 left-4 z-50" />
-			<CanvasTools className="absolute max-w-max max-h-max top-4 right-1/2 left-1/2 -translate-x-1/2 z-50" />
+			<CanvasMenu className="cursor-pointer absolute max-w-max h-9 top-4 left-4 z-50" />
+			<HistoryPanel className="absolute max-w-max h-9 bottom-4 left-4 z-50" />
+			<CanvasTools className="absolute max-w-max h-9 top-4 right-1/2 left-1/2 -translate-x-1/2 z-50" />
 		</div>
 	);
 };

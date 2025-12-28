@@ -21,7 +21,7 @@ export const CanvasMenu = memo(({ className }: { className?: string }) => {
 						<TextAlignJustify />
 					</Button>
 				</DropdownMenuTrigger>
-				<DropdownMenuContent className="pointer-events-auto"></DropdownMenuContent>
+				<DropdownMenuContent></DropdownMenuContent>
 			</DropdownMenu>
 		</div>
 	);
