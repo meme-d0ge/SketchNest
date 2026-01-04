@@ -3,6 +3,7 @@ import { useCallback, useRef } from 'react';
 import { useHistoryStore } from '@/entities/history';
 import { usePreviewStore } from '@/entities/preview/usePreviewStore.ts';
 import { isVector2d } from '@/shared/guards/isVector2d.ts';
+import { getAbsolutePosition } from '@/shared/lib/getAbsolutePosition.ts';
 
 export const useFreehandDrawing = () => {
 	const isDrawing = useRef(false);
@@ -15,11 +16,8 @@ export const useFreehandDrawing = () => {
 			isDrawing.current = true;
 			const pos = e.target.getStage()?.getPointerPosition();
 			if (isVector2d(pos)) {
-				line.current = [
-					...line.current,
-					(pos.x - e.target.x()) / e.target.scaleX(),
-					(pos.y - e.target.y()) / e.target.scaleY(),
-				];
+				const { x: absoluteX, y: absoluteY } = getAbsolutePosition(pos, e);
+				line.current = [...line.current, absoluteX, absoluteY];
 				setPreview({ type: 'line', data: { points: line.current } });
 			}
 		},
@@ -34,11 +32,8 @@ export const useFreehandDrawing = () => {
 
 			e.target.scaleX();
 			if (isVector2d(pos)) {
-				line.current = [
-					...line.current,
-					(pos.x - e.target.x()) / e.target.scaleX(),
-					(pos.y - e.target.y()) / e.target.scaleY(),
-				];
+				const { x: absoluteX, y: absoluteY } = getAbsolutePosition(pos, e);
+				line.current = [...line.current, absoluteX, absoluteY];
 				setPreview({ type: 'line', data: { points: line.current } });
 			}
 		},
