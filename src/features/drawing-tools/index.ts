@@ -1,1 +1,1 @@
-export { useStageEventListener } from './hooks/stage-event-listener.ts';
+export { useStageEventListener } from './hooks/useStageEventListener.ts';

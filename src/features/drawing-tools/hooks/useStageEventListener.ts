@@ -1,7 +1,7 @@
 import type Konva from 'konva';
 import { useCallback } from 'react';
 import { ToolsEnum, useToolsStore } from '@/entities/tools/useToolsStore.ts';
-import { useFreehandDrawing } from '@/features/drawing-tools/hooks/freehand-drawing.ts';
+import { useFreehandDrawing } from '@/features/drawing-tools/hooks/useFreehandDrawing.ts';
 
 export const useStageEventListener = () => {
 	const { tool } = useToolsStore();
