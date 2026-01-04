@@ -1,4 +1,4 @@
-import { Line } from 'react-konva';
+import { Ellipse, Line } from 'react-konva';
 import { usePreviewStore } from '@/entities/preview/usePreviewStore.ts';
 
 export const RenderPreview = () => {
@@ -16,6 +16,18 @@ export const RenderPreview = () => {
 				lineJoin="round"
 				globalCompositeOperation={'source-over'}
 				points={element.data.points}
+			/>
+		);
+	}
+	if (element.type === 'circle') {
+		return (
+			<Ellipse
+				x={element.data.x}
+				y={element.data.y}
+				radiusX={element.data.radiusX}
+				radiusY={element.data.radiusY}
+				strokeWidth={4}
+				stroke={'black'}
 			/>
 		);
 	}
