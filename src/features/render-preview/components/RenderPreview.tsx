@@ -1,4 +1,4 @@
-import { Ellipse, Line } from 'react-konva';
+import { Ellipse, Line, Rect } from 'react-konva';
 import { usePreviewStore } from '@/entities/preview/usePreviewStore.ts';
 
 export const RenderPreview = () => {
@@ -26,6 +26,18 @@ export const RenderPreview = () => {
 				y={element.data.y}
 				radiusX={element.data.radiusX}
 				radiusY={element.data.radiusY}
+				strokeWidth={4}
+				stroke={'black'}
+			/>
+		);
+	}
+	if (element.type === 'square') {
+		return (
+			<Rect
+				x={element.data.x}
+				y={element.data.y}
+				width={element.data.width}
+				height={element.data.height}
 				strokeWidth={4}
 				stroke={'black'}
 			/>

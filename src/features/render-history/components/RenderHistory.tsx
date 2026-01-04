@@ -1,4 +1,4 @@
-import { Ellipse, Line } from 'react-konva';
+import { Ellipse, Line, Rect } from 'react-konva';
 import { useHistoryStore } from '@/entities/history';
 
 export const RenderHistory = () => {
@@ -31,6 +31,20 @@ export const RenderHistory = () => {
 						y={current_version.data.y}
 						radiusX={current_version.data.radiusX}
 						radiusY={current_version.data.radiusY}
+						strokeWidth={4}
+						stroke={'black'}
+					/>
+				);
+			}
+			if (current_version.type === 'square') {
+				return (
+					<Rect
+						// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+						key={index}
+						x={current_version.data.x}
+						y={current_version.data.y}
+						width={current_version.data.width}
+						height={current_version.data.height}
 						strokeWidth={4}
 						stroke={'black'}
 					/>
