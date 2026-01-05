@@ -6,7 +6,7 @@ export const getAbsolutePosition = (
 	e: Konva.KonvaEventObject<TouchEvent | MouseEvent>,
 ) => {
 	return {
-		x: (pos.x - e.target.x()) / e.target.scaleX(),
-		y: (pos.y - e.target.y()) / e.target.scaleY(),
+		x: (pos.x - e.currentTarget.x()) / e.currentTarget.scaleX(),
+		y: (pos.y - e.currentTarget.y()) / e.currentTarget.scaleY(),
 	};
 };
