@@ -4,6 +4,7 @@ import { ToolsEnum, useToolsStore } from '@/entities/tools/useToolsStore.ts';
 import { useDrawCircle } from '@/features/drawing-tools/hooks/useDrawCircle.ts';
 import { useDrawSquare } from '@/features/drawing-tools/hooks/useDrawSquare.ts';
 import { useFreehandDrawing } from '@/features/drawing-tools/hooks/useFreehandDrawing.ts';
+import { useThrottleCallback } from '@/shared/lib/useThrottleCallback.ts';
 
 export const useStageEventListener = () => {
 	const { tool } = useToolsStore();
@@ -12,45 +13,57 @@ export const useStageEventListener = () => {
 	const { startDrawCircle, drawCircle, endDrawCircle } = useDrawCircle();
 	const { startDrawSquare, drawSquare, endDrawSquare } = useDrawSquare();
 
-	const handleMouseDown = useCallback(
-		(event: Konva.KonvaEventObject<TouchEvent | MouseEvent>) => {
+	const handleMouseDown = useThrottleCallback(
+		useCallback(
+			(event: Konva.KonvaEventObject<TouchEvent | MouseEvent>) => {
+				if (tool === ToolsEnum.Hand) {
+				} else if (tool === ToolsEnum.Selection) {
+				} else if (tool === ToolsEnum.Circle) {
+					startDrawCircle(event);
+				} else if (tool === ToolsEnum.Square) {
+					startDrawSquare(event);
+				} else if (tool === ToolsEnum.Draw) {
+					startFreehandDraw(event);
+				} else if (tool === ToolsEnum.Eraser) {
+				}
+			},
+			[tool, startFreehandDraw, startDrawCircle, startDrawSquare],
+		),
+		7,
+	);
+	const handleMouseMove = useThrottleCallback(
+		useCallback(
+			(event: Konva.KonvaEventObject<TouchEvent | MouseEvent>) => {
+				if (tool === ToolsEnum.Hand) {
+				} else if (tool === ToolsEnum.Selection) {
+				} else if (tool === ToolsEnum.Circle) {
+					drawCircle(event);
+				} else if (tool === ToolsEnum.Square) {
+					drawSquare(event);
+				} else if (tool === ToolsEnum.Draw) {
+					freehandDraw(event);
+				} else if (tool === ToolsEnum.Eraser) {
+				}
+			},
+			[tool, freehandDraw, drawCircle, drawSquare],
+		),
+		7,
+	);
+	const handleMouseUp = useThrottleCallback(
+		useCallback(() => {
 			if (tool === ToolsEnum.Hand) {
 			} else if (tool === ToolsEnum.Selection) {
 			} else if (tool === ToolsEnum.Circle) {
-				startDrawCircle(event);
+				endDrawCircle();
 			} else if (tool === ToolsEnum.Square) {
-				startDrawSquare(event);
+				endDrawSquare();
 			} else if (tool === ToolsEnum.Draw) {
-				startFreehandDraw(event);
+				endFreehandDraw();
+			} else if (tool === ToolsEnum.Eraser) {
 			}
-		},
-		[tool, startFreehandDraw, startDrawCircle, startDrawSquare],
+		}, [tool, endFreehandDraw, endDrawCircle, endDrawSquare]),
+		7,
 	);
-	const handleMouseMove = useCallback(
-		(event: Konva.KonvaEventObject<TouchEvent | MouseEvent>) => {
-			if (tool === ToolsEnum.Hand) {
-			} else if (tool === ToolsEnum.Selection) {
-			} else if (tool === ToolsEnum.Circle) {
-				drawCircle(event);
-			} else if (tool === ToolsEnum.Square) {
-				drawSquare(event);
-			} else if (tool === ToolsEnum.Draw) {
-				freehandDraw(event);
-			}
-		},
-		[tool, freehandDraw, drawCircle, drawSquare],
-	);
-	const handleMouseUp = useCallback(() => {
-		if (tool === ToolsEnum.Hand) {
-		} else if (tool === ToolsEnum.Selection) {
-		} else if (tool === ToolsEnum.Circle) {
-			endDrawCircle();
-		} else if (tool === ToolsEnum.Square) {
-			endDrawSquare();
-		} else if (tool === ToolsEnum.Draw) {
-			endFreehandDraw();
-		}
-	}, [tool, endFreehandDraw, endDrawCircle, endDrawSquare]);
 
 	return { handleMouseUp, handleMouseDown, handleMouseMove };
 };

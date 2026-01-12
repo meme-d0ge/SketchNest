@@ -1,4 +1,6 @@
-export type SquareElement = {
+import type { BaseElement } from '@/entities/elements/interfaces/base-element.ts';
+
+export interface SquareElement extends BaseElement {
 	type: 'square';
 	data: {
 		x: number;
@@ -6,4 +8,4 @@ export type SquareElement = {
 		width: number;
 		height: number;
 	};
-};
+}

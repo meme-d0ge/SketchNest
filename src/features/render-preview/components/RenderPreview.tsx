@@ -1,4 +1,6 @@
-import { Ellipse, Line, Rect } from 'react-konva';
+import { EllipseElement } from '@/entities/elements/components/EllipseElement.tsx';
+import { LineElement } from '@/entities/elements/components/LineElement.tsx';
+import { RectElement } from '@/entities/elements/components/RectElement.tsx';
 import { usePreviewStore } from '@/entities/preview/usePreviewStore.ts';
 
 export const RenderPreview = () => {
@@ -7,39 +9,25 @@ export const RenderPreview = () => {
 		return null;
 	}
 	if (element.type === 'line') {
-		return (
-			<Line
-				stroke="#df4b26"
-				strokeWidth={5}
-				tension={0}
-				lineCap="round"
-				lineJoin="round"
-				globalCompositeOperation={'source-over'}
-				points={element.data.points}
-			/>
-		);
+		return <LineElement id={element.id} points={element.data.points} />;
 	}
 	if (element.type === 'circle') {
 		return (
-			<Ellipse
+			<EllipseElement
 				x={element.data.x}
 				y={element.data.y}
 				radiusX={element.data.radiusX}
 				radiusY={element.data.radiusY}
-				strokeWidth={4}
-				stroke={'black'}
 			/>
 		);
 	}
 	if (element.type === 'square') {
 		return (
-			<Rect
+			<RectElement
 				x={element.data.x}
 				y={element.data.y}
 				width={element.data.width}
 				height={element.data.height}
-				strokeWidth={4}
-				stroke={'black'}
 			/>
 		);
 	}

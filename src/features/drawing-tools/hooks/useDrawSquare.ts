@@ -10,7 +10,7 @@ export const useDrawSquare = () => {
 	const isDrawing = useRef(false);
 	const startPosition = useRef<{ x: number; y: number } | null>(null);
 	const { set: setPreview } = usePreviewStore();
-	const { add: addToHistory } = useHistoryStore();
+	const { add: addToHistory, history } = useHistoryStore();
 
 	const square = useRef<SquareElement | null>(null);
 	const startDrawSquare = useCallback(
@@ -25,6 +25,8 @@ export const useDrawSquare = () => {
 				};
 				square.current = {
 					type: 'square',
+					id: String(history.length),
+					isDeleted: false,
 					data: {
 						x: absoluteX,
 						y: absoluteY,
@@ -35,20 +37,24 @@ export const useDrawSquare = () => {
 				setPreview(square.current);
 			}
 		},
-		[setPreview],
+		[setPreview, history],
 	);
 	const drawSquare = useCallback(
 		(e: Konva.KonvaEventObject<TouchEvent | MouseEvent>) => {
-			if (!isDrawing.current) {
-				return;
-			}
+			if (
+				!isDrawing.current ||
+				square.current === null ||
+				startPosition.current === null
+			) return;
 			const pos = e.target.getStage()?.getPointerPosition();
-			if (isVector2d(pos) && startPosition.current) {
+			if (isVector2d(pos)) {
 				const { x: absoluteX, y: absoluteY } = getAbsolutePosition(pos, e);
 				const width = startPosition.current.x - absoluteX;
 				const height = startPosition.current.y - absoluteY;
 				square.current = {
 					type: 'square',
+					id: square.current.id,
+					isDeleted: square.current.isDeleted,
 					data: {
 						x: startPosition.current.x - width,
 						y: startPosition.current.y - height,

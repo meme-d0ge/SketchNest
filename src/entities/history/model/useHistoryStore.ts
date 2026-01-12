@@ -5,18 +5,18 @@ interface IHistoryElement {
 	history: BoardElement[];
 	version: number;
 }
-interface HistoryState {
+interface IHistoryState {
 	history: IHistoryElement[];
 	historySteps: number[];
 	version: number;
-	add: (line: BoardElement) => void;
+	add: (element: BoardElement) => void;
 	undo: () => void;
 	canUndo: boolean;
 	redo: () => void;
 	canRedo: boolean;
 }
 
-export const useHistoryStore = create<HistoryState>((set) => ({
+export const useHistoryStore = create<IHistoryState>((set) => ({
 	history: [],
 	historySteps: [],
 	version: -1,
@@ -26,8 +26,6 @@ export const useHistoryStore = create<HistoryState>((set) => ({
 		set((state) => {
 			const newVersion = state.version + 1;
 			const newHistorySteps = state.historySteps.slice(0, newVersion);
-			if (newVersion < state.history.length) {
-			}
 			const newHistory = [...state.history, { history: [element], version: 0 }];
 			return {
 				history: newHistory,

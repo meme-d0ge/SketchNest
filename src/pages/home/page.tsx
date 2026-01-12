@@ -1,6 +1,6 @@
 import type Konva from 'konva';
 import { useRef } from 'react';
-import { Layer, Stage } from 'react-konva';
+import {FastLayer, Layer, Stage} from 'react-konva';
 import { ToolsEnum, useToolsStore } from '@/entities/tools/useToolsStore.ts';
 import { CanvasMenu } from '@/features/canvas-menu';
 import { CanvasTools } from '@/features/canvas-tools';
@@ -33,8 +33,10 @@ export const HomePage = () => {
 			>
 				<Layer>
 					<RenderHistory />
-					<RenderPreview />
 				</Layer>
+				<FastLayer>
+					<RenderPreview />
+				</FastLayer>
 			</Stage>
 			<CanvasMenu className="cursor-pointer absolute max-w-max h-9 top-4 left-4 z-50" />
 			<HistoryPanel className="absolute max-w-max h-9 bottom-4 left-4 z-50" />

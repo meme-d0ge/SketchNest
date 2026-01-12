@@ -1,4 +1,6 @@
-export type CircleElement = {
+import type { BaseElement } from '@/entities/elements/interfaces/base-element.ts';
+
+export interface CircleElement extends BaseElement {
 	type: 'circle';
 	data: {
 		x: number;
@@ -6,4 +8,4 @@ export type CircleElement = {
 		y: number;
 		radiusY: number;
 	};
-};
+}

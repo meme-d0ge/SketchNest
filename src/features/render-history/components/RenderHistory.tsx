@@ -1,52 +1,43 @@
-import { Ellipse, Line, Rect } from 'react-konva';
+import { EllipseElement } from '@/entities/elements/components/EllipseElement.tsx';
+import { LineElement } from '@/entities/elements/components/LineElement.tsx';
+import { RectElement } from '@/entities/elements/components/RectElement.tsx';
 import { useHistoryStore } from '@/entities/history';
 
 export const RenderHistory = () => {
 	const { history } = useHistoryStore();
-	console.log(history);
-	return history.map((value, index) => {
+	return history.map((value) => {
 		if (value.version !== -1) {
 			const current_version = value.history[value.version];
 			if (current_version.type === 'line') {
 				return (
-					<Line
-						// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-						key={index}
-						stroke="#df4b26"
-						strokeWidth={5}
-						tension={0}
-						lineCap="round"
-						lineJoin="round"
-						globalCompositeOperation={'source-over'}
+					<LineElement
+						key={current_version.id}
+						id={current_version.id}
 						points={current_version.data.points}
 					/>
 				);
 			}
 			if (current_version.type === 'circle') {
 				return (
-					<Ellipse
-						// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-						key={index}
+					<EllipseElement
+						key={current_version.id}
+						id={current_version.id}
 						x={current_version.data.x}
 						y={current_version.data.y}
 						radiusX={current_version.data.radiusX}
 						radiusY={current_version.data.radiusY}
-						strokeWidth={4}
-						stroke={'black'}
 					/>
 				);
 			}
 			if (current_version.type === 'square') {
 				return (
-					<Rect
-						// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-						key={index}
+					<RectElement
+						key={current_version.id}
+						id={current_version.id}
 						x={current_version.data.x}
 						y={current_version.data.y}
 						width={current_version.data.width}
 						height={current_version.data.height}
-						strokeWidth={4}
-						stroke={'black'}
 					/>
 				);
 			}
