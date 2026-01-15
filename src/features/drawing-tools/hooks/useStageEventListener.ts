@@ -3,6 +3,7 @@ import { useCallback } from 'react';
 import { ToolsEnum, useToolsStore } from '@/entities/tools/useToolsStore.ts';
 import { useDrawCircle } from '@/features/drawing-tools/hooks/useDrawCircle.ts';
 import { useDrawSquare } from '@/features/drawing-tools/hooks/useDrawSquare.ts';
+import { useEraser } from '@/features/drawing-tools/hooks/useEraser.ts';
 import { useFreehandDrawing } from '@/features/drawing-tools/hooks/useFreehandDrawing.ts';
 import { useThrottleCallback } from '@/shared/lib/useThrottleCallback.ts';
 
@@ -12,6 +13,7 @@ export const useStageEventListener = () => {
 		useFreehandDrawing();
 	const { startDrawCircle, drawCircle, endDrawCircle } = useDrawCircle();
 	const { startDrawSquare, drawSquare, endDrawSquare } = useDrawSquare();
+	const { startEraser, moveEraser, endEraser } = useEraser();
 
 	const handleMouseDown = useThrottleCallback(
 		useCallback(
@@ -25,9 +27,10 @@ export const useStageEventListener = () => {
 				} else if (tool === ToolsEnum.Draw) {
 					startFreehandDraw(event);
 				} else if (tool === ToolsEnum.Eraser) {
+					startEraser();
 				}
 			},
-			[tool, startFreehandDraw, startDrawCircle, startDrawSquare],
+			[tool, startFreehandDraw, startDrawCircle, startDrawSquare, startEraser],
 		),
 		7,
 	);
@@ -43,9 +46,10 @@ export const useStageEventListener = () => {
 				} else if (tool === ToolsEnum.Draw) {
 					freehandDraw(event);
 				} else if (tool === ToolsEnum.Eraser) {
+					moveEraser(event);
 				}
 			},
-			[tool, freehandDraw, drawCircle, drawSquare],
+			[tool, freehandDraw, drawCircle, drawSquare, moveEraser],
 		),
 		7,
 	);
@@ -60,8 +64,9 @@ export const useStageEventListener = () => {
 			} else if (tool === ToolsEnum.Draw) {
 				endFreehandDraw();
 			} else if (tool === ToolsEnum.Eraser) {
+				endEraser();
 			}
-		}, [tool, endFreehandDraw, endDrawCircle, endDrawSquare]),
+		}, [tool, endFreehandDraw, endDrawCircle, endDrawSquare, endEraser]),
 		7,
 	);
 
