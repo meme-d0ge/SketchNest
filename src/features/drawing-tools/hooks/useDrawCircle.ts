@@ -1,15 +1,15 @@
 import type Konva from 'konva';
 import { useCallback, useRef } from 'react';
 import type { CircleElement } from '@/entities/elements';
-import { useHistoryStore } from '@/entities/history';
-import { usePreviewStore } from '@/entities/preview/usePreviewStore.ts';
+import { useElementsStore } from '@/entities/elements';
+import { useInteractiveStore } from '@/entities/preview/useInteractiveStore.ts';
 import { isVector2d } from '@/shared/guards/isVector2d.ts';
 import { getAbsolutePosition } from '@/shared/lib/getAbsolutePosition.ts';
 
 export const useDrawCircle = () => {
 	const isDrawing = useRef(false);
-	const { set: setPreview } = usePreviewStore();
-	const { add: addToHistory, history } = useHistoryStore();
+	const { set: setPreview } = useInteractiveStore();
+	const { add: addToElementsStore, elements } = useElementsStore();
 	const circle = useRef<CircleElement | null>(null);
 	const startPosition = useRef<{ x: number; y: number } | null>(null);
 	const startDrawCircle = useCallback(
@@ -24,7 +24,7 @@ export const useDrawCircle = () => {
 				};
 				circle.current = {
 					type: 'circle',
-					id: String(history.length),
+					id: String(elements.length),
 					isDeleted: false,
 					data: {
 						x: absoluteX,
@@ -36,7 +36,7 @@ export const useDrawCircle = () => {
 				setPreview(circle.current);
 			}
 		},
-		[history, setPreview],
+		[elements, setPreview],
 	);
 	const drawCircle = useCallback(
 		(e: Konva.KonvaEventObject<TouchEvent | MouseEvent>) => {
@@ -44,7 +44,8 @@ export const useDrawCircle = () => {
 				!isDrawing.current ||
 				circle.current === null ||
 				startPosition.current === null
-			) return;
+			)
+				return;
 
 			const pos = e.target.getStage()?.getPointerPosition();
 			if (isVector2d(pos)) {
@@ -71,10 +72,10 @@ export const useDrawCircle = () => {
 		isDrawing.current = false;
 		startPosition.current = null;
 		if (circle.current !== null) {
-			addToHistory(circle.current);
+			addToElementsStore(circle.current);
 			setPreview(null);
 		}
-	}, [addToHistory, setPreview]);
+	}, [addToElementsStore, setPreview]);
 	return {
 		startDrawCircle,
 		drawCircle,

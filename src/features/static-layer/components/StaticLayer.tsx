@@ -1,11 +1,11 @@
+import { useElementsStore } from '@/entities/elements';
 import { EllipseElement } from '@/entities/elements/components/EllipseElement.tsx';
 import { LineElement } from '@/entities/elements/components/LineElement.tsx';
 import { RectElement } from '@/entities/elements/components/RectElement.tsx';
-import { useHistoryStore } from '@/entities/history';
 
-export const RenderHistory = () => {
-	const { history } = useHistoryStore();
-	return history.map((value) => {
+export const StaticLayer = () => {
+	const { elements } = useElementsStore();
+	return elements.map((value) => {
 		if (value.version !== -1) {
 			const current_version = value.history[value.version];
 			if (current_version.isDeleted) return null;

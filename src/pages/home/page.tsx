@@ -1,14 +1,14 @@
 import type Konva from 'konva';
 import { useRef } from 'react';
-import {FastLayer, Layer, Stage} from 'react-konva';
+import { FastLayer, Layer, Stage } from 'react-konva';
 import { ToolsEnum, useToolsStore } from '@/entities/tools/useToolsStore.ts';
 import { CanvasMenu } from '@/features/canvas-menu';
 import { CanvasTools } from '@/features/canvas-tools';
 import { useResize, useZoom } from '@/features/canvas-viewport';
 import { useStageEventListener } from '@/features/drawing-tools';
 import { HistoryPanel } from '@/features/history-panel';
-import { RenderHistory } from '@/features/render-history';
-import { RenderPreview } from '@/features/render-preview';
+import { InteractiveLayer } from '@/features/interactive-layer';
+import { StaticLayer } from '@/features/static-layer';
 
 export const HomePage = () => {
 	const stageRef = useRef<Konva.Stage | null>(null);
@@ -32,10 +32,10 @@ export const HomePage = () => {
 				onTouchEnd={handleMouseUp}
 			>
 				<Layer>
-					<RenderHistory />
+					<StaticLayer />
 				</Layer>
 				<FastLayer>
-					<RenderPreview />
+					<InteractiveLayer />
 				</FastLayer>
 			</Stage>
 			<CanvasMenu className="cursor-pointer absolute max-w-max h-9 top-4 left-4 z-50" />

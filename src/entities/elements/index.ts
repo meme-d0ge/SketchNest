@@ -2,3 +2,4 @@ export type { CircleElement } from '@/entities/elements/interfaces/circle-elemen
 export type { BoardElement } from '@/entities/elements/interfaces/element.ts';
 export type { LineElement } from '@/entities/elements/interfaces/line-element.ts';
 export type { SquareElement } from './interfaces/square-element';
+export { useElementsStore } from './model/useElementsStore';

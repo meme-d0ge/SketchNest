@@ -1,12 +1,12 @@
 import Konva from 'konva';
 import { useCallback, useEffect, useRef } from 'react';
-import { useHistoryStore } from '@/entities/history';
+import { useElementsStore } from '@/entities/elements';
 
 export const useEraser = () => {
 	const isDrawing = useRef<boolean>(false);
 	const arrayIdToTrash = useRef<Set<number>>(new Set());
 	const isRestoreMode = useRef<boolean>(false);
-	const { add } = useHistoryStore();
+	const { add: addToElementsStore } = useElementsStore();
 
 	const keyDown = useCallback((e: globalThis.KeyboardEvent) => {
 		if (e.altKey) {
@@ -46,17 +46,17 @@ export const useEraser = () => {
 	);
 	const endEraser = useCallback(() => {
 		isDrawing.current = false;
-		const history = useHistoryStore.getState().history;
+		const history = useElementsStore.getState().elements;
 		for (const id of arrayIdToTrash.current) {
 			const historyElement = history[id];
 			const newHistoryElement = structuredClone(
 				historyElement.history[historyElement.version],
 			);
 			newHistoryElement.isDeleted = true;
-			add(newHistoryElement, id);
+			addToElementsStore(newHistoryElement, id);
 		}
 		arrayIdToTrash.current = new Set();
-	}, [add]);
+	}, [addToElementsStore]);
 
 	useEffect(() => {
 		document.addEventListener('keydown', keyDown);

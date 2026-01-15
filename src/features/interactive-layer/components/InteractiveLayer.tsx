@@ -1,10 +1,10 @@
 import { EllipseElement } from '@/entities/elements/components/EllipseElement.tsx';
 import { LineElement } from '@/entities/elements/components/LineElement.tsx';
 import { RectElement } from '@/entities/elements/components/RectElement.tsx';
-import { usePreviewStore } from '@/entities/preview/usePreviewStore.ts';
+import { useInteractiveStore } from '@/entities/preview/useInteractiveStore.ts';
 
-export const RenderPreview = () => {
-	const { element } = usePreviewStore();
+export const InteractiveLayer = () => {
+	const { element } = useInteractiveStore();
 	if (element === null) {
 		return null;
 	}

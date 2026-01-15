@@ -6,7 +6,7 @@ interface PreviewState {
 	set: (addElement: BoardElement | null) => void;
 }
 
-export const usePreviewStore = create<PreviewState>((set) => ({
+export const useInteractiveStore = create<PreviewState>((set) => ({
 	element: null,
 	set: (addElement) => set(() => ({ element: addElement })),
 }));
