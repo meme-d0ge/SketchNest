@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { BoardElement } from '@/entities/elements';
+import type { BoardElement, BoardElementOptionalId } from '@/entities/elements';
 
 interface IElement {
 	history: BoardElement[];
@@ -7,9 +7,9 @@ interface IElement {
 }
 interface IElementsStoreState {
 	elements: IElement[];
-	historySteps: number[];
+	historySteps: Array<number[]>;
 	actualStep: number;
-	add: (element: BoardElement, index?: number) => void;
+	add: (elements: BoardElementOptionalId[]) => void;
 	undo: () => void;
 	canUndo: boolean;
 	redo: () => void;
@@ -22,54 +22,58 @@ export const useElementsStore = create<IElementsStoreState>((set) => ({
 	actualStep: -1,
 	canUndo: false,
 	canRedo: false,
-	add: (element: BoardElement, index?: number) =>
+	add: (elements: BoardElementOptionalId[]) =>
 		set((state) => {
-			if (index === undefined) {
-				const newActualStep = state.actualStep + 1;
-				const newHistorySteps = state.historySteps.slice(0, newActualStep);
-				const newElementsArray = [
-					...state.elements,
-					{ history: [element], version: 0 },
-				];
-				return {
-					elements: newElementsArray,
-					historySteps: [...newHistorySteps, newElementsArray.length - 1],
-					actualStep: newActualStep,
-					canUndo: newActualStep >= 0,
-					canRedo: false,
-				};
-			} else {
-				const newActualStep = state.actualStep + 1;
-				const newHistorySteps = state.historySteps.slice(0, newActualStep);
-				const newElementsArray = [...state.elements];
-				newElementsArray[index] = {
-					history: [
-						...newElementsArray[index].history.slice(
-							0,
-							newElementsArray[index].version + 1,
-						),
-						element,
-					],
-					version: newElementsArray[index].version + 1,
-				};
-				return {
-					elements: newElementsArray,
-					historySteps: [...newHistorySteps, index],
-					actualStep: newActualStep,
-					canUndo: newActualStep >= 0,
-					canRedo: false,
-				};
+			const newActualStep = state.actualStep + 1;
+			const newHistorySteps = state.historySteps.slice(0, newActualStep);
+			const newElementsArray = [...state.elements];
+			const arrayModElements: number[] = [];
+			for (const element of elements) {
+				if (element.id === undefined) {
+					arrayModElements.push(newElementsArray.length);
+					newElementsArray.push({
+						history: [
+							{
+								...element,
+								id: String(newElementsArray.length),
+							} as BoardElement,
+						],
+						version: 0,
+					});
+				} else {
+					const index = Number(element.id);
+					arrayModElements.push(index);
+					newElementsArray[index] = {
+						history: [
+							...newElementsArray[index].history.slice(
+								0,
+								newElementsArray[index].version + 1,
+							),
+							{ ...element, id: String(index) } as BoardElement,
+						],
+						version: newElementsArray[index].version + 1,
+					};
+				}
 			}
+			return {
+				elements: newElementsArray,
+				historySteps: [...newHistorySteps, arrayModElements],
+				actualStep: newActualStep,
+				canUndo: newActualStep >= 0,
+				canRedo: false,
+			};
 		}),
 	undo: () =>
 		set((state) => {
 			if (state.canUndo) {
-				const element_index = state.historySteps[state.actualStep];
+				const indexOfModifiedElements = state.historySteps[state.actualStep];
 				const newElementsArray = [...state.elements];
-				newElementsArray[element_index] = {
-					history: newElementsArray[element_index].history,
-					version: newElementsArray[element_index].version - 1,
-				};
+				for (const index of indexOfModifiedElements) {
+					newElementsArray[index] = {
+						history: newElementsArray[index].history,
+						version: newElementsArray[index].version - 1,
+					};
+				}
 				const newActualStep = state.actualStep - 1;
 				return {
 					elements: [...newElementsArray],
@@ -84,12 +88,14 @@ export const useElementsStore = create<IElementsStoreState>((set) => ({
 		set((state) => {
 			if (state.canRedo) {
 				const newActualStep = state.actualStep + 1;
-				const element_index = state.historySteps[newActualStep];
+				const indexOfModifiedElements = state.historySteps[newActualStep];
 				const newElementsArray = [...state.elements];
-				newElementsArray[element_index] = {
-					history: newElementsArray[element_index].history,
-					version: newElementsArray[element_index].version + 1,
-				};
+				for (const index of indexOfModifiedElements) {
+					newElementsArray[index] = {
+						history: newElementsArray[index].history,
+						version: newElementsArray[index].version + 1,
+					};
+				}
 				return {
 					elements: [...newElementsArray],
 					actualStep: newActualStep,

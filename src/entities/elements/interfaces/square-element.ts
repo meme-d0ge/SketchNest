@@ -9,3 +9,5 @@ export interface SquareElement extends BaseElement {
 		height: number;
 	};
 }
+
+export type SquareElementOptionId = Omit<SquareElement, 'id'> & { id?: string };

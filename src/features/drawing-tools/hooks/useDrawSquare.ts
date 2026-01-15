@@ -1,6 +1,6 @@
 import type Konva from 'konva';
 import { useCallback, useRef } from 'react';
-import type { SquareElement } from '@/entities/elements';
+import type { SquareElementOptionId } from '@/entities/elements';
 import { useElementsStore } from '@/entities/elements';
 import { useInteractiveStore } from '@/entities/preview/useInteractiveStore.ts';
 import { isVector2d } from '@/shared/guards/isVector2d.ts';
@@ -10,8 +10,8 @@ export const useDrawSquare = () => {
 	const isDrawing = useRef(false);
 	const startPosition = useRef<{ x: number; y: number } | null>(null);
 	const { set: setPreview } = useInteractiveStore();
-	const { add: addToElementsStore, elements } = useElementsStore();
-	const square = useRef<SquareElement | null>(null);
+	const { add: addToElementsStore } = useElementsStore();
+	const square = useRef<SquareElementOptionId | null>(null);
 	const startDrawSquare = useCallback(
 		(e: Konva.KonvaEventObject<TouchEvent | MouseEvent>) => {
 			isDrawing.current = true;
@@ -24,7 +24,6 @@ export const useDrawSquare = () => {
 				};
 				square.current = {
 					type: 'square',
-					id: String(elements.length),
 					isDeleted: false,
 					data: {
 						x: absoluteX,
@@ -36,7 +35,7 @@ export const useDrawSquare = () => {
 				setPreview(square.current);
 			}
 		},
-		[setPreview, elements],
+		[setPreview],
 	);
 	const drawSquare = useCallback(
 		(e: Konva.KonvaEventObject<TouchEvent | MouseEvent>) => {
@@ -53,7 +52,6 @@ export const useDrawSquare = () => {
 				const height = startPosition.current.y - absoluteY;
 				square.current = {
 					type: 'square',
-					id: square.current.id,
 					isDeleted: square.current.isDeleted,
 					data: {
 						x: startPosition.current.x - width,
@@ -71,7 +69,7 @@ export const useDrawSquare = () => {
 		isDrawing.current = false;
 		startPosition.current = null;
 		if (square.current !== null) {
-			addToElementsStore(square.current);
+			addToElementsStore([square.current]);
 			setPreview(null);
 		}
 	}, [addToElementsStore, setPreview]);

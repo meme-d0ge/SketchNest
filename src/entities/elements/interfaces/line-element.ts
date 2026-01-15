@@ -6,3 +6,4 @@ export interface LineElement extends BaseElement {
 		points: number[];
 	};
 }
+export type LineElementOptionId = Omit<LineElement, 'id'> & { id?: string };

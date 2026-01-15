@@ -37,8 +37,9 @@ export const useEraser = () => {
 				if (!arrayIdToTrash.current.has(idNumber)) {
 					return;
 				}
-				if (e.target instanceof Konva.Shape)
-					e.target.setAttr('opacity', (e.target.attrs.opacity | 0.5) * 1.5);
+				if (e.target instanceof Konva.Shape) {
+					e.target.setAttr('opacity', (e.target.attrs.opacity || 0.5) * 2);
+				}
 				arrayIdToTrash.current.delete(idNumber);
 			}
 		},
@@ -47,14 +48,16 @@ export const useEraser = () => {
 	const endEraser = useCallback(() => {
 		isDrawing.current = false;
 		const history = useElementsStore.getState().elements;
+		const arrayElementToTrash = [];
 		for (const id of arrayIdToTrash.current) {
 			const historyElement = history[id];
 			const newHistoryElement = structuredClone(
 				historyElement.history[historyElement.version],
 			);
 			newHistoryElement.isDeleted = true;
-			addToElementsStore(newHistoryElement, id);
+			arrayElementToTrash.push(newHistoryElement);
 		}
+		addToElementsStore(arrayElementToTrash);
 		arrayIdToTrash.current = new Set();
 	}, [addToElementsStore]);
 

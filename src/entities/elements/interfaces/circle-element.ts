@@ -9,3 +9,5 @@ export interface CircleElement extends BaseElement {
 		radiusY: number;
 	};
 }
+
+export type CircleElementOptionId = Omit<CircleElement, 'id'> & { id?: string };

@@ -1,6 +1,6 @@
 import type Konva from 'konva';
 import { useCallback, useRef } from 'react';
-import type { LineElement } from '@/entities/elements';
+import type { LineElementOptionId } from '@/entities/elements';
 import { useElementsStore } from '@/entities/elements';
 import { useInteractiveStore } from '@/entities/preview/useInteractiveStore.ts';
 import { isVector2d } from '@/shared/guards/isVector2d.ts';
@@ -8,9 +8,9 @@ import { getAbsolutePosition } from '@/shared/lib/getAbsolutePosition.ts';
 
 export const useFreehandDrawing = () => {
 	const isDrawing = useRef(false);
-	const line = useRef<LineElement | null>(null);
+	const line = useRef<LineElementOptionId | null>(null);
 	const { set: setPreview } = useInteractiveStore();
-	const { add: addToElementsStore, elements } = useElementsStore();
+	const { add: addToElementsStore } = useElementsStore();
 
 	const startFreehandDraw = useCallback(
 		(e: Konva.KonvaEventObject<TouchEvent | MouseEvent>) => {
@@ -20,7 +20,6 @@ export const useFreehandDrawing = () => {
 				const { x: absoluteX, y: absoluteY } = getAbsolutePosition(pos, e);
 				line.current = {
 					type: 'line',
-					id: String(elements.length),
 					isDeleted: false,
 					data: {
 						points: [absoluteX, absoluteY],
@@ -29,7 +28,7 @@ export const useFreehandDrawing = () => {
 				setPreview(line.current);
 			}
 		},
-		[setPreview, elements],
+		[setPreview],
 	);
 	const freehandDraw = useCallback(
 		(e: Konva.KonvaEventObject<TouchEvent | MouseEvent>) => {
@@ -40,7 +39,6 @@ export const useFreehandDrawing = () => {
 				const { x: absoluteX, y: absoluteY } = getAbsolutePosition(pos, e);
 				line.current = {
 					type: 'line',
-					id: line.current.id,
 					isDeleted: line.current.isDeleted,
 					data: {
 						points: [...line.current.data.points, absoluteX, absoluteY],
@@ -54,7 +52,7 @@ export const useFreehandDrawing = () => {
 	const endFreehandDraw = useCallback(() => {
 		isDrawing.current = false;
 		if (line.current !== null) {
-			addToElementsStore(line.current);
+			addToElementsStore([line.current]);
 			setPreview(null);
 			line.current = null;
 		}

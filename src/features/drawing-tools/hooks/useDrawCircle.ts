@@ -1,6 +1,6 @@
 import type Konva from 'konva';
 import { useCallback, useRef } from 'react';
-import type { CircleElement } from '@/entities/elements';
+import type { CircleElementOptionId } from '@/entities/elements';
 import { useElementsStore } from '@/entities/elements';
 import { useInteractiveStore } from '@/entities/preview/useInteractiveStore.ts';
 import { isVector2d } from '@/shared/guards/isVector2d.ts';
@@ -9,8 +9,8 @@ import { getAbsolutePosition } from '@/shared/lib/getAbsolutePosition.ts';
 export const useDrawCircle = () => {
 	const isDrawing = useRef(false);
 	const { set: setPreview } = useInteractiveStore();
-	const { add: addToElementsStore, elements } = useElementsStore();
-	const circle = useRef<CircleElement | null>(null);
+	const { add: addToElementsStore } = useElementsStore();
+	const circle = useRef<CircleElementOptionId | null>(null);
 	const startPosition = useRef<{ x: number; y: number } | null>(null);
 	const startDrawCircle = useCallback(
 		(e: Konva.KonvaEventObject<TouchEvent | MouseEvent>) => {
@@ -24,7 +24,6 @@ export const useDrawCircle = () => {
 				};
 				circle.current = {
 					type: 'circle',
-					id: String(elements.length),
 					isDeleted: false,
 					data: {
 						x: absoluteX,
@@ -36,7 +35,7 @@ export const useDrawCircle = () => {
 				setPreview(circle.current);
 			}
 		},
-		[elements, setPreview],
+		[setPreview],
 	);
 	const drawCircle = useCallback(
 		(e: Konva.KonvaEventObject<TouchEvent | MouseEvent>) => {
@@ -54,7 +53,6 @@ export const useDrawCircle = () => {
 				const radiusY = (startPosition.current.y - absoluteY) / 2;
 				circle.current = {
 					type: 'circle',
-					id: circle.current.id,
 					isDeleted: circle.current.isDeleted,
 					data: {
 						x: startPosition.current.x - radiusX,
@@ -72,7 +70,7 @@ export const useDrawCircle = () => {
 		isDrawing.current = false;
 		startPosition.current = null;
 		if (circle.current !== null) {
-			addToElementsStore(circle.current);
+			addToElementsStore([circle.current]);
 			setPreview(null);
 		}
 	}, [addToElementsStore, setPreview]);

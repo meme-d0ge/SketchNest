@@ -1,9 +1,9 @@
 import { create } from 'zustand';
-import type { BoardElement } from '@/entities/elements';
+import type {BoardElementOptionalId} from '@/entities/elements';
 
 interface PreviewState {
-	element: BoardElement | null;
-	set: (addElement: BoardElement | null) => void;
+	element: BoardElementOptionalId | null;
+	set: (addElement: BoardElementOptionalId | null) => void;
 }
 
 export const useInteractiveStore = create<PreviewState>((set) => ({
