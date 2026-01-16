@@ -3,8 +3,8 @@ import { create } from 'zustand';
 export const ToolsEnum = {
 	Selection: 'selection',
 	Hand: 'hand',
-	Circle: 'circle',
-	Square: 'square',
+	Ellipse: 'ellipse',
+	Rect: 'rect',
 	Draw: 'draw',
 	Eraser: 'eraser',
 } as const;

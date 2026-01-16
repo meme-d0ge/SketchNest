@@ -1,13 +1,12 @@
 import type {
-	CircleElementOptionId,
-	LineElementOptionId,
-	SquareElement,
-	SquareElementOptionId,
-} from '@/entities/elements';
-import type { CircleElement } from '@/entities/elements/interfaces/circle-element.ts';
-import type { LineElement } from '@/entities/elements/interfaces/line-element.ts';
-export type BoardElement = LineElement | CircleElement | SquareElement;
+	EllipseElement,
+	EllipseElementOptionId,
+} from './ellipse-element.ts';
+import type { LineElement, LineElementOptionId } from './line-element.ts';
+import type { RectElement, RectElementOptionId } from './rect-element.ts';
+
+export type BoardElement = LineElement | EllipseElement | RectElement;
 export type BoardElementOptionalId =
 	| LineElementOptionId
-	| CircleElementOptionId
-	| SquareElementOptionId;
+	| EllipseElementOptionId
+	| RectElementOptionId;

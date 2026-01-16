@@ -1,18 +1,17 @@
 import type Konva from 'konva';
 import { useCallback, useRef } from 'react';
-import type { SquareElementOptionId } from '@/entities/elements';
-import { useElementsStore } from '@/entities/elements';
-import { useInteractiveStore } from '@/entities/preview/useInteractiveStore.ts';
+import type { RectElementOptionId } from '@/entities/elements';
+import { useElementsStore, useInteractiveStore } from '@/entities/elements';
 import { isVector2d } from '@/shared/guards/isVector2d.ts';
 import { getAbsolutePosition } from '@/shared/lib/getAbsolutePosition.ts';
 
-export const useDrawSquare = () => {
+export const useDrawRect = () => {
 	const isDrawing = useRef(false);
 	const startPosition = useRef<{ x: number; y: number } | null>(null);
 	const { set: setPreview } = useInteractiveStore();
 	const { add: addToElementsStore } = useElementsStore();
-	const square = useRef<SquareElementOptionId | null>(null);
-	const startDrawSquare = useCallback(
+	const rect = useRef<RectElementOptionId | null>(null);
+	const startDrawRect = useCallback(
 		(e: Konva.KonvaEventObject<TouchEvent | MouseEvent>) => {
 			isDrawing.current = true;
 			const pos = e.target.getStage()?.getPointerPosition();
@@ -22,8 +21,8 @@ export const useDrawSquare = () => {
 					x: absoluteX,
 					y: absoluteY,
 				};
-				square.current = {
-					type: 'square',
+				rect.current = {
+					type: 'rect',
 					isDeleted: false,
 					data: {
 						x: absoluteX,
@@ -32,16 +31,16 @@ export const useDrawSquare = () => {
 						height: 0,
 					},
 				};
-				setPreview(square.current);
+				setPreview(rect.current);
 			}
 		},
 		[setPreview],
 	);
-	const drawSquare = useCallback(
+	const drawRect = useCallback(
 		(e: Konva.KonvaEventObject<TouchEvent | MouseEvent>) => {
 			if (
 				!isDrawing.current ||
-				square.current === null ||
+				rect.current === null ||
 				startPosition.current === null
 			)
 				return;
@@ -50,9 +49,9 @@ export const useDrawSquare = () => {
 				const { x: absoluteX, y: absoluteY } = getAbsolutePosition(pos, e);
 				const width = startPosition.current.x - absoluteX;
 				const height = startPosition.current.y - absoluteY;
-				square.current = {
-					type: 'square',
-					isDeleted: square.current.isDeleted,
+				rect.current = {
+					type: 'rect',
+					isDeleted: rect.current.isDeleted,
 					data: {
 						x: startPosition.current.x - width,
 						y: startPosition.current.y - height,
@@ -60,18 +59,18 @@ export const useDrawSquare = () => {
 						height: height,
 					},
 				};
-				setPreview(square.current);
+				setPreview(rect.current);
 			}
 		},
 		[setPreview],
 	);
-	const endDrawSquare = useCallback(() => {
+	const endDrawRect = useCallback(() => {
 		isDrawing.current = false;
 		startPosition.current = null;
-		if (square.current !== null) {
-			addToElementsStore([square.current]);
+		if (rect.current !== null) {
+			addToElementsStore([rect.current]);
 			setPreview(null);
 		}
 	}, [addToElementsStore, setPreview]);
-	return { startDrawSquare, drawSquare, endDrawSquare };
+	return { startDrawRect, drawRect, endDrawRect };
 };

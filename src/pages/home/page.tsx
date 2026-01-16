@@ -1,7 +1,7 @@
 import type Konva from 'konva';
 import { useRef } from 'react';
 import { FastLayer, Layer, Stage } from 'react-konva';
-import { ToolsEnum, useToolsStore } from '@/entities/tools/useToolsStore.ts';
+import { ToolsEnum, useToolsStore } from '@/entities/tools';
 import { CanvasMenu } from '@/features/canvas-menu';
 import { CanvasTools } from '@/features/canvas-tools';
 import { useResize, useZoom } from '@/features/canvas-viewport';

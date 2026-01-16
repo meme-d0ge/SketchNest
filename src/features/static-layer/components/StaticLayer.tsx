@@ -1,7 +1,9 @@
-import { useElementsStore } from '@/entities/elements';
-import { EllipseElement } from '@/entities/elements/components/EllipseElement.tsx';
-import { LineElement } from '@/entities/elements/components/LineElement.tsx';
-import { RectElement } from '@/entities/elements/components/RectElement.tsx';
+import {
+	EllipseComponent,
+	LineComponent,
+	RectComponent,
+	useElementsStore,
+} from '@/entities/elements';
 
 export const StaticLayer = () => {
 	const { elements } = useElementsStore();
@@ -11,7 +13,7 @@ export const StaticLayer = () => {
 			if (current_version.isDeleted) return null;
 			if (current_version.type === 'line') {
 				return (
-					<LineElement
+					<LineComponent
 						key={current_version.id}
 						id={current_version.id}
 						points={current_version.data.points}
@@ -19,9 +21,9 @@ export const StaticLayer = () => {
 					/>
 				);
 			}
-			if (current_version.type === 'circle') {
+			if (current_version.type === 'ellipse') {
 				return (
-					<EllipseElement
+					<EllipseComponent
 						key={current_version.id}
 						id={current_version.id}
 						x={current_version.data.x}
@@ -32,9 +34,9 @@ export const StaticLayer = () => {
 					/>
 				);
 			}
-			if (current_version.type === 'square') {
+			if (current_version.type === 'rect') {
 				return (
-					<RectElement
+					<RectComponent
 						key={current_version.id}
 						id={current_version.id}
 						x={current_version.data.x}

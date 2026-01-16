@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type {BoardElementOptionalId} from '@/entities/elements';
+import type { BoardElementOptionalId } from '@/entities/elements';
 
 interface PreviewState {
 	element: BoardElementOptionalId | null;

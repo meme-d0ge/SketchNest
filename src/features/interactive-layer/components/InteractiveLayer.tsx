@@ -1,7 +1,9 @@
-import { EllipseElement } from '@/entities/elements/components/EllipseElement.tsx';
-import { LineElement } from '@/entities/elements/components/LineElement.tsx';
-import { RectElement } from '@/entities/elements/components/RectElement.tsx';
-import { useInteractiveStore } from '@/entities/preview/useInteractiveStore.ts';
+import {
+	EllipseComponent,
+	LineComponent,
+	RectComponent,
+	useInteractiveStore,
+} from '@/entities/elements';
 
 export const InteractiveLayer = () => {
 	const { element } = useInteractiveStore();
@@ -9,11 +11,11 @@ export const InteractiveLayer = () => {
 		return null;
 	}
 	if (element.type === 'line') {
-		return <LineElement id={element.id} points={element.data.points} />;
+		return <LineComponent id={element.id} points={element.data.points} />;
 	}
-	if (element.type === 'circle') {
+	if (element.type === 'ellipse') {
 		return (
-			<EllipseElement
+			<EllipseComponent
 				x={element.data.x}
 				y={element.data.y}
 				radiusX={element.data.radiusX}
@@ -21,9 +23,9 @@ export const InteractiveLayer = () => {
 			/>
 		);
 	}
-	if (element.type === 'square') {
+	if (element.type === 'rect') {
 		return (
-			<RectElement
+			<RectComponent
 				x={element.data.x}
 				y={element.data.y}
 				width={element.data.width}

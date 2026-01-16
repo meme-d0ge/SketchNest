@@ -1,17 +1,21 @@
 export type {
-	CircleElement,
-	CircleElementOptionId,
-} from '@/entities/elements/interfaces/circle-element.ts';
-export type {
 	BoardElement,
 	BoardElementOptionalId,
 } from '@/entities/elements/interfaces/element.ts';
 export type {
+	EllipseElement,
+	EllipseElementOptionId,
+} from '@/entities/elements/interfaces/ellipse-element.ts';
+export type {
 	LineElement,
 	LineElementOptionId,
 } from '@/entities/elements/interfaces/line-element.ts';
+export { EllipseComponent } from './components/EllipseComponent.tsx';
+export { LineComponent } from './components/LineComponent.tsx';
+export { RectComponent } from './components/RectComponent.tsx';
 export type {
-	SquareElement,
-	SquareElementOptionId,
-} from './interfaces/square-element';
+	RectElement,
+	RectElementOptionId,
+} from './interfaces/rect-element.ts';
 export { useElementsStore } from './model/useElementsStore';
+export { useInteractiveStore } from './model/useInteractiveStore.ts';

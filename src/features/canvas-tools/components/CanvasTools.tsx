@@ -7,11 +7,7 @@ import {
 	Square,
 } from 'lucide-react';
 import { memo, useCallback } from 'react';
-import {
-	ToolsEnum,
-	type ToolType,
-	useToolsStore,
-} from '@/entities/tools/useToolsStore.ts';
+import { ToolsEnum, type ToolType, useToolsStore } from '@/entities/tools';
 import {
 	ToggleGroup,
 	ToggleGroupItem,
@@ -50,17 +46,17 @@ export const CanvasTools = memo(({ className }: { className?: string }) => {
 				<MousePointer2 className="h-4 w-4" />
 			</ToggleGroupItem>
 			<ToggleGroupItem
-				value={ToolsEnum.Square}
-				aria-label="Toggle square"
-				disabled={tool === ToolsEnum.Square}
+				value={ToolsEnum.Rect}
+				aria-label="Toggle rectangle"
+				disabled={tool === ToolsEnum.Rect}
 				className="cursor-pointer"
 			>
 				<Square className="h-4 w-4" />
 			</ToggleGroupItem>
 			<ToggleGroupItem
-				value={ToolsEnum.Circle}
-				aria-label="Toggle circle"
-				disabled={tool === ToolsEnum.Circle}
+				value={ToolsEnum.Ellipse}
+				aria-label="Toggle ellipse"
+				disabled={tool === ToolsEnum.Ellipse}
 				className="cursor-pointer"
 			>
 				<Circle className="h-4 w-4" />

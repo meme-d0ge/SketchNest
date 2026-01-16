@@ -1,18 +1,17 @@
 import type Konva from 'konva';
 import { useCallback, useRef } from 'react';
-import type { CircleElementOptionId } from '@/entities/elements';
-import { useElementsStore } from '@/entities/elements';
-import { useInteractiveStore } from '@/entities/preview/useInteractiveStore.ts';
+import type { EllipseElementOptionId } from '@/entities/elements';
+import { useElementsStore, useInteractiveStore } from '@/entities/elements';
 import { isVector2d } from '@/shared/guards/isVector2d.ts';
 import { getAbsolutePosition } from '@/shared/lib/getAbsolutePosition.ts';
 
-export const useDrawCircle = () => {
+export const useDrawEllipse = () => {
 	const isDrawing = useRef(false);
 	const { set: setPreview } = useInteractiveStore();
 	const { add: addToElementsStore } = useElementsStore();
-	const circle = useRef<CircleElementOptionId | null>(null);
+	const ellipse = useRef<EllipseElementOptionId | null>(null);
 	const startPosition = useRef<{ x: number; y: number } | null>(null);
-	const startDrawCircle = useCallback(
+	const startDrawEllipse = useCallback(
 		(e: Konva.KonvaEventObject<TouchEvent | MouseEvent>) => {
 			isDrawing.current = true;
 			const pos = e.target.getStage()?.getPointerPosition();
@@ -22,8 +21,8 @@ export const useDrawCircle = () => {
 					x: absoluteX,
 					y: absoluteY,
 				};
-				circle.current = {
-					type: 'circle',
+				ellipse.current = {
+					type: 'ellipse',
 					isDeleted: false,
 					data: {
 						x: absoluteX,
@@ -32,16 +31,16 @@ export const useDrawCircle = () => {
 						radiusY: 0,
 					},
 				};
-				setPreview(circle.current);
+				setPreview(ellipse.current);
 			}
 		},
 		[setPreview],
 	);
-	const drawCircle = useCallback(
+	const drawEllipse = useCallback(
 		(e: Konva.KonvaEventObject<TouchEvent | MouseEvent>) => {
 			if (
 				!isDrawing.current ||
-				circle.current === null ||
+				ellipse.current === null ||
 				startPosition.current === null
 			)
 				return;
@@ -51,9 +50,9 @@ export const useDrawCircle = () => {
 				const { x: absoluteX, y: absoluteY } = getAbsolutePosition(pos, e);
 				const radiusX = (startPosition.current.x - absoluteX) / 2;
 				const radiusY = (startPosition.current.y - absoluteY) / 2;
-				circle.current = {
-					type: 'circle',
-					isDeleted: circle.current.isDeleted,
+				ellipse.current = {
+					type: 'ellipse',
+					isDeleted: ellipse.current.isDeleted,
 					data: {
 						x: startPosition.current.x - radiusX,
 						y: startPosition.current.y - radiusY,
@@ -61,22 +60,22 @@ export const useDrawCircle = () => {
 						radiusY: Math.abs(radiusY),
 					},
 				};
-				setPreview(circle.current);
+				setPreview(ellipse.current);
 			}
 		},
 		[setPreview],
 	);
-	const endDrawCircle = useCallback(() => {
+	const endDrawEllipse = useCallback(() => {
 		isDrawing.current = false;
 		startPosition.current = null;
-		if (circle.current !== null) {
-			addToElementsStore([circle.current]);
+		if (ellipse.current !== null) {
+			addToElementsStore([ellipse.current]);
 			setPreview(null);
 		}
 	}, [addToElementsStore, setPreview]);
 	return {
-		startDrawCircle,
-		drawCircle,
-		endDrawCircle,
+		startDrawEllipse,
+		drawEllipse,
+		endDrawEllipse,
 	};
 };

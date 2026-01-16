@@ -1,8 +1,7 @@
 import type Konva from 'konva';
 import { useCallback, useRef } from 'react';
 import type { LineElementOptionId } from '@/entities/elements';
-import { useElementsStore } from '@/entities/elements';
-import { useInteractiveStore } from '@/entities/preview/useInteractiveStore.ts';
+import { useElementsStore, useInteractiveStore } from '@/entities/elements';
 import { isVector2d } from '@/shared/guards/isVector2d.ts';
 import { getAbsolutePosition } from '@/shared/lib/getAbsolutePosition.ts';
 

@@ -1,4 +1,4 @@
-import type { BaseElement } from '@/entities/elements/interfaces/base-element.ts';
+import type { BaseElement } from './base-element.ts';
 
 export interface LineElement extends BaseElement {
 	type: 'line';

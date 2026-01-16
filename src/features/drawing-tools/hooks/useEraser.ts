@@ -68,6 +68,6 @@ export const useEraser = () => {
 			document.removeEventListener('keydown', keyDown);
 			document.removeEventListener('keyup', keyUp);
 		};
-	});
+	}, [keyDown, keyUp]);
 	return { startEraser, moveEraser, endEraser };
 };

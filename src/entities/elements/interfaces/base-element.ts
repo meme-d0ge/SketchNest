@@ -1,5 +1,5 @@
 export interface BaseElement {
-	type: 'line' | 'circle' | 'square';
+	type: 'line' | 'ellipse' | 'rect';
 	id: string;
 	isDeleted: boolean;
 	opacity?: number;
