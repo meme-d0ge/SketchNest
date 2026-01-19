@@ -1,16 +1,15 @@
 import type Konva from 'konva';
 import { useCallback, useRef } from 'react';
+import { useStore } from '@/app/providers/StoreProvider.tsx';
 import type { RectElementOptionId } from '@/entities/elements';
-import { useElementsStore, useInteractiveStore } from '@/entities/elements';
 import { isVector2d } from '@/shared/guards/isVector2d.ts';
 import { getAbsolutePosition } from '@/shared/lib/getAbsolutePosition.ts';
 
 export const useDrawRect = () => {
 	const isDrawing = useRef(false);
 	const startPosition = useRef<{ x: number; y: number } | null>(null);
-	const { set: setPreview } = useInteractiveStore();
-	const { add: addToElementsStore } = useElementsStore();
 	const rect = useRef<RectElementOptionId | null>(null);
+	const { entities } = useStore();
 	const startDrawRect = useCallback(
 		(e: Konva.KonvaEventObject<TouchEvent | MouseEvent>) => {
 			isDrawing.current = true;
@@ -31,10 +30,10 @@ export const useDrawRect = () => {
 						height: 0,
 					},
 				};
-				setPreview(rect.current);
+				entities.interactiveStore.set(rect.current);
 			}
 		},
-		[setPreview],
+		[entities],
 	);
 	const drawRect = useCallback(
 		(e: Konva.KonvaEventObject<TouchEvent | MouseEvent>) => {
@@ -59,18 +58,18 @@ export const useDrawRect = () => {
 						height: height,
 					},
 				};
-				setPreview(rect.current);
+				entities.interactiveStore.set(rect.current);
 			}
 		},
-		[setPreview],
+		[entities],
 	);
 	const endDrawRect = useCallback(() => {
 		isDrawing.current = false;
 		startPosition.current = null;
 		if (rect.current !== null) {
-			addToElementsStore([rect.current]);
-			setPreview(null);
+			entities.elementsStore.add([rect.current]);
+			entities.interactiveStore.set(null);
 		}
-	}, [addToElementsStore, setPreview]);
+	}, [entities]);
 	return { startDrawRect, drawRect, endDrawRect };
 };

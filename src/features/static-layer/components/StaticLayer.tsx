@@ -1,13 +1,15 @@
+import { observer } from 'mobx-react-lite';
+import { useStore } from '@/app/providers/StoreProvider.tsx';
 import {
 	EllipseComponent,
 	LineComponent,
 	RectComponent,
-	useElementsStore,
 } from '@/entities/elements';
 
-export const StaticLayer = () => {
-	const { elements } = useElementsStore();
-	return elements.map((value) => {
+export const StaticLayer = observer(() => {
+	const { entities } = useStore();
+	const elementsStore = entities.elementsStore;
+	return elementsStore.elements.map((value) => {
 		if (value.version !== -1) {
 			const current_version = value.history[value.version];
 			if (current_version.isDeleted) return null;
@@ -50,4 +52,4 @@ export const StaticLayer = () => {
 		}
 		return null;
 	});
-};
+});

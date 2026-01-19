@@ -1,7 +1,9 @@
 import type Konva from 'konva';
+import { observer } from 'mobx-react-lite';
 import { useRef } from 'react';
 import { FastLayer, Layer, Stage } from 'react-konva';
-import { ToolsEnum, useToolsStore } from '@/entities/tools';
+import { useStore } from '@/app/providers/StoreProvider.tsx';
+import { ToolsEnum } from '@/entities/tools';
 import { CanvasMenu } from '@/features/canvas-menu';
 import { CanvasTools } from '@/features/canvas-tools';
 import { useResize, useZoom } from '@/features/canvas-viewport';
@@ -10,18 +12,18 @@ import { HistoryPanel } from '@/features/history-panel';
 import { InteractiveLayer } from '@/features/interactive-layer';
 import { StaticLayer } from '@/features/static-layer';
 
-export const HomePage = () => {
+export const HomePage = observer(() => {
 	const stageRef = useRef<Konva.Stage | null>(null);
 	const { handleMouseUp, handleMouseMove, handleMouseDown } =
 		useStageEventListener();
-	const { tool } = useToolsStore();
 	const { windowWidth, windowHeight } = useResize();
 	useZoom(stageRef);
+	const { entities } = useStore();
 	return (
 		<div className="relative">
 			<Stage
 				ref={stageRef}
-				draggable={tool === ToolsEnum.Hand}
+				draggable={entities.toolsStore.tool === ToolsEnum.Hand}
 				width={windowWidth}
 				height={windowHeight}
 				onMouseDown={handleMouseDown}
@@ -43,4 +45,4 @@ export const HomePage = () => {
 			<CanvasTools className="absolute max-w-max h-9 top-4 right-1/2 left-1/2 -translate-x-1/2 z-50" />
 		</div>
 	);
-};
+});

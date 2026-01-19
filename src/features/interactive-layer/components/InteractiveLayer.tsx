@@ -1,12 +1,14 @@
+import { observer } from 'mobx-react-lite';
+import { useStore } from '@/app/providers/StoreProvider.tsx';
 import {
 	EllipseComponent,
 	LineComponent,
 	RectComponent,
-	useInteractiveStore,
 } from '@/entities/elements';
 
-export const InteractiveLayer = () => {
-	const { element } = useInteractiveStore();
+export const InteractiveLayer = observer(() => {
+	const { entities } = useStore();
+	const { element } = entities.interactiveStore;
 	if (element === null) {
 		return null;
 	}
@@ -34,4 +36,4 @@ export const InteractiveLayer = () => {
 		);
 	}
 	return null;
-};
+});

@@ -17,5 +17,5 @@ export type {
 	RectElement,
 	RectElementOptionId,
 } from './interfaces/rect-element.ts';
-export { useElementsStore } from './model/useElementsStore';
-export { useInteractiveStore } from './model/useInteractiveStore.ts';
+export { ElementsStore } from './model/ElementsStore.ts';
+export { InteractiveStore } from './model/InteractiveStore.ts';

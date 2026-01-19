@@ -1,14 +1,13 @@
 import type Konva from 'konva';
 import { useCallback, useRef } from 'react';
+import { useStore } from '@/app/providers/StoreProvider.tsx';
 import type { EllipseElementOptionId } from '@/entities/elements';
-import { useElementsStore, useInteractiveStore } from '@/entities/elements';
 import { isVector2d } from '@/shared/guards/isVector2d.ts';
 import { getAbsolutePosition } from '@/shared/lib/getAbsolutePosition.ts';
 
 export const useDrawEllipse = () => {
+	const { entities } = useStore();
 	const isDrawing = useRef(false);
-	const { set: setPreview } = useInteractiveStore();
-	const { add: addToElementsStore } = useElementsStore();
 	const ellipse = useRef<EllipseElementOptionId | null>(null);
 	const startPosition = useRef<{ x: number; y: number } | null>(null);
 	const startDrawEllipse = useCallback(
@@ -31,10 +30,10 @@ export const useDrawEllipse = () => {
 						radiusY: 0,
 					},
 				};
-				setPreview(ellipse.current);
+				entities.interactiveStore.set(ellipse.current);
 			}
 		},
-		[setPreview],
+		[entities],
 	);
 	const drawEllipse = useCallback(
 		(e: Konva.KonvaEventObject<TouchEvent | MouseEvent>) => {
@@ -60,19 +59,19 @@ export const useDrawEllipse = () => {
 						radiusY: Math.abs(radiusY),
 					},
 				};
-				setPreview(ellipse.current);
+				entities.interactiveStore.set(ellipse.current);
 			}
 		},
-		[setPreview],
+		[entities],
 	);
 	const endDrawEllipse = useCallback(() => {
 		isDrawing.current = false;
 		startPosition.current = null;
 		if (ellipse.current !== null) {
-			addToElementsStore([ellipse.current]);
-			setPreview(null);
+			entities.elementsStore.add([ellipse.current]);
+			entities.interactiveStore.set(null);
 		}
-	}, [addToElementsStore, setPreview]);
+	}, [entities]);
 	return {
 		startDrawEllipse,
 		drawEllipse,

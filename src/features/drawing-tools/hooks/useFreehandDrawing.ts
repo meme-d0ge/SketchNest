@@ -1,15 +1,14 @@
 import type Konva from 'konva';
 import { useCallback, useRef } from 'react';
+import { useStore } from '@/app/providers/StoreProvider.tsx';
 import type { LineElementOptionId } from '@/entities/elements';
-import { useElementsStore, useInteractiveStore } from '@/entities/elements';
 import { isVector2d } from '@/shared/guards/isVector2d.ts';
 import { getAbsolutePosition } from '@/shared/lib/getAbsolutePosition.ts';
 
 export const useFreehandDrawing = () => {
 	const isDrawing = useRef(false);
 	const line = useRef<LineElementOptionId | null>(null);
-	const { set: setPreview } = useInteractiveStore();
-	const { add: addToElementsStore } = useElementsStore();
+	const { entities } = useStore();
 
 	const startFreehandDraw = useCallback(
 		(e: Konva.KonvaEventObject<TouchEvent | MouseEvent>) => {
@@ -24,10 +23,10 @@ export const useFreehandDrawing = () => {
 						points: [absoluteX, absoluteY],
 					},
 				};
-				setPreview(line.current);
+				entities.interactiveStore.set(line.current);
 			}
 		},
-		[setPreview],
+		[entities],
 	);
 	const freehandDraw = useCallback(
 		(e: Konva.KonvaEventObject<TouchEvent | MouseEvent>) => {
@@ -43,19 +42,19 @@ export const useFreehandDrawing = () => {
 						points: [...line.current.data.points, absoluteX, absoluteY],
 					},
 				};
-				setPreview(line.current);
+				entities.interactiveStore.set(line.current);
 			}
 		},
-		[setPreview],
+		[entities],
 	);
 	const endFreehandDraw = useCallback(() => {
 		isDrawing.current = false;
 		if (line.current !== null) {
-			addToElementsStore([line.current]);
-			setPreview(null);
+			entities.elementsStore.add([line.current]);
+			entities.interactiveStore.set(null);
 			line.current = null;
 		}
-	}, [addToElementsStore, setPreview]);
+	}, [entities]);
 
 	return { startFreehandDraw, freehandDraw, endFreehandDraw };
 };

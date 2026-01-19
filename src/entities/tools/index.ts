@@ -1,5 +1,5 @@
 export {
 	ToolsEnum,
+	ToolsStore,
 	type ToolType,
-	useToolsStore,
-} from './model/useToolsStore.ts';
+} from './model/ToolsStore.ts';

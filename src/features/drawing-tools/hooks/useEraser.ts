@@ -1,12 +1,13 @@
 import Konva from 'konva';
+import { toJS } from 'mobx';
 import { useCallback, useEffect, useRef } from 'react';
-import { useElementsStore } from '@/entities/elements';
+import { useStore } from '@/app/providers/StoreProvider.tsx';
 
 export const useEraser = () => {
 	const isDrawing = useRef<boolean>(false);
 	const arrayIdToTrash = useRef<Set<number>>(new Set());
 	const isRestoreMode = useRef<boolean>(false);
-	const { add: addToElementsStore } = useElementsStore();
+	const { entities } = useStore();
 
 	const keyDown = useCallback((e: globalThis.KeyboardEvent) => {
 		if (e.altKey) {
@@ -47,19 +48,19 @@ export const useEraser = () => {
 	);
 	const endEraser = useCallback(() => {
 		isDrawing.current = false;
-		const history = useElementsStore.getState().elements;
+		const history = entities.elementsStore.elements;
 		const arrayElementToTrash = [];
 		for (const id of arrayIdToTrash.current) {
 			const historyElement = history[id];
-			const newHistoryElement = structuredClone(
+			const newHistoryElement = toJS(
 				historyElement.history[historyElement.version],
 			);
 			newHistoryElement.isDeleted = true;
 			arrayElementToTrash.push(newHistoryElement);
 		}
-		addToElementsStore(arrayElementToTrash);
+		entities.elementsStore.add(arrayElementToTrash);
 		arrayIdToTrash.current = new Set();
-	}, [addToElementsStore]);
+	}, [entities]);
 
 	useEffect(() => {
 		document.addEventListener('keydown', keyDown);

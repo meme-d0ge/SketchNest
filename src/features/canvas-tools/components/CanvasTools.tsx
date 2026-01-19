@@ -6,15 +6,18 @@ import {
 	Pencil,
 	Square,
 } from 'lucide-react';
-import { memo, useCallback } from 'react';
-import { ToolsEnum, type ToolType, useToolsStore } from '@/entities/tools';
+import { observer } from 'mobx-react-lite';
+import { useCallback } from 'react';
+import { useStore } from '@/app/providers/StoreProvider.tsx';
+import { ToolsEnum, type ToolType } from '@/entities/tools';
 import {
 	ToggleGroup,
 	ToggleGroupItem,
 } from '@/shared/components/ui/toggle-group.tsx';
 
-export const CanvasTools = memo(({ className }: { className?: string }) => {
-	const { tool, setTool } = useToolsStore();
+export const CanvasTools = observer(({ className }: { className?: string }) => {
+	const { entities } = useStore();
+	const { tool, setTool } = entities.toolsStore;
 	const handleValueChange = useCallback(
 		(newValue: ToolType) => {
 			setTool(newValue);
