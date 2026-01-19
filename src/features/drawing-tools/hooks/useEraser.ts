@@ -58,8 +58,10 @@ export const useEraser = () => {
 			newHistoryElement.isDeleted = true;
 			arrayElementToTrash.push(newHistoryElement);
 		}
-		entities.elementsStore.add(arrayElementToTrash);
-		arrayIdToTrash.current = new Set();
+		if (arrayElementToTrash.length > 0) {
+			entities.elementsStore.add(arrayElementToTrash);
+			arrayIdToTrash.current = new Set();
+		}
 	}, [entities]);
 
 	useEffect(() => {
