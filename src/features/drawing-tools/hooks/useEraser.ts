@@ -1,12 +1,11 @@
 import Konva from 'konva';
-import { toJS } from 'mobx';
 import { useCallback, useEffect, useRef } from 'react';
 import { useStore } from '@/app/providers/StoreProvider.tsx';
 
 export const useEraser = () => {
 	const isDrawing = useRef<boolean>(false);
-	const arrayIdToTrash = useRef<Set<number>>(new Set());
 	const isRestoreMode = useRef<boolean>(false);
+	const arrayIdToTrash = useRef<Set<string>>(new Set());
 	const { entities } = useStore();
 
 	const keyDown = useCallback((e: globalThis.KeyboardEvent) => {
@@ -26,37 +25,33 @@ export const useEraser = () => {
 	const moveEraser = useCallback(
 		(e: Konva.KonvaEventObject<TouchEvent | MouseEvent>) => {
 			if (!isDrawing.current || e.target.getClassName() === 'Stage') return;
-			const idNumber = Number(e.target.attrs.id);
+			const id = e.target.attrs.id;
 			if (!isRestoreMode.current) {
-				if (arrayIdToTrash.current.has(idNumber)) {
+				if (arrayIdToTrash.current.has(id)) {
 					return;
 				}
 				if (e.target instanceof Konva.Shape)
 					e.target.setAttr('opacity', (e.target.attrs.opacity | 1) * 0.5);
-				arrayIdToTrash.current.add(idNumber);
+				arrayIdToTrash.current.add(id);
 			} else {
-				if (!arrayIdToTrash.current.has(idNumber)) {
+				if (!arrayIdToTrash.current.has(id)) {
 					return;
 				}
 				if (e.target instanceof Konva.Shape) {
 					e.target.setAttr('opacity', (e.target.attrs.opacity || 0.5) * 2);
 				}
-				arrayIdToTrash.current.delete(idNumber);
+				arrayIdToTrash.current.delete(id);
 			}
 		},
 		[],
 	);
 	const endEraser = useCallback(() => {
 		isDrawing.current = false;
-		const history = entities.elementsStore.elements;
 		const arrayElementToTrash = [];
 		for (const id of arrayIdToTrash.current) {
-			const historyElement = history[id];
-			const newHistoryElement = toJS(
-				historyElement.history[historyElement.version],
-			);
-			newHistoryElement.isDeleted = true;
-			arrayElementToTrash.push(newHistoryElement);
+			const historyElement = entities.elementsStore.getLatestVersion(id)
+			historyElement.isDeleted = true;
+			arrayElementToTrash.push(historyElement);
 		}
 		if (arrayElementToTrash.length > 0) {
 			entities.elementsStore.add(arrayElementToTrash);
