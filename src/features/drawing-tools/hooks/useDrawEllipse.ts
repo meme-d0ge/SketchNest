@@ -3,7 +3,6 @@ import { useCallback, useRef } from 'react';
 import { useStore } from '@/app/providers/StoreProvider.tsx';
 import type { EllipseElementOptionId } from '@/entities/elements';
 import { isVector2d } from '@/shared/guards/isVector2d.ts';
-import { getAbsolutePosition } from '@/shared/lib/getAbsolutePosition.ts';
 
 export const useDrawEllipse = () => {
 	const { entities } = useStore();
@@ -13,9 +12,10 @@ export const useDrawEllipse = () => {
 	const startDrawEllipse = useCallback(
 		(e: Konva.KonvaEventObject<TouchEvent | MouseEvent>) => {
 			isDrawing.current = true;
-			const pos = e.target.getStage()?.getPointerPosition();
+			const stage = e.target.getStage()
+			const pos = stage?.getRelativePointerPosition();
 			if (isVector2d(pos)) {
-				const { x: absoluteX, y: absoluteY } = getAbsolutePosition(pos, e);
+				const { x: absoluteX, y: absoluteY } = pos;
 				startPosition.current = {
 					x: absoluteX,
 					y: absoluteY,
@@ -43,10 +43,10 @@ export const useDrawEllipse = () => {
 				startPosition.current === null
 			)
 				return;
-
-			const pos = e.target.getStage()?.getPointerPosition();
+			const stage = e.target.getStage()
+			const pos = stage?.getRelativePointerPosition();
 			if (isVector2d(pos)) {
-				const { x: absoluteX, y: absoluteY } = getAbsolutePosition(pos, e);
+				const { x: absoluteX, y: absoluteY } = pos;
 				const radiusX = (startPosition.current.x - absoluteX) / 2;
 				const radiusY = (startPosition.current.y - absoluteY) / 2;
 				ellipse.current = {

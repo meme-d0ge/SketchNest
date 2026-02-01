@@ -3,7 +3,6 @@ import { useCallback, useRef } from 'react';
 import { useStore } from '@/app/providers/StoreProvider.tsx';
 import type { RectElementOptionId } from '@/entities/elements';
 import { isVector2d } from '@/shared/guards/isVector2d.ts';
-import { getAbsolutePosition } from '@/shared/lib/getAbsolutePosition.ts';
 
 export const useDrawRect = () => {
 	const isDrawing = useRef(false);
@@ -13,9 +12,10 @@ export const useDrawRect = () => {
 	const startDrawRect = useCallback(
 		(e: Konva.KonvaEventObject<TouchEvent | MouseEvent>) => {
 			isDrawing.current = true;
-			const pos = e.target.getStage()?.getPointerPosition();
+			const stage = e.target.getStage()
+			const pos = stage?.getRelativePointerPosition();
 			if (isVector2d(pos)) {
-				const { x: absoluteX, y: absoluteY } = getAbsolutePosition(pos, e);
+				const { x: absoluteX, y: absoluteY } = pos;
 				startPosition.current = {
 					x: absoluteX,
 					y: absoluteY,
@@ -43,9 +43,10 @@ export const useDrawRect = () => {
 				startPosition.current === null
 			)
 				return;
-			const pos = e.target.getStage()?.getPointerPosition();
+			const stage = e.target.getStage()
+			const pos = stage?.getRelativePointerPosition();
 			if (isVector2d(pos)) {
-				const { x: absoluteX, y: absoluteY } = getAbsolutePosition(pos, e);
+				const { x: absoluteX, y: absoluteY } = pos;
 				const width = startPosition.current.x - absoluteX;
 				const height = startPosition.current.y - absoluteY;
 				rect.current = {

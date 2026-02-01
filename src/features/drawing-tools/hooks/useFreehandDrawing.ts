@@ -3,7 +3,6 @@ import { useCallback, useRef } from 'react';
 import { useStore } from '@/app/providers/StoreProvider.tsx';
 import type { LineElementOptionId } from '@/entities/elements';
 import { isVector2d } from '@/shared/guards/isVector2d.ts';
-import { getAbsolutePosition } from '@/shared/lib/getAbsolutePosition.ts';
 
 export const useFreehandDrawing = () => {
 	const isDrawing = useRef(false);
@@ -13,9 +12,10 @@ export const useFreehandDrawing = () => {
 	const startFreehandDraw = useCallback(
 		(e: Konva.KonvaEventObject<TouchEvent | MouseEvent>) => {
 			isDrawing.current = true;
-			const pos = e.target.getStage()?.getPointerPosition();
+			const stage = e.target.getStage()
+			const pos = stage?.getRelativePointerPosition();
 			if (isVector2d(pos)) {
-				const { x: absoluteX, y: absoluteY } = getAbsolutePosition(pos, e);
+				const { x: absoluteX, y: absoluteY } = pos;
 				line.current = {
 					type: 'line',
 					isDeleted: false,
@@ -31,10 +31,10 @@ export const useFreehandDrawing = () => {
 	const freehandDraw = useCallback(
 		(e: Konva.KonvaEventObject<TouchEvent | MouseEvent>) => {
 			if (!isDrawing.current || line.current === null) return;
-
-			const pos = e.target.getStage()?.getPointerPosition();
+			const stage = e.target.getStage()
+			const pos = stage?.getRelativePointerPosition();
 			if (isVector2d(pos)) {
-				const { x: absoluteX, y: absoluteY } = getAbsolutePosition(pos, e);
+				const { x: absoluteX, y: absoluteY } = pos;
 				line.current = {
 					type: 'line',
 					isDeleted: line.current.isDeleted,
