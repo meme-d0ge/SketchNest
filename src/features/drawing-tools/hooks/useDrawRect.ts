@@ -46,17 +46,16 @@ export const useDrawRect = () => {
 			const stage = e.target.getStage()
 			const pos = stage?.getRelativePointerPosition();
 			if (isVector2d(pos)) {
-				const { x: absoluteX, y: absoluteY } = pos;
-				const width = startPosition.current.x - absoluteX;
-				const height = startPosition.current.y - absoluteY;
+				const { x: curX, y: curY } = pos;
+				const { x: startX, y: startY } = startPosition.current;
 				rect.current = {
 					type: 'rect',
 					isDeleted: rect.current.isDeleted,
 					data: {
-						x: startPosition.current.x - width,
-						y: startPosition.current.y - height,
-						width: width,
-						height: height,
+						x: Math.min(startX, curX),
+						y: Math.min(startY, curY),
+						width: Math.abs(curX - startX),
+						height: Math.abs(curY - startY),
 					},
 				};
 				entities.interactiveStore.set(rect.current);
