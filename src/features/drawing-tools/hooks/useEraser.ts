@@ -26,19 +26,20 @@ export const useEraser = () => {
 		(e: Konva.KonvaEventObject<TouchEvent | MouseEvent>) => {
 			if (!isDrawing.current || e.target.getClassName() === 'Stage') return;
 			const id = e.target.attrs.id;
+			if (!id) return;
 			if (!isRestoreMode.current) {
 				if (arrayIdToTrash.current.has(id)) {
 					return;
 				}
 				if (e.target instanceof Konva.Shape)
-					e.target.setAttr('opacity', (e.target.attrs.opacity | 1) * 0.5);
+					e.target.setAttr('opacity', (e.target.attrs.opacity ?? 1) * 0.5);
 				arrayIdToTrash.current.add(id);
 			} else {
 				if (!arrayIdToTrash.current.has(id)) {
 					return;
 				}
 				if (e.target instanceof Konva.Shape) {
-					e.target.setAttr('opacity', (e.target.attrs.opacity || 0.5) * 2);
+					e.target.setAttr('opacity', (e.target.attrs.opacity ?? 0.5) * 2);
 				}
 				arrayIdToTrash.current.delete(id);
 			}
@@ -50,8 +51,10 @@ export const useEraser = () => {
 		const arrayElementToTrash = [];
 		for (const id of arrayIdToTrash.current) {
 			const historyElement = entities.elementsStore.getLatestVersion(id)
-			historyElement.isDeleted = true;
-			arrayElementToTrash.push(historyElement);
+			arrayElementToTrash.push({
+				...historyElement,
+				isDeleted: true
+			});
 		}
 		if (arrayElementToTrash.length > 0) {
 			entities.elementsStore.add(arrayElementToTrash);

@@ -10,6 +10,6 @@ export interface EllipseElement extends BaseElement {
 	};
 }
 
-export type EllipseElementOptionId = Omit<EllipseElement, 'id'> & {
+export type EllipseElementDraft = Omit<EllipseElement, 'id' | 'shapeBox'> & {
 	id?: string;
 };

@@ -1,13 +1,13 @@
 import type Konva from 'konva';
 import { useCallback, useRef } from 'react';
 import { useStore } from '@/app/providers/StoreProvider.tsx';
-import type { EllipseElementOptionId } from '@/entities/elements';
+import type { EllipseElementDraft } from '@/entities/elements';
 import { isVector2d } from '@/shared/guards/isVector2d.ts';
 
 export const useDrawEllipse = () => {
 	const { entities } = useStore();
 	const isDrawing = useRef(false);
-	const ellipse = useRef<EllipseElementOptionId | null>(null);
+	const ellipse = useRef<EllipseElementDraft | null>(null);
 	const startPosition = useRef<{ x: number; y: number } | null>(null);
 	const startDrawEllipse = useCallback(
 		(e: Konva.KonvaEventObject<TouchEvent | MouseEvent>) => {

@@ -1,12 +1,13 @@
 import type {
 	EllipseElement,
-	EllipseElementOptionId,
+	EllipseElementDraft,
 } from './ellipse-element.ts';
-import type { LineElement, LineElementOptionId } from './line-element.ts';
-import type { RectElement, RectElementOptionId } from './rect-element.ts';
+import type { LineElement, LineElementDraft } from './line-element.ts';
+import type { RectElement, RectElementDraft } from './rect-element.ts';
 
 export type BoardElement = LineElement | EllipseElement | RectElement;
 export type BoardElementOptionalId =
-	| LineElementOptionId
-	| EllipseElementOptionId
-	| RectElementOptionId;
+	| LineElementDraft
+	| EllipseElementDraft
+	| RectElementDraft;
+

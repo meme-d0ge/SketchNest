@@ -1,5 +1,8 @@
 import {makeAutoObservable, toJS} from 'mobx';
-import type { BoardElement, BoardElementOptionalId } from '@/entities/elements';
+import type {BoardElement, BoardElementOptionalId} from '@/entities/elements';
+import RBush from 'rbush';
+import type {ShapeBox} from "@/entities/elements/interfaces/shape-element.ts";
+import {getBounds} from "@/shared/lib/getBounds.ts";
 
 interface IElement {
 	history: BoardElement[];
@@ -10,8 +13,10 @@ export class ElementsStore {
 	constructor() {
 		makeAutoObservable(this);
 	}
+	elementIndexMap:Record<string, number> = {};
+	rtree: RBush<ShapeBox> = new RBush();
+
 	elements: IElement[] = [];
-	elementIndexMap:Record<string, number> = {}
 	historySteps: string[][] = [];
 	actualStep: number = -1;
 	canRedo: boolean = false;
@@ -24,28 +29,58 @@ export class ElementsStore {
 		for (const element of elements) {
 			if (element.id === undefined) {
 				const newId = crypto.randomUUID()
+				const bounds = getBounds(element)
+				if (bounds === null) {
+					continue
+				}
+
 				this.elementIndexMap[newId] = this.elements.length
-				arrayModElements.push(newId);
+
+				const newBoardElement = {
+					...element,
+					id: newId,
+					shapeBox: {
+						...bounds,
+						ownerId: newId
+					}
+				} as BoardElement;
+
 				this.elements.push({
-					history: [
-						{
-							...element,
-							id: newId,
-						} as BoardElement,
-					],
+					history: [newBoardElement],
 					version: 0,
 				});
+				this.rtree.insert(newBoardElement.shapeBox)
+				arrayModElements.push(newId);
 			} else {
 				const index = this.elementIndexMap[element.id];
-				arrayModElements.push(element.id);
+				const bounds = getBounds(element)
+				if (bounds === null) {
+					continue
+				}
+
 				this.elements[index].history = this.elements[index].history.slice(
 					0,
 					this.elements[index].version + 1,
 				);
-				this.elements[index].history.push({
+
+				const lastElement = this.elements[index].history[this.elements[index].version];
+				this.rtree.remove(lastElement.shapeBox)
+
+				const newBoardElement = {
 					...element,
-				} as BoardElement);
+					shapeBox: {
+						...bounds,
+						ownerId: lastElement.id
+					}
+				} as BoardElement;
+
+				this.elements[index].history.push(newBoardElement);
 				this.elements[index].version = this.elements[index].version + 1;
+
+				if (!newBoardElement.isDeleted) {
+					this.rtree.insert(newBoardElement.shapeBox)
+				}
+				arrayModElements.push(element.id);
 			}
 		}
 		this.historySteps.push(arrayModElements);
@@ -59,7 +94,14 @@ export class ElementsStore {
 		const idOfModifiedElements = this.historySteps[this.actualStep];
 		for (const id of idOfModifiedElements) {
 			const index = this.elementIndexMap[id]
+			const lastElement = this.elements[index].history[this.elements[index].version]
+
+			this.rtree.remove(lastElement.shapeBox)
 			this.elements[index].version = this.elements[index].version - 1;
+			if (this.elements[index].version !== -1 && !this.elements[index].history[this.elements[index].version].isDeleted) {
+				const prevElement = this.elements[index].history[this.elements[index].version]
+				this.rtree.insert(prevElement.shapeBox)
+			}
 		}
 		this.actualStep = this.actualStep - 1;
 		this.canRedo = true;
@@ -73,7 +115,12 @@ export class ElementsStore {
 		const idOfModifiedElements = this.historySteps[this.actualStep];
 		for (const id of idOfModifiedElements) {
 			const index = this.elementIndexMap[id]
+			const actualElement = this.elements[index].history[this.elements[index].version]
+			this.rtree.remove(actualElement.shapeBox)
 			this.elements[index].version = this.elements[index].version + 1;
+			if (!this.elements[index].history[this.elements[index].version].isDeleted) {
+				this.rtree.insert(this.elements[index].history[this.elements[index].version].shapeBox)
+			}
 		}
 		this.canUndo = true;
 		this.canRedo = this.actualStep + 1 < this.historySteps.length;

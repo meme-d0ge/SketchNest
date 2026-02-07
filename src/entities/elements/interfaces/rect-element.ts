@@ -10,6 +10,6 @@ export interface RectElement extends BaseElement {
 	};
 }
 
-export type RectElementOptionId = Omit<RectElement, 'id'> & {
+export type RectElementDraft = Omit<RectElement, 'id' | 'shapeBox'> & {
 	id?: string;
 };
