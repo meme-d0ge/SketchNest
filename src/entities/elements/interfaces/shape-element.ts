@@ -1,10 +1,5 @@
-// import type {BoardElement} from "@/entities/elements";
+import type {Bounds} from "@/shared/types/shape.ts";
 
-export interface ShapeBox {
-    maxY: number;
-    minY: number;
-    maxX: number;
-    minX: number;
-
+export interface ShapeBox extends Bounds{
     ownerId: string;
 }

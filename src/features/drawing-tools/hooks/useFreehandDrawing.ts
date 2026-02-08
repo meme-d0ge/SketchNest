@@ -20,7 +20,10 @@ export const useFreehandDrawing = () => {
 					type: 'line',
 					isDeleted: false,
 					data: {
-						points: [absoluteX, absoluteY],
+						x: absoluteX,
+						y: absoluteY,
+						points: [0, 0],
+						rotation: 0,
 					},
 				};
 				entities.interactiveStore.set(line.current);
@@ -39,7 +42,10 @@ export const useFreehandDrawing = () => {
 					type: 'line',
 					isDeleted: line.current.isDeleted,
 					data: {
-						points: [...line.current.data.points, absoluteX, absoluteY],
+						x: line.current.data.x,
+						y: line.current.data.y,
+						points: [...line.current.data.points, absoluteX - line.current.data.x, absoluteY - line.current.data.y],
+						rotation: 0,
 					},
 				};
 				entities.interactiveStore.set(line.current);

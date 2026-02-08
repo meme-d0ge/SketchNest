@@ -27,7 +27,7 @@ export const useStageEventListener = () => {
 				} else if (entities.toolsStore.tool === ToolsEnum.Draw) {
 					startFreehandDraw(event);
 				} else if (entities.toolsStore.tool === ToolsEnum.Eraser) {
-					startEraser();
+					startEraser(event);
 				}
 			},
 			[

@@ -1,9 +1,14 @@
 import type { BaseElement } from './base-element.ts';
+import type {BaseGeometryProps} from "@/entities/elements/interfaces/base-geometry-props.ts";
+
+interface LineData extends BaseGeometryProps {
+	x: number;
+	y: number;
+	points: number[];
+}
 
 export interface LineElement extends BaseElement {
 	type: 'line';
-	data: {
-		points: number[];
-	};
+	data: LineData;
 }
 export type LineElementDraft = Omit<LineElement, 'id' | 'shapeBox'> & { id?: string };

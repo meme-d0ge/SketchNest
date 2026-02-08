@@ -115,8 +115,10 @@ export class ElementsStore {
 		const idOfModifiedElements = this.historySteps[this.actualStep];
 		for (const id of idOfModifiedElements) {
 			const index = this.elementIndexMap[id]
-			const actualElement = this.elements[index].history[this.elements[index].version]
-			this.rtree.remove(actualElement.shapeBox)
+			if (this.elements[index].version !== -1) {
+				const actualElement = this.elements[index].history[this.elements[index].version]
+				this.rtree.remove(actualElement.shapeBox)
+			}
 			this.elements[index].version = this.elements[index].version + 1;
 			if (!this.elements[index].history[this.elements[index].version].isDeleted) {
 				this.rtree.insert(this.elements[index].history[this.elements[index].version].shapeBox)

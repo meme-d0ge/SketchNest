@@ -28,6 +28,7 @@ export const useDrawRect = () => {
 						y: absoluteY,
 						width: 0,
 						height: 0,
+						rotation: 0,
 					},
 				};
 				entities.interactiveStore.set(rect.current);
@@ -56,6 +57,7 @@ export const useDrawRect = () => {
 						y: Math.min(startY, curY),
 						width: Math.abs(curX - startX),
 						height: Math.abs(curY - startY),
+						rotation: 0,
 					},
 				};
 				entities.interactiveStore.set(rect.current);

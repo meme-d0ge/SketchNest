@@ -11,6 +11,8 @@
         "@radix-ui/react-toggle": "^1.1.10",
         "@radix-ui/react-toggle-group": "^1.1.11",
         "@tailwindcss/vite": "^4.1.18",
+        "@thi.ng/geom": "^8.3.14",
+        "@thi.ng/geom-sdf": "^1.0.68",
         "@types/rbush": "^4.0.0",
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
@@ -305,6 +307,100 @@
     "@tailwindcss/oxide-win32-x64-msvc": ["@tailwindcss/oxide-win32-x64-msvc@4.1.18", "", { "os": "win32", "cpu": "x64" }, "sha512-bJWbyYpUlqamC8dpR7pfjA0I7vdF6t5VpUGMWRkXVE3AXgIZjYUYAK7II1GNaxR8J1SSrSrppRar8G++JekE3Q=="],
 
     "@tailwindcss/vite": ["@tailwindcss/vite@4.1.18", "", { "dependencies": { "@tailwindcss/node": "4.1.18", "@tailwindcss/oxide": "4.1.18", "tailwindcss": "4.1.18" }, "peerDependencies": { "vite": "^5.2.0 || ^6 || ^7" } }, "sha512-jVA+/UpKL1vRLg6Hkao5jldawNmRo7mQYrZtNHMIVpLfLhDml5nMRUo/8MwoX2vNXvnaXNNMedrMfMugAVX1nA=="],
+
+    "@thi.ng/adjacency": ["@thi.ng/adjacency@3.0.69", "", { "dependencies": { "@thi.ng/api": "^8.12.14", "@thi.ng/arrays": "^2.14.7", "@thi.ng/bitfield": "^2.4.27", "@thi.ng/dcons": "^3.2.182", "@thi.ng/disjoint-set": "^1.1.41", "@thi.ng/errors": "^2.6.3", "@thi.ng/sparse": "^1.1.29" } }, "sha512-2YdRI0i1o1dOWaObaJZikC+qmsPQ7E8GxaMDJTRZzNu6Kk2+zpCP2vwiNMqHVwWpXn1UIM/pjqE8znk9sCJLAQ=="],
+
+    "@thi.ng/api": ["@thi.ng/api@8.12.14", "", {}, "sha512-AbVvaZcgAv0jx679MCjmTLUleomngealZVpfloDSA/4KRmCVYc8zuJMEXDKPhTlkaB9PvYg7IdJMW4XDvIFE3w=="],
+
+    "@thi.ng/arrays": ["@thi.ng/arrays@2.14.7", "", { "dependencies": { "@thi.ng/api": "^8.12.14", "@thi.ng/checks": "^3.8.4", "@thi.ng/compare": "^2.4.40", "@thi.ng/equiv": "^2.1.104", "@thi.ng/errors": "^2.6.3", "@thi.ng/random": "^4.1.39" } }, "sha512-YvnkGWyvrTXv3o40B0BwniGhZQjjAA9yg8s4Gm8OFaaS+wfHUeZPr0oOehXM28aJm3qt8yIDPdHw3YqGmlVduQ=="],
+
+    "@thi.ng/binary": ["@thi.ng/binary@3.6.3", "", { "dependencies": { "@thi.ng/api": "^8.12.14" } }, "sha512-ZUDgigBUUOI3eyruhGURUijf4FidhKyF68JqBtAkQLDc0p7KhutG10S4e/ESG3I9Pflx97ma6umpA2q8TcgocA=="],
+
+    "@thi.ng/bitfield": ["@thi.ng/bitfield@2.4.27", "", { "dependencies": { "@thi.ng/api": "^8.12.14", "@thi.ng/binary": "^3.6.3", "@thi.ng/errors": "^2.6.3", "@thi.ng/strings": "^3.9.35" } }, "sha512-LvPAT/nV4kcJbFQHxM/aaixy+g+sxDDYm8vWItsPqe8EaIL+CLNJ2PJEiXsu6Suv3KVlEIDa9PwuMelSS0SuJQ=="],
+
+    "@thi.ng/checks": ["@thi.ng/checks@3.8.4", "", {}, "sha512-VmUyVd24lL3qz8VUN/+pY8pdBAGi3hUa7TM4W7gs5thddbwJcs048ePArGeNymDCSS5lDX019/iSiHbA7FIwDQ=="],
+
+    "@thi.ng/color": ["@thi.ng/color@5.8.10", "", { "dependencies": { "@thi.ng/api": "^8.12.14", "@thi.ng/arrays": "^2.14.7", "@thi.ng/binary": "^3.6.3", "@thi.ng/checks": "^3.8.4", "@thi.ng/compare": "^2.4.40", "@thi.ng/compose": "^3.0.51", "@thi.ng/defmulti": "^3.0.90", "@thi.ng/errors": "^2.6.3", "@thi.ng/math": "^5.15.3", "@thi.ng/random": "^4.1.39", "@thi.ng/strings": "^3.9.35", "@thi.ng/transducers": "^9.6.23", "@thi.ng/vectors": "^8.6.20" } }, "sha512-VE0gLT43ESI57fN0pn79DDKU78SufQlfLBaiJZD+5ys30Mjwf/BzpvCHWuQ2vToLsIZBRLGkCtJCSIB4ArH5lQ=="],
+
+    "@thi.ng/compare": ["@thi.ng/compare@2.4.40", "", { "dependencies": { "@thi.ng/api": "^8.12.14" } }, "sha512-YaCqrCaZtACWwjISaJ+uFIQcZXmtlLaTLqMjC1cfhKV+QB3U1hsIHfabRPP9Wr8gTeDX8ih6GNkouFHpNFELHQ=="],
+
+    "@thi.ng/compose": ["@thi.ng/compose@3.0.51", "", { "dependencies": { "@thi.ng/api": "^8.12.14", "@thi.ng/errors": "^2.6.3" } }, "sha512-9wA/URDH2019pZGdgErOC9+fHviV9EQibY3YzuBlWEvXNljpRi/AqmC/PPRVo3iIe9WIPw0O2k7SWdeo4RaN7Q=="],
+
+    "@thi.ng/dcons": ["@thi.ng/dcons@3.2.182", "", { "dependencies": { "@thi.ng/api": "^8.12.14", "@thi.ng/checks": "^3.8.4", "@thi.ng/compare": "^2.4.40", "@thi.ng/equiv": "^2.1.104", "@thi.ng/errors": "^2.6.3", "@thi.ng/random": "^4.1.39", "@thi.ng/transducers": "^9.6.23" } }, "sha512-P04lcv8F2gcsuUIhr2yvqrUUjaZ0wtR4s04s+HmntzBZXEvyjm/Fn0vSUjFLafKpnK8BJD3iKSM8fR5RFyG3Aw=="],
+
+    "@thi.ng/defmulti": ["@thi.ng/defmulti@3.0.90", "", { "dependencies": { "@thi.ng/api": "^8.12.14", "@thi.ng/errors": "^2.6.3", "@thi.ng/logger": "^3.2.13" } }, "sha512-DPZOtVulA1P6RlekaSjn6lgcBCvRDTp7b7p+a8zEPECYzZgUJWIhmP1zcSOjKdOqgLP07DluM70ddACHT/okgw=="],
+
+    "@thi.ng/disjoint-set": ["@thi.ng/disjoint-set@1.1.41", "", {}, "sha512-E61bR/R7/9my9A9iWMPyfU3mS8zccaGQIKkLjG5Ce9SHVP1ifCOyFbKXs0zYb9Bd8TgXiOJHhZtZRJdoGotufA=="],
+
+    "@thi.ng/distance": ["@thi.ng/distance@3.0.30", "", { "dependencies": { "@thi.ng/api": "^8.12.14", "@thi.ng/checks": "^3.8.4", "@thi.ng/errors": "^2.6.3", "@thi.ng/heaps": "^2.1.120", "@thi.ng/math": "^5.15.3", "@thi.ng/vectors": "^8.6.20" } }, "sha512-xqmg2qIl7yCB51iKbW0xCYThaFNnLXFixSm0xp/FzJ5CzejViXlBkC7xtXP7Keqn/OsV4TFi+KzUcqmjHsG6vw=="],
+
+    "@thi.ng/equiv": ["@thi.ng/equiv@2.1.104", "", {}, "sha512-TTCLxhpNlCdOqMQavh0CkpZsXaHYXPieF9NCrRRX3CMhaRkGWj0G00OKKxzFgAztvYQKe9ZRK2K0vnNELTKFbQ=="],
+
+    "@thi.ng/errors": ["@thi.ng/errors@2.6.3", "", {}, "sha512-owkOOKHf7MrAPN2jNpKWDdY/vjtPFiJf6oxZ3jkkhV6ICTu2iY1fXIR2wQ7kVEeybdtb0w24k2PtrU43OYCWdg=="],
+
+    "@thi.ng/geom": ["@thi.ng/geom@8.3.14", "", { "dependencies": { "@thi.ng/adjacency": "^3.0.69", "@thi.ng/api": "^8.12.14", "@thi.ng/arrays": "^2.14.7", "@thi.ng/checks": "^3.8.4", "@thi.ng/defmulti": "^3.0.90", "@thi.ng/equiv": "^2.1.104", "@thi.ng/errors": "^2.6.3", "@thi.ng/geom-arc": "^2.1.209", "@thi.ng/geom-clip-line": "^2.3.166", "@thi.ng/geom-clip-poly": "^2.1.208", "@thi.ng/geom-closest-point": "^2.1.204", "@thi.ng/geom-hull": "^2.1.204", "@thi.ng/geom-isec": "^4.0.76", "@thi.ng/geom-poly-utils": "^3.1.13", "@thi.ng/geom-resample": "^3.0.76", "@thi.ng/geom-splines": "^2.3.76", "@thi.ng/geom-subdiv-curve": "^3.0.83", "@thi.ng/geom-tessellate": "^3.0.83", "@thi.ng/hiccup": "^5.3.37", "@thi.ng/hiccup-svg": "^5.5.25", "@thi.ng/math": "^5.15.3", "@thi.ng/matrices": "^3.0.35", "@thi.ng/object-utils": "^1.3.6", "@thi.ng/random": "^4.1.39", "@thi.ng/strings": "^3.9.35", "@thi.ng/transducers": "^9.6.23", "@thi.ng/vectors": "^8.6.20" } }, "sha512-HUB7cMJkimgfo+bPkRDleKDXn3dpcR2Rminm4G94VnxxSRfZBVjdWkrPVJSDm9VX4jucoKOWPuOBObNYxPUNbA=="],
+
+    "@thi.ng/geom-accel": ["@thi.ng/geom-accel@4.1.76", "", { "dependencies": { "@thi.ng/api": "^8.12.14", "@thi.ng/arrays": "^2.14.7", "@thi.ng/checks": "^3.8.4", "@thi.ng/distance": "^3.0.30", "@thi.ng/equiv": "^2.1.104", "@thi.ng/errors": "^2.6.3", "@thi.ng/geom-isec": "^4.0.76", "@thi.ng/heaps": "^2.1.120", "@thi.ng/math": "^5.15.3", "@thi.ng/transducers": "^9.6.23", "@thi.ng/vectors": "^8.6.20" } }, "sha512-Q9c4AEucLvlz4oeoeH2eaFoBdRo4mrfV23IL0CpmqGG5nCBeBP48pjZJ8sm3xxg+EdjEIk891vvKmM9TNIsCtw=="],
+
+    "@thi.ng/geom-arc": ["@thi.ng/geom-arc@2.1.209", "", { "dependencies": { "@thi.ng/checks": "^3.8.4", "@thi.ng/geom-resample": "^3.0.76", "@thi.ng/math": "^5.15.3", "@thi.ng/vectors": "^8.6.20" } }, "sha512-+TygVBE84n5DeUJ4I1W1K1eSRfm4i7cyQBTZZ34g9vF13aklDKdKZhSUkIdyH/ai8P6/Bk1ArQaRTZGEJrjPyw=="],
+
+    "@thi.ng/geom-clip-line": ["@thi.ng/geom-clip-line@2.3.166", "", { "dependencies": { "@thi.ng/api": "^8.12.14", "@thi.ng/geom-isec": "^4.0.76", "@thi.ng/vectors": "^8.6.20" } }, "sha512-ClEb/yiuVhEtURQNtc553bNZq14sIL75SOxh+mmqwE3magSV+0c+YNJ450DC2lzNfFyiKo9cHqBRkeOc6FXQSA=="],
+
+    "@thi.ng/geom-clip-poly": ["@thi.ng/geom-clip-poly@2.1.208", "", { "dependencies": { "@thi.ng/geom-isec": "^4.0.76", "@thi.ng/geom-poly-utils": "^3.1.13", "@thi.ng/math": "^5.15.3", "@thi.ng/vectors": "^8.6.20" } }, "sha512-ajIdiP2pCsuatL/rMHmlpBEw11klEUXT3GaCX72gttEnzrcTH+B7vT1vOqqfCX7uL3VjSRpYc80NDcNMh1NxPA=="],
+
+    "@thi.ng/geom-closest-point": ["@thi.ng/geom-closest-point@2.1.204", "", { "dependencies": { "@thi.ng/api": "^8.12.14", "@thi.ng/math": "^5.15.3", "@thi.ng/vectors": "^8.6.20" } }, "sha512-H/vGCFKXTFXp1u5D+62d+vjZ2o4+TLpsd/wx/fgS3B7JiPDVwTIT0w5I1kJq71KqAHba4h7WN3pbEhNj3iGyCQ=="],
+
+    "@thi.ng/geom-hull": ["@thi.ng/geom-hull@2.1.204", "", { "dependencies": { "@thi.ng/math": "^5.15.3", "@thi.ng/vectors": "^8.6.20" } }, "sha512-75vsShySBOiuTw8JOL5Xmz7UNR9MnszkjpAStSfkZCR8i5AHeSEn0tVcQhMQxVTUPFTW0idm07sIE7xMFxn9bg=="],
+
+    "@thi.ng/geom-isec": ["@thi.ng/geom-isec@4.0.76", "", { "dependencies": { "@thi.ng/api": "^8.12.14", "@thi.ng/geom-closest-point": "^2.1.204", "@thi.ng/math": "^5.15.3", "@thi.ng/vectors": "^8.6.20" } }, "sha512-k2XBZmbxHdGp5kxnQj5ZId0Bjgrb5kDjxYNJJ9JVIMABGYj8/Uyl+MkPSuYgpnO0vMZ5ruMLnYz+3k+JWqCV1g=="],
+
+    "@thi.ng/geom-isoline": ["@thi.ng/geom-isoline@2.1.210", "", { "dependencies": { "@thi.ng/api": "^8.12.14", "@thi.ng/transducers": "^9.6.23", "@thi.ng/vectors": "^8.6.20" } }, "sha512-Xv08Gcm4vEZNnEf0zDSEmqDQpqRZqWQxnaKSEShgz5TwWjsz/42WJBeuEEOCYpT4ZaXbCCtXDLZ5V7KCeqBH9A=="],
+
+    "@thi.ng/geom-poly-utils": ["@thi.ng/geom-poly-utils@3.1.13", "", { "dependencies": { "@thi.ng/api": "^8.12.14", "@thi.ng/errors": "^2.6.3", "@thi.ng/math": "^5.15.3", "@thi.ng/vectors": "^8.6.20" } }, "sha512-vCf8brl8jhsoeLpUpYZ4zibv62pgz9qYVL2RAJipyJJjCh+83wD7KAEePUV/E3jvgwKLJnvI/hJ4YaqIJ97heg=="],
+
+    "@thi.ng/geom-resample": ["@thi.ng/geom-resample@3.0.76", "", { "dependencies": { "@thi.ng/api": "^8.12.14", "@thi.ng/checks": "^3.8.4", "@thi.ng/geom-closest-point": "^2.1.204", "@thi.ng/geom-isec": "^4.0.76", "@thi.ng/math": "^5.15.3", "@thi.ng/vectors": "^8.6.20" } }, "sha512-34SGzdgTVz7jQ0hsE5us9I8H5UTgP9dfY3C0yPDttftIexPib+Z1jsDZCOG1oYy321BmsRMLU++WsMK8DXwSCw=="],
+
+    "@thi.ng/geom-sdf": ["@thi.ng/geom-sdf@1.0.68", "", { "dependencies": { "@thi.ng/api": "^8.12.14", "@thi.ng/checks": "^3.8.4", "@thi.ng/defmulti": "^3.0.90", "@thi.ng/errors": "^2.6.3", "@thi.ng/geom": "^8.3.14", "@thi.ng/geom-isoline": "^2.1.210", "@thi.ng/geom-poly-utils": "^3.1.13", "@thi.ng/geom-resample": "^3.0.76", "@thi.ng/math": "^5.15.3", "@thi.ng/transducers": "^9.6.23", "@thi.ng/vectors": "^8.6.20" } }, "sha512-Qrox6iSNo75S5F7OaM0BCSPheTNzZK4z+tHwd58+nC5Nb0onbXZgKoa18bY99f4UjoNiBv60V9wuVLb41u8uzA=="],
+
+    "@thi.ng/geom-splines": ["@thi.ng/geom-splines@2.3.76", "", { "dependencies": { "@thi.ng/api": "^8.12.14", "@thi.ng/checks": "^3.8.4", "@thi.ng/geom-arc": "^2.1.209", "@thi.ng/geom-resample": "^3.0.76", "@thi.ng/math": "^5.15.3", "@thi.ng/vectors": "^8.6.20" } }, "sha512-ttVUEIVgNYlIA6HTzFXsN+e9Pu0XrPaoAuIClmkVAtNhwdhrsxHkGUC1Qar8uH3GT3aJFoHE/NuQ54UMInrjVw=="],
+
+    "@thi.ng/geom-subdiv-curve": ["@thi.ng/geom-subdiv-curve@3.0.83", "", { "dependencies": { "@thi.ng/transducers": "^9.6.23", "@thi.ng/vectors": "^8.6.20" } }, "sha512-wiHxlhJ24amdnucSF4twOdJ2tJZqnVs6Z5djesEszit4yaoj8xfVfGwbW5XmQKV5Z0B7F26N6MEk+gfdi4IqLg=="],
+
+    "@thi.ng/geom-tessellate": ["@thi.ng/geom-tessellate@3.0.83", "", { "dependencies": { "@thi.ng/api": "^8.12.14", "@thi.ng/checks": "^3.8.4", "@thi.ng/geom-accel": "^4.1.76", "@thi.ng/geom-isec": "^4.0.76", "@thi.ng/geom-poly-utils": "^3.1.13", "@thi.ng/math": "^5.15.3", "@thi.ng/morton": "^3.1.137", "@thi.ng/transducers": "^9.6.23", "@thi.ng/vectors": "^8.6.20" } }, "sha512-FZCwp4rpFv3nutC3nqtaNThiah0k/7q/BKYE28GvUUigckD/sU6wVC8xWfcDGjIVl3qN86OUDDp9hERPpYvVHg=="],
+
+    "@thi.ng/heaps": ["@thi.ng/heaps@2.1.120", "", { "dependencies": { "@thi.ng/api": "^8.12.14", "@thi.ng/compare": "^2.4.40", "@thi.ng/equiv": "^2.1.104" } }, "sha512-8lWB9buOQoUfZvWxusbu8skG8gr7G/BDQWI1zw6YtM1n3joIpcEWEIwOAXjfGdeQzItBT7fTWsbDSUzAdnmQEQ=="],
+
+    "@thi.ng/hex": ["@thi.ng/hex@2.4.7", "", {}, "sha512-mkaZH6eEcfs4r4UjzbBzrmLL4ufj569wqhN7h4c49/HUXNqz69GjDPhbnc1O0G84gz6jyzlJ0aCMOiQxIVlWyA=="],
+
+    "@thi.ng/hiccup": ["@thi.ng/hiccup@5.3.37", "", { "dependencies": { "@thi.ng/api": "^8.12.14", "@thi.ng/checks": "^3.8.4", "@thi.ng/errors": "^2.6.3", "@thi.ng/strings": "^3.9.35" } }, "sha512-BBs2uUYrz9YcrpsH035+1fCItDApzDhJHy4EqCjstKQJC0U216tGsyLOCKZCdk8BAqB1mELPNbVpo+DsJvoOcQ=="],
+
+    "@thi.ng/hiccup-svg": ["@thi.ng/hiccup-svg@5.5.25", "", { "dependencies": { "@thi.ng/api": "^8.12.14", "@thi.ng/checks": "^3.8.4", "@thi.ng/color": "^5.8.10", "@thi.ng/prefixes": "^2.3.65" } }, "sha512-ZUL6DsrFrdqhpHeY1vovw2gDAdsuixEMnH0C3u9QcxSlTYJxS/MIHh1MyrEg43YaiK9Ev3ZzbPnv29xWlZv7BA=="],
+
+    "@thi.ng/logger": ["@thi.ng/logger@3.2.13", "", {}, "sha512-eZ/r96Fo9KNNZUOmFOg/DJ5jmM5dszPpA2T3bzkCsfBgu2EO4n4/TjfhTS/CmT4fX2Jle5wTCmKd+C3Li+nLhg=="],
+
+    "@thi.ng/math": ["@thi.ng/math@5.15.3", "", { "dependencies": { "@thi.ng/api": "^8.12.14" } }, "sha512-IjJSoHCrE7ky1vZC/CgTZ9YbYzrKRd4jllsmW4leyF9SHRQHnCWGHKgzWv+lyXck9rZwUFIzQu5G0JWGtiPwew=="],
+
+    "@thi.ng/matrices": ["@thi.ng/matrices@3.0.35", "", { "dependencies": { "@thi.ng/api": "^8.12.14", "@thi.ng/checks": "^3.8.4", "@thi.ng/math": "^5.15.3", "@thi.ng/vectors": "^8.6.20" } }, "sha512-ao3UtWiUPXN8n7z1QV0npt8aisj6t6Uzksz4lzTGGWXunoopd3t725qliKuBZOzF+AHJ1jxEckRfd9Wt/ZM8cw=="],
+
+    "@thi.ng/memoize": ["@thi.ng/memoize@4.0.38", "", { "dependencies": { "@thi.ng/api": "^8.12.14" } }, "sha512-YALHPnm95DkrrQTlsTBsb+ON2laLUFP72AVPrNIUeviaKIL2gyWUFUA1n3blkj8ZWVfUc868jxYRPA+xNBZPlA=="],
+
+    "@thi.ng/morton": ["@thi.ng/morton@3.1.137", "", { "dependencies": { "@thi.ng/api": "^8.12.14", "@thi.ng/binary": "^3.6.3", "@thi.ng/errors": "^2.6.3", "@thi.ng/math": "^5.15.3" } }, "sha512-rJ06RaX0JH40H5cioKgug219gB5rIVRBLeo1qOtUz+RMnxSYTQIoprY4IjX2/L36yMb7xA3iAcTPjtxJPzPB0g=="],
+
+    "@thi.ng/object-utils": ["@thi.ng/object-utils@1.3.6", "", { "dependencies": { "@thi.ng/api": "^8.12.14", "@thi.ng/checks": "^3.8.4" } }, "sha512-SjsBDwvTsvJJ6DtRPcHZbl7G5H2YY2nGNuOU7/EicvJpTgReb0ecT3PR80oJgHtpoGB2LUGMRR6pTb9lXFveRA=="],
+
+    "@thi.ng/prefixes": ["@thi.ng/prefixes@2.3.65", "", {}, "sha512-3pnkjS+0cgXLezx2R2LAMF1uX2WCyBdIQ8y9dEtUvUo2Ktz6GNiOx34w64RxGH/iZoBGW6qfYp7fMcIuVrTOKQ=="],
+
+    "@thi.ng/random": ["@thi.ng/random@4.1.39", "", { "dependencies": { "@thi.ng/api": "^8.12.14", "@thi.ng/errors": "^2.6.3" } }, "sha512-QHrcnzql4xOop8lhu5kSNEgiFkinO26MPRV9N71u4DL4ILFmucTnjUZBUxb13jg9BNq7I8crlo8v+BJQjOyX8g=="],
+
+    "@thi.ng/sparse": ["@thi.ng/sparse@1.1.29", "", { "dependencies": { "@thi.ng/api": "^8.12.14", "@thi.ng/errors": "^2.6.3", "@thi.ng/transducers": "^9.6.23" } }, "sha512-diS7pbgRT6JSk2npzLBbuncSyHaGBgxR4Cqnm8WIwsMImwVH7BdbZVVeMbAw4h3vbF3xM5GgbSnSu8dWacMy2A=="],
+
+    "@thi.ng/strings": ["@thi.ng/strings@3.9.35", "", { "dependencies": { "@thi.ng/api": "^8.12.14", "@thi.ng/errors": "^2.6.3", "@thi.ng/hex": "^2.4.7", "@thi.ng/memoize": "^4.0.38" } }, "sha512-vFed7+cd3FtRSCMc2KeEizGwD+7Crls46rHo/6ucHTNQ2qTMwwQc0O/AKWIsN4ntpUy4loLj592PJDxH8kYxhA=="],
+
+    "@thi.ng/timestamp": ["@thi.ng/timestamp@1.1.33", "", {}, "sha512-mZM3ABpLjOxVR8Y4DbquecWog36+CiiqN6W18RUyFIz1/O4mPWJlfz7tlU5znqG2GfhLuBGLcgJhIxZHFzVDdA=="],
+
+    "@thi.ng/transducers": ["@thi.ng/transducers@9.6.23", "", { "dependencies": { "@thi.ng/api": "^8.12.14", "@thi.ng/arrays": "^2.14.7", "@thi.ng/checks": "^3.8.4", "@thi.ng/compare": "^2.4.40", "@thi.ng/compose": "^3.0.51", "@thi.ng/errors": "^2.6.3", "@thi.ng/math": "^5.15.3", "@thi.ng/random": "^4.1.39", "@thi.ng/timestamp": "^1.1.33" } }, "sha512-jH3W7Ff9Zr5GXrdBrtBhX9oH3S7b8/i6jT0tmHE9mb2crbHKTnSnPPEWk6e7Bcqa/Xjd4SkUbXJHEufl1neRJA=="],
+
+    "@thi.ng/vectors": ["@thi.ng/vectors@8.6.20", "", { "dependencies": { "@thi.ng/api": "^8.12.14", "@thi.ng/binary": "^3.6.3", "@thi.ng/checks": "^3.8.4", "@thi.ng/errors": "^2.6.3", "@thi.ng/math": "^5.15.3", "@thi.ng/memoize": "^4.0.38", "@thi.ng/random": "^4.1.39", "@thi.ng/strings": "^3.9.35" } }, "sha512-xpJ11f45dHNYq6OI9rqt48ecbTFEs5nRbPB7CN8i/JfDJp5lHnNtq3v6HhUVCZDaeU3QNv5PJhhl7PIOGxjfhQ=="],
 
     "@types/babel__core": ["@types/babel__core@7.20.5", "", { "dependencies": { "@babel/parser": "^7.20.7", "@babel/types": "^7.20.7", "@types/babel__generator": "*", "@types/babel__template": "*", "@types/babel__traverse": "*" } }, "sha512-qoQprZvz5wQFJwMDqeseRXWv3rqMvhgpbXFfVyWhbx9X47POIA6i/+dXefEmZKoAgOaTdaIgNSMqMIU61yRyzA=="],
 

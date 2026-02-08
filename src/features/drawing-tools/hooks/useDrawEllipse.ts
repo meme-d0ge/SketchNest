@@ -28,6 +28,7 @@ export const useDrawEllipse = () => {
 						y: absoluteY,
 						radiusX: 0,
 						radiusY: 0,
+						rotation: 0,
 					},
 				};
 				entities.interactiveStore.set(ellipse.current);
@@ -57,6 +58,7 @@ export const useDrawEllipse = () => {
 						y: startPosition.current.y - radiusY,
 						radiusX: Math.abs(radiusX),
 						radiusY: Math.abs(radiusY),
+						rotation: 0,
 					},
 				};
 				entities.interactiveStore.set(ellipse.current);
