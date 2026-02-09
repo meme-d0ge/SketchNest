@@ -1,5 +1,5 @@
-import type {Bounds} from "@/shared/types/shape.ts";
+import type { Bounds } from '@/shared/types/shape.ts';
 
-export interface ShapeBox extends Bounds{
-    ownerId: string;
+export interface ShapeBox extends Bounds {
+	ownerId: string;
 }

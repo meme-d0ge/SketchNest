@@ -15,10 +15,18 @@ export const StaticLayer = observer(() => {
 			if (current_version.isDeleted) return null;
 			if (current_version.type === 'line') {
 				const localBounds = {
-					minX: Math.min(...current_version.data.points.filter((_, i) => i % 2 === 0)),
-					maxX: Math.max(...current_version.data.points.filter((_, i) => i % 2 === 0)),
-					minY: Math.min(...current_version.data.points.filter((_, i) => i % 2 === 1)),
-					maxY: Math.max(...current_version.data.points.filter((_, i) => i % 2 === 1))
+					minX: Math.min(
+						...current_version.data.points.filter((_, i) => i % 2 === 0),
+					),
+					maxX: Math.max(
+						...current_version.data.points.filter((_, i) => i % 2 === 0),
+					),
+					minY: Math.min(
+						...current_version.data.points.filter((_, i) => i % 2 === 1),
+					),
+					maxY: Math.max(
+						...current_version.data.points.filter((_, i) => i % 2 === 1),
+					),
 				};
 				const centerX = (localBounds.minX + localBounds.maxX) / 2;
 				const centerY = (localBounds.minY + localBounds.maxY) / 2;
@@ -59,8 +67,8 @@ export const StaticLayer = observer(() => {
 						y={current_version.data.y + current_version.data.height / 2}
 						width={current_version.data.width}
 						height={current_version.data.height}
-						offsetX = {current_version.data.width / 2}
-						offsetY = {current_version.data.height / 2}
+						offsetX={current_version.data.width / 2}
+						offsetY={current_version.data.height / 2}
 						opacity={current_version.opacity}
 						rotation={current_version.data.rotation}
 					/>

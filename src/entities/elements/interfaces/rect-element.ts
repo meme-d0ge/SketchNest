@@ -1,5 +1,5 @@
+import type { BaseGeometryProps } from '@/entities/elements/interfaces/base-geometry-props.ts';
 import type { BaseElement } from './base-element.ts';
-import type {BaseGeometryProps} from "@/entities/elements/interfaces/base-geometry-props.ts";
 
 interface RectData extends BaseGeometryProps {
 	x: number;

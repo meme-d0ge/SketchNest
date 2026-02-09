@@ -13,12 +13,14 @@ export const InteractiveLayer = observer(() => {
 		return null;
 	}
 	if (element.type === 'line') {
-		return <LineComponent
-			id={element.id}
-			x={element.data.x}
-			y={element.data.y}
-			points={element.data.points}
-		/>;
+		return (
+			<LineComponent
+				id={element.id}
+				x={element.data.x}
+				y={element.data.y}
+				points={element.data.points}
+			/>
+		);
 	}
 	if (element.type === 'ellipse') {
 		return (

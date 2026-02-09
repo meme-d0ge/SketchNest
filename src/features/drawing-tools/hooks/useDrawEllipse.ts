@@ -12,7 +12,7 @@ export const useDrawEllipse = () => {
 	const startDrawEllipse = useCallback(
 		(e: Konva.KonvaEventObject<TouchEvent | MouseEvent>) => {
 			isDrawing.current = true;
-			const stage = e.target.getStage()
+			const stage = e.target.getStage();
 			const pos = stage?.getRelativePointerPosition();
 			if (isVector2d(pos)) {
 				const { x: absoluteX, y: absoluteY } = pos;
@@ -44,7 +44,7 @@ export const useDrawEllipse = () => {
 				startPosition.current === null
 			)
 				return;
-			const stage = e.target.getStage()
+			const stage = e.target.getStage();
 			const pos = stage?.getRelativePointerPosition();
 			if (isVector2d(pos)) {
 				const { x: absoluteX, y: absoluteY } = pos;

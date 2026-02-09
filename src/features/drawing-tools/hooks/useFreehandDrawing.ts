@@ -12,7 +12,7 @@ export const useFreehandDrawing = () => {
 	const startFreehandDraw = useCallback(
 		(e: Konva.KonvaEventObject<TouchEvent | MouseEvent>) => {
 			isDrawing.current = true;
-			const stage = e.target.getStage()
+			const stage = e.target.getStage();
 			const pos = stage?.getRelativePointerPosition();
 			if (isVector2d(pos)) {
 				const { x: absoluteX, y: absoluteY } = pos;
@@ -34,7 +34,7 @@ export const useFreehandDrawing = () => {
 	const freehandDraw = useCallback(
 		(e: Konva.KonvaEventObject<TouchEvent | MouseEvent>) => {
 			if (!isDrawing.current || line.current === null) return;
-			const stage = e.target.getStage()
+			const stage = e.target.getStage();
 			const pos = stage?.getRelativePointerPosition();
 			if (isVector2d(pos)) {
 				const { x: absoluteX, y: absoluteY } = pos;
@@ -44,7 +44,11 @@ export const useFreehandDrawing = () => {
 					data: {
 						x: line.current.data.x,
 						y: line.current.data.y,
-						points: [...line.current.data.points, absoluteX - line.current.data.x, absoluteY - line.current.data.y],
+						points: [
+							...line.current.data.points,
+							absoluteX - line.current.data.x,
+							absoluteY - line.current.data.y,
+						],
 						rotation: 0,
 					},
 				};
