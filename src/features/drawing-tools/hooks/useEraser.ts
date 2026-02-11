@@ -8,6 +8,7 @@ import { isVector2d } from '@/shared/guards/isVector2d.ts';
 import { getDistanceToEllipse } from '@/shared/lib/math/getDistanceToEllipse.ts';
 import { getDistanceToLine } from '@/shared/lib/math/getDistanceToLine.ts';
 import { getDistanceToRect } from '@/shared/lib/math/getDistanceToRect.ts';
+import {ElementsEnum} from "@/entities/elements/interfaces/element-type-variant.ts";
 
 const eraserRadius = 20;
 const radiusLine = 5;
@@ -89,7 +90,7 @@ export const useEraser = () => {
 
 				for (const item of allObjects) {
 					let flag = false;
-					if (item.model.type === 'line') {
+					if (item.model.type === ElementsEnum.Line) {
 						const position = { x, y };
 						if (
 							getDistanceToLine(position, item.model.data) >
@@ -97,12 +98,12 @@ export const useEraser = () => {
 						)
 							continue;
 						flag = true;
-					} else if (item.model.type === 'rect') {
+					} else if (item.model.type === ElementsEnum.Rect) {
 						const position = { x, y };
 						if (getDistanceToRect(position, item.model.data) > eraserRadius)
 							continue;
 						flag = true;
-					} else if (item.model.type === 'ellipse') {
+					} else if (item.model.type === ElementsEnum.Ellipse) {
 						const position = { x, y };
 						if (getDistanceToEllipse(position, item.model.data) > eraserRadius)
 							continue;

@@ -6,11 +6,12 @@ import {
 	rotate,
 	translate,
 } from '@thi.ng/geom';
-import type { BoardElementOptionalId } from '@/entities/elements';
+import type { BoardElementDraft } from '@/entities/elements';
+import {ElementsEnum} from "@/entities/elements/interfaces/element-type-variant.ts";
 
-export function getBounds(item: BoardElementOptionalId) {
+export function getBounds(item: BoardElementDraft) {
 	switch (item.type) {
-		case 'rect': {
+		case ElementsEnum.Rect: {
 			const { x, y, width, height } = item.data;
 			const pivot = [x + width / 2, y + height / 2];
 			const angle = (item.data.rotation * Math.PI) / 180;
@@ -30,7 +31,7 @@ export function getBounds(item: BoardElementOptionalId) {
 				minY: min[1],
 			};
 		}
-		case 'line': {
+		case ElementsEnum.Line: {
 			if (item.data.points.length < 2 || item.data.points.length % 2 !== 0)
 				return null;
 			const newArrPoints = [];
@@ -73,7 +74,7 @@ export function getBounds(item: BoardElementOptionalId) {
 				minY: min[1],
 			};
 		}
-		case 'ellipse': {
+		case ElementsEnum.Ellipse: {
 			const { x, y, radiusX, radiusY } = item.data;
 			const pivot = [x, y];
 			const angle = (item.data.rotation * Math.PI) / 180;

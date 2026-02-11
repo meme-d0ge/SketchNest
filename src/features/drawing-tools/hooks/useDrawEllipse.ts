@@ -3,6 +3,7 @@ import { useCallback, useRef } from 'react';
 import { useStore } from '@/app/providers/StoreProvider.tsx';
 import type { EllipseElementDraft } from '@/entities/elements';
 import { isVector2d } from '@/shared/guards/isVector2d.ts';
+import {ElementsEnum} from "@/entities/elements/interfaces/element-type-variant.ts";
 
 export const useDrawEllipse = () => {
 	const { entities } = useStore();
@@ -21,7 +22,7 @@ export const useDrawEllipse = () => {
 					y: absoluteY,
 				};
 				ellipse.current = {
-					type: 'ellipse',
+					type: ElementsEnum.Ellipse,
 					isDeleted: false,
 					data: {
 						x: absoluteX,
@@ -51,7 +52,7 @@ export const useDrawEllipse = () => {
 				const radiusX = (startPosition.current.x - absoluteX) / 2;
 				const radiusY = (startPosition.current.y - absoluteY) / 2;
 				ellipse.current = {
-					type: 'ellipse',
+					type: ElementsEnum.Ellipse,
 					isDeleted: ellipse.current.isDeleted,
 					data: {
 						x: startPosition.current.x - radiusX,

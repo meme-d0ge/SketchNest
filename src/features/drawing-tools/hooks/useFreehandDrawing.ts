@@ -3,6 +3,7 @@ import { useCallback, useRef } from 'react';
 import { useStore } from '@/app/providers/StoreProvider.tsx';
 import type { LineElementDraft } from '@/entities/elements';
 import { isVector2d } from '@/shared/guards/isVector2d.ts';
+import {ElementsEnum} from "@/entities/elements/interfaces/element-type-variant.ts";
 
 export const useFreehandDrawing = () => {
 	const isDrawing = useRef(false);
@@ -17,7 +18,7 @@ export const useFreehandDrawing = () => {
 			if (isVector2d(pos)) {
 				const { x: absoluteX, y: absoluteY } = pos;
 				line.current = {
-					type: 'line',
+					type: ElementsEnum.Line,
 					isDeleted: false,
 					data: {
 						x: absoluteX,
@@ -39,7 +40,7 @@ export const useFreehandDrawing = () => {
 			if (isVector2d(pos)) {
 				const { x: absoluteX, y: absoluteY } = pos;
 				line.current = {
-					type: 'line',
+					type: ElementsEnum.Line,
 					isDeleted: line.current.isDeleted,
 					data: {
 						x: line.current.data.x,

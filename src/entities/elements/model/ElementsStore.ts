@@ -1,13 +1,15 @@
+import * as z from 'zod/v4'
 import { makeAutoObservable, toJS } from 'mobx';
 import RBush from 'rbush';
-import type { BoardElement, BoardElementOptionalId } from '@/entities/elements';
+import {type BoardElement, type BoardElementDraft, BoardElementSchema} from '@/entities/elements';
 import type { ShapeBox } from '@/entities/elements/interfaces/shape-element.ts';
 import { getBounds } from '@/shared/lib/getBounds.ts';
 
-interface IElement {
-	history: BoardElement[];
-	version: number;
-}
+const ElementSchema = z.object({
+	history: z.array(BoardElementSchema),
+	version: z.number()
+})
+type Element = z.infer<typeof ElementSchema>
 
 export class ElementsStore {
 	constructor() {
@@ -16,13 +18,13 @@ export class ElementsStore {
 	elementIndexMap: Record<string, number> = {};
 	rtree: RBush<ShapeBox> = new RBush();
 
-	elements: IElement[] = [];
+	elements: Element[] = [];
 	historySteps: string[][] = [];
 	actualStep: number = -1;
 	canRedo: boolean = false;
 	canUndo: boolean = false;
 
-	add = (elements: BoardElementOptionalId[]) => {
+	add = (elements: BoardElementDraft[]) => {
 		this.actualStep = this.actualStep + 1;
 		this.historySteps = this.historySteps.slice(0, this.actualStep);
 		const arrayModElements: string[] = [];

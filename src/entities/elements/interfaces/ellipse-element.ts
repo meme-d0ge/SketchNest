@@ -1,18 +1,25 @@
-import type { BaseGeometryProps } from '@/entities/elements/interfaces/base-geometry-props.ts';
-import type { BaseElement } from './base-element.ts';
+import * as z from 'zod/v4';
+import { BaseElementDataSchema } from '@/entities/elements/interfaces/base-geometry-data.ts';
+import { BaseElementSchema } from './base-element.ts';
+import {ElementsEnum} from "@/entities/elements/interfaces/element-type-variant.ts";
 
-interface EllipseData extends BaseGeometryProps {
-	x: number;
-	radiusX: number;
-	y: number;
-	radiusY: number;
-}
+export const EllipseDataSchema = BaseElementDataSchema.extend({
+	x: z.number(),
+	radiusX: z.number(),
+	y: z.number(),
+	radiusY: z.number(),
+});
+export type EllipseData = z.infer<typeof EllipseDataSchema>;
 
-export interface EllipseElement extends BaseElement {
-	type: 'ellipse';
-	data: EllipseData;
-}
+export const EllipseElementSchema = BaseElementSchema.extend({
+	type: z.literal(ElementsEnum.Ellipse),
+	data: EllipseDataSchema,
+});
+export type EllipseElement = z.infer<typeof EllipseElementSchema>;
 
-export type EllipseElementDraft = Omit<EllipseElement, 'id' | 'shapeBox'> & {
-	id?: string;
-};
+export const EllipseElementDraftSchema = EllipseElementSchema.omit({
+	shapeBox: true,
+}).extend({
+	id: z.string().optional(),
+});
+export type EllipseElementDraft = z.infer<typeof EllipseElementDraftSchema>;

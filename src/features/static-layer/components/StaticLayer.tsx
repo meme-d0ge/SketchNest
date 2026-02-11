@@ -5,6 +5,7 @@ import {
 	LineComponent,
 	RectComponent,
 } from '@/entities/elements';
+import {ElementsEnum} from "@/entities/elements/interfaces/element-type-variant.ts";
 
 export const StaticLayer = observer(() => {
 	const { entities } = useStore();
@@ -13,7 +14,7 @@ export const StaticLayer = observer(() => {
 		if (value.version !== -1) {
 			const current_version = value.history[value.version];
 			if (current_version.isDeleted) return null;
-			if (current_version.type === 'line') {
+			if (current_version.type === ElementsEnum.Line) {
 				const localBounds = {
 					minX: Math.min(
 						...current_version.data.points.filter((_, i) => i % 2 === 0),
@@ -32,7 +33,7 @@ export const StaticLayer = observer(() => {
 				const centerY = (localBounds.minY + localBounds.maxY) / 2;
 				return (
 					<LineComponent
-						key={crypto.randomUUID()}
+						key={current_version.id}
 						id={current_version.id}
 						x={current_version.data.x + centerX}
 						y={current_version.data.y + centerY}
@@ -44,7 +45,7 @@ export const StaticLayer = observer(() => {
 					/>
 				);
 			}
-			if (current_version.type === 'ellipse') {
+			if (current_version.type === ElementsEnum.Ellipse) {
 				return (
 					<EllipseComponent
 						key={current_version.id}
@@ -58,7 +59,7 @@ export const StaticLayer = observer(() => {
 					/>
 				);
 			}
-			if (current_version.type === 'rect') {
+			if (current_version.type === ElementsEnum.Rect) {
 				return (
 					<RectComponent
 						key={current_version.id}

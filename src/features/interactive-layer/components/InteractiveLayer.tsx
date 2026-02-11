@@ -5,6 +5,7 @@ import {
 	LineComponent,
 	RectComponent,
 } from '@/entities/elements';
+import {ElementsEnum} from "@/entities/elements/interfaces/element-type-variant.ts";
 
 export const InteractiveLayer = observer(() => {
 	const { entities } = useStore();
@@ -12,7 +13,7 @@ export const InteractiveLayer = observer(() => {
 	if (element === null) {
 		return null;
 	}
-	if (element.type === 'line') {
+	if (element.type === ElementsEnum.Line) {
 		return (
 			<LineComponent
 				id={element.id}
@@ -22,7 +23,7 @@ export const InteractiveLayer = observer(() => {
 			/>
 		);
 	}
-	if (element.type === 'ellipse') {
+	if (element.type === ElementsEnum.Ellipse) {
 		return (
 			<EllipseComponent
 				x={element.data.x}
@@ -32,7 +33,7 @@ export const InteractiveLayer = observer(() => {
 			/>
 		);
 	}
-	if (element.type === 'rect') {
+	if (element.type === ElementsEnum.Rect) {
 		return (
 			<RectComponent
 				x={element.data.x}

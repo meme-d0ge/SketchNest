@@ -1,5 +1,7 @@
-import type { Bounds } from '@/shared/types/shape.ts';
+import * as z from 'zod/v4';
+import { BoundsSchema } from '@/shared/types/shape.ts';
 
-export interface ShapeBox extends Bounds {
-	ownerId: string;
-}
+export const ShapeBoxSchema = BoundsSchema.extend({
+	ownerId: z.string(),
+});
+export type ShapeBox = z.infer<typeof ShapeBoxSchema>;

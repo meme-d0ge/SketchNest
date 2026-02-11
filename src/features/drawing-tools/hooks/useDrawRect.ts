@@ -3,6 +3,7 @@ import { useCallback, useRef } from 'react';
 import { useStore } from '@/app/providers/StoreProvider.tsx';
 import type { RectElementDraft } from '@/entities/elements';
 import { isVector2d } from '@/shared/guards/isVector2d.ts';
+import {ElementsEnum} from "@/entities/elements/interfaces/element-type-variant.ts";
 
 export const useDrawRect = () => {
 	const isDrawing = useRef(false);
@@ -21,7 +22,7 @@ export const useDrawRect = () => {
 					y: absoluteY,
 				};
 				rect.current = {
-					type: 'rect',
+					type: ElementsEnum.Rect,
 					isDeleted: false,
 					data: {
 						x: absoluteX,
@@ -50,7 +51,7 @@ export const useDrawRect = () => {
 				const { x: curX, y: curY } = pos;
 				const { x: startX, y: startY } = startPosition.current;
 				rect.current = {
-					type: 'rect',
+					type: ElementsEnum.Rect,
 					isDeleted: rect.current.isDeleted,
 					data: {
 						x: Math.min(startX, curX),

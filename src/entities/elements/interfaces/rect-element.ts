@@ -1,18 +1,25 @@
-import type { BaseGeometryProps } from '@/entities/elements/interfaces/base-geometry-props.ts';
-import type { BaseElement } from './base-element.ts';
+import * as z from 'zod/v4';
+import { BaseElementDataSchema } from '@/entities/elements/interfaces/base-geometry-data.ts';
+import { BaseElementSchema } from './base-element.ts';
+import {ElementsEnum} from "@/entities/elements/interfaces/element-type-variant.ts";
 
-interface RectData extends BaseGeometryProps {
-	x: number;
-	y: number;
-	width: number;
-	height: number;
-}
+export const RectDataSchema = BaseElementDataSchema.extend({
+	x: z.number(),
+	y: z.number(),
+	width: z.number(),
+	height: z.number(),
+});
+export type RectData = z.infer<typeof RectDataSchema>;
 
-export interface RectElement extends BaseElement {
-	type: 'rect';
-	data: RectData;
-}
+export const RectElementSchema = BaseElementSchema.extend({
+	type: z.literal(ElementsEnum.Rect),
+	data: RectDataSchema,
+});
+export type RectElement = z.infer<typeof RectElementSchema>;
 
-export type RectElementDraft = Omit<RectElement, 'id' | 'shapeBox'> & {
-	id?: string;
-};
+export const RectElementDraftSchema = RectElementSchema.omit({
+	shapeBox: true,
+}).extend({
+	id: z.string().optional(),
+});
+export type RectElementDraft = z.infer<typeof RectElementDraftSchema>;
