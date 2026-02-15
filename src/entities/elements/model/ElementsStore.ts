@@ -1,4 +1,4 @@
-import { makeAutoObservable, toJS } from 'mobx';
+import {makeAutoObservable, makeObservable, toJS} from 'mobx';
 import RBush from 'rbush';
 import * as z from 'zod/v4';
 import {
@@ -19,11 +19,11 @@ export class ElementsStore {
 	constructor() {
 		makeAutoObservable(this);
 	}
-	elementIndexMap: Record<string, number> = {};
+	elementIndexMap: Record<BoardElement['id'], number> = {};
 	rtree: RBush<ShapeBox> = new RBush();
 
 	elements: Element[] = [];
-	historySteps: string[][] = [];
+	historySteps: BoardElement['id'][][] = [];
 	actualStep: number = -1;
 	canRedo: boolean = false;
 	canUndo: boolean = false;
@@ -41,15 +41,14 @@ export class ElementsStore {
 				}
 
 				this.elementIndexMap[newId] = this.elements.length;
-
-				const newBoardElement = {
+				const newBoardElement = makeObservable({
 					...element,
 					id: newId,
 					shapeBox: {
 						...bounds,
 						ownerId: newId,
 					},
-				} as BoardElement;
+				} as BoardElement);
 
 				this.elements.push({
 					history: [newBoardElement],
@@ -64,25 +63,18 @@ export class ElementsStore {
 					continue;
 				}
 
-				this.elements[index].history = this.elements[index].history.slice(
-					0,
-					this.elements[index].version + 1,
-				);
-
-				const lastElement =
-					this.elements[index].history[this.elements[index].version];
-				this.rtree.remove(lastElement.shapeBox);
-
-				const newBoardElement = {
+				this.sliceFutureVersionByIndex(index)
+				const actualElement = this.getActualElementByIndex(index)
+				this.rtree.remove(actualElement.shapeBox);
+				const newBoardElement = makeObservable({
 					...element,
 					shapeBox: {
 						...bounds,
-						ownerId: lastElement.id,
+						ownerId: actualElement.id,
 					},
-				} as BoardElement;
-
-				this.elements[index].history.push(newBoardElement);
-				this.elements[index].version = this.elements[index].version + 1;
+				} as BoardElement);
+				this.pushNewElement(index, newBoardElement)
+				this.incrementVersion(index)
 
 				if (!newBoardElement.isDeleted) {
 					this.rtree.insert(newBoardElement.shapeBox);
@@ -101,17 +93,16 @@ export class ElementsStore {
 		const idOfModifiedElements = this.historySteps[this.actualStep];
 		for (const id of idOfModifiedElements) {
 			const index = this.elementIndexMap[id];
-			const lastElement =
-				this.elements[index].history[this.elements[index].version];
 
+			const lastElement = this.getActualElementByIndex(index)
 			this.rtree.remove(lastElement.shapeBox);
-			this.elements[index].version = this.elements[index].version - 1;
+			this.decrementVersion(index)
+
 			if (
 				this.elements[index].version !== -1 &&
 				!this.elements[index].history[this.elements[index].version].isDeleted
 			) {
-				const prevElement =
-					this.elements[index].history[this.elements[index].version];
+				const prevElement = this.getActualElementByIndex(index);
 				this.rtree.insert(prevElement.shapeBox);
 			}
 		}
@@ -128,16 +119,15 @@ export class ElementsStore {
 		for (const id of idOfModifiedElements) {
 			const index = this.elementIndexMap[id];
 			if (this.elements[index].version !== -1) {
-				const actualElement =
-					this.elements[index].history[this.elements[index].version];
+				const actualElement = this.getActualElementByIndex(index)
 				this.rtree.remove(actualElement.shapeBox);
 			}
-			this.elements[index].version = this.elements[index].version + 1;
+			this.incrementVersion(index)
 			if (
 				!this.elements[index].history[this.elements[index].version].isDeleted
 			) {
 				this.rtree.insert(
-					this.elements[index].history[this.elements[index].version].shapeBox,
+					this.getActualElementByIndex(index).shapeBox,
 				);
 			}
 		}
@@ -145,10 +135,36 @@ export class ElementsStore {
 		this.canRedo = this.actualStep + 1 < this.historySteps.length;
 	};
 
-	getLatestVersion = (id: string) => {
+	getActualVersion = (id: string) => {
 		const index = this.elementIndexMap[id];
 		const element = this.elements[index];
 		const version = element.version;
 		return toJS(element.history[version]);
 	};
+
+	private getActualElementByIndex = (index: number) => {
+		const element = this.elements[index];
+		const version = element.version;
+		return element.history[version];
+	}
+
+	private sliceFutureVersionByIndex = (index: number) => {
+		this.elements[index].history = this.elements[index].history.slice(
+			0,
+			this.elements[index].version + 1,
+		);
+	}
+
+	private pushNewElement = (index: number, element: BoardElement) => {
+		this.elements[index].history.push(element);
+	}
+
+	private incrementVersion = (index: number) => {
+		this.elements[index].version = this.elements[index].version + 1;
+	}
+
+	private decrementVersion = (index: number) => {
+		this.elements[index].version = this.elements[index].version - 1;
+	}
+
 }

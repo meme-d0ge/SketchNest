@@ -74,7 +74,7 @@ export const useEraser = () => {
 						eraserRadius,
 				})
 				.map((item) => {
-					return entities.elementsStore.getLatestVersion(item.ownerId);
+					return entities.elementsStore.getActualVersion(item.ownerId);
 				});
 
 			for (let i = hypotenuse; i >= 0; i = i - 5) {
@@ -120,7 +120,7 @@ export const useEraser = () => {
 		isDrawing.current = false;
 		const arrayElementToTrash = [];
 		for (const id of arrayIdToTrash.current) {
-			const historyElement = entities.elementsStore.getLatestVersion(id);
+			const historyElement = entities.elementsStore.getActualVersion(id);
 			historyElement.isDeleted = true;
 			arrayElementToTrash.push(historyElement);
 		}
