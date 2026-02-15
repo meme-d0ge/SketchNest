@@ -12,6 +12,7 @@
         "@radix-ui/react-toggle-group": "^1.1.11",
         "@tailwindcss/vite": "^4.1.18",
         "@thi.ng/geom": "^8.3.14",
+        "@thi.ng/geom-resample": "^3.0.76",
         "@thi.ng/geom-sdf": "^1.0.68",
         "@types/rbush": "^4.0.0",
         "class-variance-authority": "^0.7.1",

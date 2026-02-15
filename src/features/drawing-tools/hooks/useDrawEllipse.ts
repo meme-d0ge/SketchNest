@@ -2,8 +2,8 @@ import type Konva from 'konva';
 import { useCallback, useRef } from 'react';
 import { useStore } from '@/app/providers/StoreProvider.tsx';
 import type { EllipseElementDraft } from '@/entities/elements';
+import { ElementsEnum } from '@/entities/elements/interfaces/element-type-variant.ts';
 import { isVector2d } from '@/shared/guards/isVector2d.ts';
-import {ElementsEnum} from "@/entities/elements/interfaces/element-type-variant.ts";
 
 export const useDrawEllipse = () => {
 	const { entities } = useStore();
@@ -24,6 +24,9 @@ export const useDrawEllipse = () => {
 				ellipse.current = {
 					type: ElementsEnum.Ellipse,
 					isDeleted: false,
+					visualData: {
+						opacity: 1,
+					},
 					data: {
 						x: absoluteX,
 						y: absoluteY,
@@ -51,17 +54,12 @@ export const useDrawEllipse = () => {
 				const { x: absoluteX, y: absoluteY } = pos;
 				const radiusX = (startPosition.current.x - absoluteX) / 2;
 				const radiusY = (startPosition.current.y - absoluteY) / 2;
-				ellipse.current = {
-					type: ElementsEnum.Ellipse,
-					isDeleted: ellipse.current.isDeleted,
-					data: {
-						x: startPosition.current.x - radiusX,
-						y: startPosition.current.y - radiusY,
-						radiusX: Math.abs(radiusX),
-						radiusY: Math.abs(radiusY),
-						rotation: 0,
-					},
-				};
+
+				ellipse.current.data.x = startPosition.current.x - radiusX;
+				ellipse.current.data.y = startPosition.current.y - radiusY;
+				ellipse.current.data.radiusX = Math.abs(radiusX);
+				ellipse.current.data.radiusY = Math.abs(radiusY);
+
 				entities.interactiveStore.set(ellipse.current);
 			}
 		},

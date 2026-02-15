@@ -1,5 +1,4 @@
-import { ellipse, rotate, translate } from '@thi.ng/geom';
-import { asSDF } from '@thi.ng/geom-sdf';
+import { distEllipse2 } from '@thi.ng/geom-sdf';
 import type { Vector2d } from 'konva/lib/types';
 
 export function getDistanceToEllipse(
@@ -12,12 +11,15 @@ export function getDistanceToEllipse(
 		rotation: number;
 	},
 ) {
-	const angle = (data.rotation * Math.PI) / 180;
-	const pivot = [data.x, data.y];
-	let _ellipse = ellipse([data.x, data.y], [data.radiusX, data.radiusY]);
-	_ellipse = translate(_ellipse, [-pivot[0], -pivot[1]]);
-	let polygon = rotate(_ellipse, angle);
-	polygon = translate(polygon, [pivot[0], pivot[1]]);
-	const dist = asSDF(polygon)([point.x, point.y]);
-	return dist;
+	let localPosition = [point.x - data.x, point.y - data.y];
+	if (data.rotation !== 0) {
+		const angle = -(data.rotation * Math.PI) / 180;
+		const sin = Math.sin(angle);
+		const cos = Math.cos(angle);
+		localPosition = [
+			cos * localPosition[0] - sin * localPosition[1],
+			sin * localPosition[0] + cos * localPosition[1],
+		];
+	}
+	return distEllipse2(localPosition, [data.radiusX, data.radiusY]);
 }

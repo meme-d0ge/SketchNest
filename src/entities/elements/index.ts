@@ -1,48 +1,42 @@
-export {
-	BoardElementSchema,
-	BoardElementDraftSchema
-} from '@/entities/elements/interfaces/board-element.ts';
 export type {
 	BoardElement,
-	BoardElementDraft
+	BoardElementDraft,
 } from '@/entities/elements/interfaces/board-element.ts';
-
 export {
-	EllipseElementSchema,
-	EllipseElementDraftSchema,
-} from '@/entities/elements/interfaces/ellipse-element.ts';
+	BoardElementDraftSchema,
+	BoardElementSchema,
+} from '@/entities/elements/interfaces/board-element.ts';
 export type {
 	EllipseElement,
 	EllipseElementDraft,
 } from '@/entities/elements/interfaces/ellipse-element.ts';
-
 export {
-	LineElementSchema,
-	LineElementDraftSchema,
-} from '@/entities/elements/interfaces/line-element.ts';
+	EllipseElementDraftSchema,
+	EllipseElementSchema,
+} from '@/entities/elements/interfaces/ellipse-element.ts';
 export type {
 	LineElement,
 	LineElementDraft,
 } from '@/entities/elements/interfaces/line-element.ts';
-
 export {
-	RectElementSchema,
-	RectElementDraftSchema,
-} from './interfaces/rect-element.ts';
+	LineElementDraftSchema,
+	LineElementSchema,
+} from '@/entities/elements/interfaces/line-element.ts';
+export { EllipseComponent } from './components/EllipseComponent.tsx';
+export { LineComponent } from './components/LineComponent.tsx';
+export { RectComponent } from './components/RectComponent.tsx';
+export type { ElementType } from './interfaces/element-type-variant.ts';
+
+export { ElementTypeSchema } from './interfaces/element-type-variant.ts';
 export type {
 	RectElement,
 	RectElementDraft,
 } from './interfaces/rect-element.ts';
-
-export {ShapeBoxSchema} from './interfaces/shape-element.ts'
-export type {ShapeBox} from './interfaces/shape-element.ts'
-
-export {ElementTypeSchema} from './interfaces/element-type-variant.ts'
-export type {ElementType} from './interfaces/element-type-variant.ts'
-
+export {
+	RectElementDraftSchema,
+	RectElementSchema,
+} from './interfaces/rect-element.ts';
+export type { ShapeBox } from './interfaces/shape-element.ts';
+export { ShapeBoxSchema } from './interfaces/shape-element.ts';
 export { ElementsStore } from './model/ElementsStore.ts';
 export { InteractiveStore } from './model/InteractiveStore.ts';
-
-export { EllipseComponent } from './components/EllipseComponent.tsx';
-export { LineComponent } from './components/LineComponent.tsx';
-export { RectComponent } from './components/RectComponent.tsx';

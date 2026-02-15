@@ -2,8 +2,8 @@ import type Konva from 'konva';
 import { useCallback, useRef } from 'react';
 import { useStore } from '@/app/providers/StoreProvider.tsx';
 import type { RectElementDraft } from '@/entities/elements';
+import { ElementsEnum } from '@/entities/elements/interfaces/element-type-variant.ts';
 import { isVector2d } from '@/shared/guards/isVector2d.ts';
-import {ElementsEnum} from "@/entities/elements/interfaces/element-type-variant.ts";
 
 export const useDrawRect = () => {
 	const isDrawing = useRef(false);
@@ -24,6 +24,9 @@ export const useDrawRect = () => {
 				rect.current = {
 					type: ElementsEnum.Rect,
 					isDeleted: false,
+					visualData: {
+						opacity: 1,
+					},
 					data: {
 						x: absoluteX,
 						y: absoluteY,
@@ -50,17 +53,10 @@ export const useDrawRect = () => {
 			if (isVector2d(pos)) {
 				const { x: curX, y: curY } = pos;
 				const { x: startX, y: startY } = startPosition.current;
-				rect.current = {
-					type: ElementsEnum.Rect,
-					isDeleted: rect.current.isDeleted,
-					data: {
-						x: Math.min(startX, curX),
-						y: Math.min(startY, curY),
-						width: Math.abs(curX - startX),
-						height: Math.abs(curY - startY),
-						rotation: 0,
-					},
-				};
+				rect.current.data.x = Math.min(startX, curX);
+				rect.current.data.y = Math.min(startY, curY);
+				rect.current.data.width = Math.abs(curX - startX);
+				rect.current.data.height = Math.abs(curY - startY);
 				entities.interactiveStore.set(rect.current);
 			}
 		},

@@ -1,5 +1,5 @@
-import { bounds, polyline, rotate, translate } from '@thi.ng/geom';
-import { asSDF } from '@thi.ng/geom-sdf';
+import { simplify } from '@thi.ng/geom-resample';
+import { distPolyline2 } from '@thi.ng/geom-sdf';
 import type { Vector2d } from 'konva/lib/types';
 export function getDistanceToLine(
 	point: Vector2d,
@@ -8,34 +8,32 @@ export function getDistanceToLine(
 		y: number;
 		points: number[];
 		rotation: number;
+		centerX: number;
+		centerY: number;
 	},
 ) {
 	if (data.points.length < 2 || data.points.length % 2 !== 0) return NaN;
-	const newArrPoints = [];
+
+	let points = [];
 	for (let i = 0; i < data.points.length; i = i + 2) {
-		newArrPoints.push([data.x + data.points[i], data.y + data.points[i + 1]]);
+		points.push([data.points[i], data.points[i + 1]]);
 	}
-	const angle = (data.rotation * Math.PI) / 180;
-	let _polyline = polyline(newArrPoints);
-	const _bounds = bounds(_polyline);
-	const min = _bounds?.min();
-	const max = _bounds?.max();
-	if (max === undefined || min === undefined) return NaN;
-	const localBounds = {
-		minX: min[0],
-		maxX: max[0],
-		minY: min[1],
-		maxY: max[1],
-	};
-	const pivot = [
-		data.x + (localBounds.minX + localBounds.maxX) / 2,
-		data.y + (localBounds.minY + localBounds.maxY) / 2,
-	];
+	points = simplify(points);
 
-	_polyline = translate(_polyline, [-pivot[0], -pivot[1]]);
-	const polygon = rotate(_polyline, angle);
-	_polyline = translate(polygon, [pivot[0], pivot[1]]);
+	let localPoint = [point.x - data.x, point.y - data.y];
+	if (data.rotation !== 0) {
+		const angle = -(data.rotation * Math.PI) / 180;
 
-	const dist = asSDF(_polyline)([point.x, point.y]);
-	return dist;
+		const sin = Math.sin(angle);
+		const cos = Math.cos(angle);
+
+		localPoint = [localPoint[0] - data.centerX, localPoint[1] - data.centerY];
+		localPoint = [
+			cos * localPoint[0] - sin * localPoint[1],
+			sin * localPoint[0] + cos * localPoint[1],
+		];
+		localPoint = [localPoint[0] + data.centerX, localPoint[1] + data.centerY];
+	}
+
+	return distPolyline2(localPoint, points);
 }

@@ -1,15 +1,19 @@
-import * as z from 'zod/v4'
 import { makeAutoObservable, toJS } from 'mobx';
 import RBush from 'rbush';
-import {type BoardElement, type BoardElementDraft, BoardElementSchema} from '@/entities/elements';
+import * as z from 'zod/v4';
+import {
+	type BoardElement,
+	type BoardElementDraft,
+	BoardElementSchema,
+} from '@/entities/elements';
 import type { ShapeBox } from '@/entities/elements/interfaces/shape-element.ts';
 import { getBounds } from '@/shared/lib/getBounds.ts';
 
 const ElementSchema = z.object({
 	history: z.array(BoardElementSchema),
-	version: z.number()
-})
-type Element = z.infer<typeof ElementSchema>
+	version: z.number(),
+});
+type Element = z.infer<typeof ElementSchema>;
 
 export class ElementsStore {
 	constructor() {

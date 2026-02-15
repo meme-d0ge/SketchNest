@@ -6,7 +6,19 @@ export class InteractiveStore {
 		makeAutoObservable(this);
 	}
 	element: BoardElementDraft | null = null;
+	pendingSoftDelete: Record<string, null> = {};
+
 	set = (addElement: BoardElementDraft | null) => {
 		this.element = addElement;
+	};
+
+	addToPendingSoftDelete = (id: string) => {
+		this.pendingSoftDelete[id] = null;
+	};
+	removeFromPendingSoftDelete = (id: string) => {
+		delete this.pendingSoftDelete[id];
+	};
+	clearPendingSoftDelete = () => {
+		this.pendingSoftDelete = {};
 	};
 }

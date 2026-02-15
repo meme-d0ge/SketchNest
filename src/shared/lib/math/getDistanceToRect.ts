@@ -1,5 +1,4 @@
-import { rect, rotate, translate } from '@thi.ng/geom';
-import { asSDF } from '@thi.ng/geom-sdf';
+import { distBox2 } from '@thi.ng/geom-sdf';
 import type { Vector2d } from 'konva/lib/types';
 
 export function getDistanceToRect(
@@ -12,12 +11,19 @@ export function getDistanceToRect(
 		rotation: number;
 	},
 ) {
-	const angle = (data.rotation * Math.PI) / 180;
-	const pivot = [data.x + data.width / 2, data.y + data.height / 2];
-	let shape = rect([data.x, data.y], [data.width, data.height]);
-	shape = translate(shape, [-pivot[0], -pivot[1]]);
-	const polygonR = rotate(shape, angle);
-	const _polygon = translate(polygonR, [pivot[0], pivot[1]]);
-	const dist = asSDF(_polygon)([point.x, point.y]);
-	return dist;
+	let localPosition = [
+		point.x - (data.x + data.width / 2),
+		point.y - (data.y + data.height / 2),
+	];
+	if (data.rotation !== 0) {
+		const angle = -(data.rotation * Math.PI) / 180;
+		const sin = Math.sin(angle);
+		const cos = Math.cos(angle);
+		localPosition = [
+			cos * localPosition[0] - sin * localPosition[1],
+			sin * localPosition[0] + cos * localPosition[1],
+		];
+	}
+
+	return distBox2(localPosition, [data.width / 2, data.height / 2]);
 }

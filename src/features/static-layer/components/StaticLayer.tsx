@@ -5,43 +5,33 @@ import {
 	LineComponent,
 	RectComponent,
 } from '@/entities/elements';
-import {ElementsEnum} from "@/entities/elements/interfaces/element-type-variant.ts";
+import { ElementsEnum } from '@/entities/elements/interfaces/element-type-variant.ts';
 
 export const StaticLayer = observer(() => {
 	const { entities } = useStore();
 	const elementsStore = entities.elementsStore;
+	const pendingSoftDelete = entities.interactiveStore.pendingSoftDelete;
 	return elementsStore.elements.map((value) => {
 		if (value.version !== -1) {
 			const current_version = value.history[value.version];
 			if (current_version.isDeleted) return null;
+			const opacity =
+				current_version.id in pendingSoftDelete
+					? current_version.visualData.opacity * 0.5
+					: current_version.visualData.opacity;
+
 			if (current_version.type === ElementsEnum.Line) {
-				const localBounds = {
-					minX: Math.min(
-						...current_version.data.points.filter((_, i) => i % 2 === 0),
-					),
-					maxX: Math.max(
-						...current_version.data.points.filter((_, i) => i % 2 === 0),
-					),
-					minY: Math.min(
-						...current_version.data.points.filter((_, i) => i % 2 === 1),
-					),
-					maxY: Math.max(
-						...current_version.data.points.filter((_, i) => i % 2 === 1),
-					),
-				};
-				const centerX = (localBounds.minX + localBounds.maxX) / 2;
-				const centerY = (localBounds.minY + localBounds.maxY) / 2;
 				return (
 					<LineComponent
 						key={current_version.id}
 						id={current_version.id}
-						x={current_version.data.x + centerX}
-						y={current_version.data.y + centerY}
-						offsetX={centerX}
-						offsetY={centerY}
+						x={current_version.data.x + current_version.data.centerX}
+						y={current_version.data.y + current_version.data.centerY}
+						offsetX={current_version.data.centerX}
+						offsetY={current_version.data.centerY}
 						rotation={current_version.data.rotation}
 						points={current_version.data.points}
-						opacity={current_version.opacity}
+						opacity={opacity}
 					/>
 				);
 			}
@@ -54,7 +44,7 @@ export const StaticLayer = observer(() => {
 						y={current_version.data.y}
 						radiusX={current_version.data.radiusX}
 						radiusY={current_version.data.radiusY}
-						opacity={current_version.opacity}
+						opacity={opacity}
 						rotation={current_version.data.rotation}
 					/>
 				);
@@ -70,7 +60,7 @@ export const StaticLayer = observer(() => {
 						height={current_version.data.height}
 						offsetX={current_version.data.width / 2}
 						offsetY={current_version.data.height / 2}
-						opacity={current_version.opacity}
+						opacity={opacity}
 						rotation={current_version.data.rotation}
 					/>
 				);

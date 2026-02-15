@@ -7,7 +7,7 @@ import {
 	translate,
 } from '@thi.ng/geom';
 import type { BoardElementDraft } from '@/entities/elements';
-import {ElementsEnum} from "@/entities/elements/interfaces/element-type-variant.ts";
+import { ElementsEnum } from '@/entities/elements/interfaces/element-type-variant.ts';
 
 export function getBounds(item: BoardElementDraft) {
 	switch (item.type) {
@@ -34,44 +34,30 @@ export function getBounds(item: BoardElementDraft) {
 		case ElementsEnum.Line: {
 			if (item.data.points.length < 2 || item.data.points.length % 2 !== 0)
 				return null;
+
 			const newArrPoints = [];
 			for (let i = 0; i < item.data.points.length; i = i + 2) {
-				newArrPoints.push([
-					item.data.x + item.data.points[i],
-					item.data.y + item.data.points[i + 1],
-				]);
+				newArrPoints.push([item.data.points[i], item.data.points[i + 1]]);
 			}
 			const angle = (item.data.rotation * Math.PI) / 180;
-			let _polyline = polyline(newArrPoints);
-			let _bounds = bounds(_polyline);
-			let min = _bounds?.min();
-			let max = _bounds?.max();
-			if (max === undefined || min === undefined) return null;
-			const localBounds = {
-				minX: min[0],
-				maxX: max[0],
-				minY: min[1],
-				maxY: max[1],
-			};
-			const pivot = [
-				item.data.x + (localBounds.minX + localBounds.maxX) / 2,
-				item.data.y + (localBounds.minY + localBounds.maxY) / 2,
-			];
 
+			const pivot = [item.data.centerX, item.data.centerY];
+
+			let _polyline = polyline(newArrPoints);
 			_polyline = translate(_polyline, [-pivot[0], -pivot[1]]);
 			const polygon = rotate(_polyline, angle);
 			_polyline = translate(polygon, [pivot[0], pivot[1]]);
 
-			_bounds = bounds(_polyline);
-			max = _bounds?.max();
-			min = _bounds?.min();
+			const _bounds = bounds(_polyline);
+			const max = _bounds?.max();
+			const min = _bounds?.min();
 
 			if (max === undefined || min === undefined) return null;
 			return {
-				maxX: max[0],
-				minX: min[0],
-				maxY: max[1],
-				minY: min[1],
+				maxX: item.data.x + max[0],
+				minX: item.data.x + min[0],
+				maxY: item.data.y + max[1],
+				minY: item.data.y + min[1],
 			};
 		}
 		case ElementsEnum.Ellipse: {

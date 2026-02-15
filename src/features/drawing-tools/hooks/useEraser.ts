@@ -1,14 +1,13 @@
 import type Konva from 'konva';
-import type { Shape } from 'konva/lib/Shape';
 import type { Vector2d } from 'konva/lib/types';
 import { useCallback, useEffect, useRef } from 'react';
 import { useStore } from '@/app/providers/StoreProvider.tsx';
 import type { BoardElement } from '@/entities/elements';
+import { ElementsEnum } from '@/entities/elements/interfaces/element-type-variant.ts';
 import { isVector2d } from '@/shared/guards/isVector2d.ts';
 import { getDistanceToEllipse } from '@/shared/lib/math/getDistanceToEllipse.ts';
 import { getDistanceToLine } from '@/shared/lib/math/getDistanceToLine.ts';
 import { getDistanceToRect } from '@/shared/lib/math/getDistanceToRect.ts';
-import {ElementsEnum} from "@/entities/elements/interfaces/element-type-variant.ts";
 
 const eraserRadius = 20;
 const radiusLine = 5;
@@ -59,7 +58,7 @@ export const useEraser = () => {
 			const sinA = height / hypotenuse;
 			const cosA = width / hypotenuse;
 
-			const allObjects = entities.elementsStore.rtree
+			const allObjects: BoardElement[] = entities.elementsStore.rtree
 				.search({
 					maxX:
 						Math.max(absolutePos.x + hypotenuse * cosA, absolutePos.x) +
@@ -75,13 +74,7 @@ export const useEraser = () => {
 						eraserRadius,
 				})
 				.map((item) => {
-					return {
-						shape: stage.findOne(`#${item.ownerId}`),
-						model: entities.elementsStore.getLatestVersion(item.ownerId),
-					};
-				})
-				.filter((item): item is { shape: Shape; model: BoardElement } => {
-					return item.shape !== undefined;
+					return entities.elementsStore.getLatestVersion(item.ownerId);
 				});
 
 			for (let i = hypotenuse; i >= 0; i = i - 5) {
@@ -90,40 +83,31 @@ export const useEraser = () => {
 
 				for (const item of allObjects) {
 					let flag = false;
-					if (item.model.type === ElementsEnum.Line) {
+					if (item.type === ElementsEnum.Line) {
 						const position = { x, y };
 						if (
-							getDistanceToLine(position, item.model.data) >
+							getDistanceToLine(position, item.data) >
 							radiusLine + eraserRadius
 						)
 							continue;
 						flag = true;
-					} else if (item.model.type === ElementsEnum.Rect) {
+					} else if (item.type === ElementsEnum.Rect) {
 						const position = { x, y };
-						if (getDistanceToRect(position, item.model.data) > eraserRadius)
-							continue;
+						if (getDistanceToRect(position, item.data) > eraserRadius) continue;
 						flag = true;
-					} else if (item.model.type === ElementsEnum.Ellipse) {
+					} else if (item.type === ElementsEnum.Ellipse) {
 						const position = { x, y };
-						if (getDistanceToEllipse(position, item.model.data) > eraserRadius)
+						if (getDistanceToEllipse(position, item.data) > eraserRadius)
 							continue;
 						flag = true;
 					}
-
 					if (flag) {
-						const id = item.shape.attrs.id;
 						if (isRestoreMode.current) {
-							item.shape.setAttr(
-								'opacity',
-								(e.target.attrs.opacity || 0.5) * 2,
-							);
-							arrayIdToTrash.current.delete(id);
+							entities.interactiveStore.removeFromPendingSoftDelete(item.id);
+							arrayIdToTrash.current.delete(item.id);
 						} else {
-							if (arrayIdToTrash.current.has(id)) {
-								continue;
-							}
-							item.shape.setAttr('opacity', (e.target.attrs.opacity | 1) * 0.5);
-							arrayIdToTrash.current.add(id);
+							entities.interactiveStore.addToPendingSoftDelete(item.id);
+							arrayIdToTrash.current.add(item.id);
 						}
 					}
 				}
@@ -137,12 +121,11 @@ export const useEraser = () => {
 		const arrayElementToTrash = [];
 		for (const id of arrayIdToTrash.current) {
 			const historyElement = entities.elementsStore.getLatestVersion(id);
-			arrayElementToTrash.push({
-				...historyElement,
-				isDeleted: true,
-			});
+			historyElement.isDeleted = true;
+			arrayElementToTrash.push(historyElement);
 		}
 		if (arrayElementToTrash.length > 0) {
+			entities.interactiveStore.clearPendingSoftDelete();
 			entities.elementsStore.add(arrayElementToTrash);
 			arrayIdToTrash.current = new Set();
 		}

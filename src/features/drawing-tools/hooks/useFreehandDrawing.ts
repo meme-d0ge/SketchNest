@@ -2,12 +2,19 @@ import type Konva from 'konva';
 import { useCallback, useRef } from 'react';
 import { useStore } from '@/app/providers/StoreProvider.tsx';
 import type { LineElementDraft } from '@/entities/elements';
+import { ElementsEnum } from '@/entities/elements/interfaces/element-type-variant.ts';
 import { isVector2d } from '@/shared/guards/isVector2d.ts';
-import {ElementsEnum} from "@/entities/elements/interfaces/element-type-variant.ts";
+import type { Bounds } from '@/shared/types/shape.ts';
 
 export const useFreehandDrawing = () => {
 	const isDrawing = useRef(false);
 	const line = useRef<LineElementDraft | null>(null);
+	const localBounds = useRef<Bounds>({
+		minX: 0,
+		maxX: 0,
+		minY: 0,
+		maxY: 0,
+	});
 	const { entities } = useStore();
 
 	const startFreehandDraw = useCallback(
@@ -17,13 +24,28 @@ export const useFreehandDrawing = () => {
 			const pos = stage?.getRelativePointerPosition();
 			if (isVector2d(pos)) {
 				const { x: absoluteX, y: absoluteY } = pos;
+				localBounds.current = {
+					minX: 0,
+					maxX: 0,
+					minY: 0,
+					maxY: 0,
+				};
+				const centerX =
+					(localBounds.current.minX + localBounds.current.maxX) / 2;
+				const centerY =
+					(localBounds.current.minY + localBounds.current.maxY) / 2;
 				line.current = {
 					type: ElementsEnum.Line,
 					isDeleted: false,
+					visualData: {
+						opacity: 1,
+					},
 					data: {
 						x: absoluteX,
 						y: absoluteY,
 						points: [0, 0],
+						centerX: centerX,
+						centerY: centerY,
 						rotation: 0,
 					},
 				};
@@ -39,20 +61,28 @@ export const useFreehandDrawing = () => {
 			const pos = stage?.getRelativePointerPosition();
 			if (isVector2d(pos)) {
 				const { x: absoluteX, y: absoluteY } = pos;
-				line.current = {
-					type: ElementsEnum.Line,
-					isDeleted: line.current.isDeleted,
-					data: {
-						x: line.current.data.x,
-						y: line.current.data.y,
-						points: [
-							...line.current.data.points,
-							absoluteX - line.current.data.x,
-							absoluteY - line.current.data.y,
-						],
-						rotation: 0,
-					},
-				};
+				const localX = absoluteX - line.current.data.x;
+				const localY = absoluteY - line.current.data.y;
+				line.current.data.points.push(localX, localY);
+
+				if (localX > localBounds.current.maxX) {
+					localBounds.current.maxX = localX;
+				} else if (localX < localBounds.current.minX) {
+					localBounds.current.minX = localX;
+				}
+				if (localY > localBounds.current.maxY) {
+					localBounds.current.maxY = localY;
+				} else if (localY < localBounds.current.minY) {
+					localBounds.current.minY = localY;
+				}
+
+				const centerX =
+					(localBounds.current.minX + localBounds.current.maxX) / 2;
+				const centerY =
+					(localBounds.current.minY + localBounds.current.maxY) / 2;
+
+				line.current.data.centerX = centerX;
+				line.current.data.centerY = centerY;
 				entities.interactiveStore.set(line.current);
 			}
 		},
