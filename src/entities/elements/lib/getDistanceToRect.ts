@@ -1,16 +1,8 @@
 import { distBox2 } from '@thi.ng/geom-sdf';
 import type { Vector2d } from 'konva/lib/types';
+import type { RectData } from '@/entities/elements/interfaces/rect-element.ts';
 
-export function getDistanceToRect(
-	point: Vector2d,
-	data: {
-		x: number;
-		y: number;
-		width: number;
-		height: number;
-		rotation: number;
-	},
-) {
+export function getDistanceToRect(point: Vector2d, data: RectData) {
 	let localPosition = [
 		point.x - (data.x + data.width / 2),
 		point.y - (data.y + data.height / 2),

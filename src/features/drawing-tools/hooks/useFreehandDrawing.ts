@@ -1,10 +1,9 @@
 import type Konva from 'konva';
 import { useCallback, useRef } from 'react';
 import { useStore } from '@/app/providers/StoreProvider.tsx';
-import type { LineElementDraft } from '@/entities/elements';
-import { ElementsEnum } from '@/entities/elements/interfaces/element-type-variant.ts';
+import type { Bounds, LineElementDraft } from '@/entities/elements';
+import { ElementsEnum } from '@/entities/elements';
 import { isVector2d } from '@/shared/guards/isVector2d.ts';
-import type { Bounds } from '@/shared/types/shape.ts';
 
 export const useFreehandDrawing = () => {
 	const isDrawing = useRef(false);
@@ -39,6 +38,8 @@ export const useFreehandDrawing = () => {
 					isDeleted: false,
 					visualData: {
 						opacity: 1,
+						strokeWidth: 5,
+						stroke: 'red',
 					},
 					data: {
 						x: absoluteX,

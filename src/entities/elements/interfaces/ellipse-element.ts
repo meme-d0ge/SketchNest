@@ -1,7 +1,7 @@
 import * as z from 'zod/v4';
-import { BaseElementDataSchema } from '@/entities/elements/interfaces/base-geometry-data.ts';
-import { ElementsEnum } from '@/entities/elements/interfaces/element-type-variant.ts';
 import { BaseElementSchema } from './base-element.ts';
+import { BaseElementDataSchema } from './base-geometry-data.ts';
+import { ElementsEnum } from './element-type-variant.ts';
 
 export const EllipseDataSchema = BaseElementDataSchema.extend({
 	x: z.number(),

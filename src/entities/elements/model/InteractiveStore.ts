@@ -1,5 +1,5 @@
 import { makeAutoObservable } from 'mobx';
-import type { BoardElementDraft } from '@/entities/elements';
+import type { BoardElementDraft } from '@/entities/elements/interfaces/board-element';
 
 export class InteractiveStore {
 	constructor() {

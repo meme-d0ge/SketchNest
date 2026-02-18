@@ -2,7 +2,7 @@ import type Konva from 'konva';
 import { useCallback, useRef } from 'react';
 import { useStore } from '@/app/providers/StoreProvider.tsx';
 import type { RectElementDraft } from '@/entities/elements';
-import { ElementsEnum } from '@/entities/elements/interfaces/element-type-variant.ts';
+import { ElementsEnum } from '@/entities/elements';
 import { isVector2d } from '@/shared/guards/isVector2d.ts';
 
 export const useDrawRect = () => {
@@ -26,6 +26,8 @@ export const useDrawRect = () => {
 					isDeleted: false,
 					visualData: {
 						opacity: 1,
+						strokeWidth: 4,
+						stroke: 'black',
 					},
 					data: {
 						x: absoluteX,

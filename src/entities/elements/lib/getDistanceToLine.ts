@@ -1,17 +1,8 @@
 import { simplify } from '@thi.ng/geom-resample';
 import { distPolyline2 } from '@thi.ng/geom-sdf';
 import type { Vector2d } from 'konva/lib/types';
-export function getDistanceToLine(
-	point: Vector2d,
-	data: {
-		x: number;
-		y: number;
-		points: number[];
-		rotation: number;
-		centerX: number;
-		centerY: number;
-	},
-) {
+import type { LineData } from '@/entities/elements/interfaces/line-element.ts';
+export function getDistanceToLine(point: Vector2d, data: LineData) {
 	if (data.points.length < 2 || data.points.length % 2 !== 0) return NaN;
 
 	let points = [];

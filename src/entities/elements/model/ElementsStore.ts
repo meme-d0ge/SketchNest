@@ -1,13 +1,13 @@
-import {makeAutoObservable, makeObservable, toJS} from 'mobx';
+import { makeAutoObservable, makeObservable, toJS } from 'mobx';
 import RBush from 'rbush';
 import * as z from 'zod/v4';
 import {
 	type BoardElement,
 	type BoardElementDraft,
 	BoardElementSchema,
-} from '@/entities/elements';
+} from '@/entities/elements/interfaces/board-element';
 import type { ShapeBox } from '@/entities/elements/interfaces/shape-element.ts';
-import { getBounds } from '@/shared/lib/getBounds.ts';
+import { getBounds } from '@/entities/elements/lib/getBounds.ts';
 
 const ElementSchema = z.object({
 	history: z.array(BoardElementSchema),
@@ -63,8 +63,8 @@ export class ElementsStore {
 					continue;
 				}
 
-				this.sliceFutureVersionByIndex(index)
-				const actualElement = this.getActualElementByIndex(index)
+				this.sliceFutureVersionByIndex(index);
+				const actualElement = this.getActualElementByIndex(index);
 				this.rtree.remove(actualElement.shapeBox);
 				const newBoardElement = makeObservable({
 					...element,
@@ -73,8 +73,8 @@ export class ElementsStore {
 						ownerId: actualElement.id,
 					},
 				} as BoardElement);
-				this.pushNewElement(index, newBoardElement)
-				this.incrementVersion(index)
+				this.pushNewElement(index, newBoardElement);
+				this.incrementVersion(index);
 
 				if (!newBoardElement.isDeleted) {
 					this.rtree.insert(newBoardElement.shapeBox);
@@ -94,9 +94,9 @@ export class ElementsStore {
 		for (const id of idOfModifiedElements) {
 			const index = this.elementIndexMap[id];
 
-			const lastElement = this.getActualElementByIndex(index)
+			const lastElement = this.getActualElementByIndex(index);
 			this.rtree.remove(lastElement.shapeBox);
-			this.decrementVersion(index)
+			this.decrementVersion(index);
 
 			if (
 				this.elements[index].version !== -1 &&
@@ -119,16 +119,14 @@ export class ElementsStore {
 		for (const id of idOfModifiedElements) {
 			const index = this.elementIndexMap[id];
 			if (this.elements[index].version !== -1) {
-				const actualElement = this.getActualElementByIndex(index)
+				const actualElement = this.getActualElementByIndex(index);
 				this.rtree.remove(actualElement.shapeBox);
 			}
-			this.incrementVersion(index)
+			this.incrementVersion(index);
 			if (
 				!this.elements[index].history[this.elements[index].version].isDeleted
 			) {
-				this.rtree.insert(
-					this.getActualElementByIndex(index).shapeBox,
-				);
+				this.rtree.insert(this.getActualElementByIndex(index).shapeBox);
 			}
 		}
 		this.canUndo = true;
@@ -146,25 +144,24 @@ export class ElementsStore {
 		const element = this.elements[index];
 		const version = element.version;
 		return element.history[version];
-	}
+	};
 
 	private sliceFutureVersionByIndex = (index: number) => {
 		this.elements[index].history = this.elements[index].history.slice(
 			0,
 			this.elements[index].version + 1,
 		);
-	}
+	};
 
 	private pushNewElement = (index: number, element: BoardElement) => {
 		this.elements[index].history.push(element);
-	}
+	};
 
 	private incrementVersion = (index: number) => {
 		this.elements[index].version = this.elements[index].version + 1;
-	}
+	};
 
 	private decrementVersion = (index: number) => {
 		this.elements[index].version = this.elements[index].version - 1;
-	}
-
+	};
 }

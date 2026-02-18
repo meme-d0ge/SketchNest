@@ -1,11 +1,11 @@
 import { observer } from 'mobx-react-lite';
 import { useStore } from '@/app/providers/StoreProvider.tsx';
 import {
+	ElementsEnum,
 	EllipseComponent,
 	LineComponent,
 	RectComponent,
 } from '@/entities/elements';
-import { ElementsEnum } from '@/entities/elements/interfaces/element-type-variant.ts';
 
 export const StaticLayer = observer(() => {
 	const { entities } = useStore();
@@ -32,6 +32,8 @@ export const StaticLayer = observer(() => {
 						rotation={current_version.data.rotation}
 						points={current_version.data.points}
 						opacity={opacity}
+						stroke={current_version.visualData.stroke}
+						strokeWidth={current_version.visualData.strokeWidth}
 					/>
 				);
 			}
@@ -44,8 +46,10 @@ export const StaticLayer = observer(() => {
 						y={current_version.data.y}
 						radiusX={current_version.data.radiusX}
 						radiusY={current_version.data.radiusY}
-						opacity={opacity}
 						rotation={current_version.data.rotation}
+						opacity={opacity}
+						stroke={current_version.visualData.stroke}
+						strokeWidth={current_version.visualData.strokeWidth}
 					/>
 				);
 			}
@@ -60,8 +64,10 @@ export const StaticLayer = observer(() => {
 						height={current_version.data.height}
 						offsetX={current_version.data.width / 2}
 						offsetY={current_version.data.height / 2}
-						opacity={opacity}
 						rotation={current_version.data.rotation}
+						opacity={opacity}
+						stroke={current_version.visualData.stroke}
+						strokeWidth={current_version.visualData.strokeWidth}
 					/>
 				);
 			}

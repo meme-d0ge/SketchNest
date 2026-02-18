@@ -1,11 +1,11 @@
 import { observer } from 'mobx-react-lite';
 import { useStore } from '@/app/providers/StoreProvider.tsx';
 import {
+	ElementsEnum,
 	EllipseComponent,
 	LineComponent,
 	RectComponent,
 } from '@/entities/elements';
-import { ElementsEnum } from '@/entities/elements/interfaces/element-type-variant.ts';
 
 export const InteractiveLayer = observer(() => {
 	const { entities } = useStore();
@@ -23,6 +23,8 @@ export const InteractiveLayer = observer(() => {
 				rotation={element.data.rotation}
 				points={element.data.points}
 				opacity={element.visualData.opacity}
+				stroke={element.visualData.stroke}
+				strokeWidth={element.visualData.strokeWidth}
 			/>
 		);
 	}
@@ -33,8 +35,10 @@ export const InteractiveLayer = observer(() => {
 				y={element.data.y}
 				radiusX={element.data.radiusX}
 				radiusY={element.data.radiusY}
-				opacity={element.visualData.opacity}
 				rotation={element.data.rotation}
+				opacity={element.visualData.opacity}
+				stroke={element.visualData.stroke}
+				strokeWidth={element.visualData.strokeWidth}
 			/>
 		);
 	}
@@ -47,8 +51,10 @@ export const InteractiveLayer = observer(() => {
 				height={element.data.height}
 				offsetX={element.data.width / 2}
 				offsetY={element.data.height / 2}
-				opacity={element.visualData.opacity}
 				rotation={element.data.rotation}
+				opacity={element.visualData.opacity}
+				stroke={element.visualData.stroke}
+				strokeWidth={element.visualData.strokeWidth}
 			/>
 		);
 	}

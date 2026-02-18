@@ -1,33 +1,33 @@
 export type {
 	BoardElement,
 	BoardElementDraft,
-} from '@/entities/elements/interfaces/board-element.ts';
+} from './interfaces/board-element.ts';
 export {
 	BoardElementDraftSchema,
 	BoardElementSchema,
-} from '@/entities/elements/interfaces/board-element.ts';
+} from './interfaces/board-element.ts';
+export type { Bounds } from './interfaces/bounds.ts';
+export type { ElementType } from './interfaces/element-type-variant.ts';
+export {
+	ElementsEnum,
+	ElementTypeSchema,
+} from './interfaces/element-type-variant.ts';
 export type {
 	EllipseElement,
 	EllipseElementDraft,
-} from '@/entities/elements/interfaces/ellipse-element.ts';
+} from './interfaces/ellipse-element.ts';
 export {
 	EllipseElementDraftSchema,
 	EllipseElementSchema,
-} from '@/entities/elements/interfaces/ellipse-element.ts';
+} from './interfaces/ellipse-element.ts';
 export type {
 	LineElement,
 	LineElementDraft,
-} from '@/entities/elements/interfaces/line-element.ts';
+} from './interfaces/line-element.ts';
 export {
 	LineElementDraftSchema,
 	LineElementSchema,
-} from '@/entities/elements/interfaces/line-element.ts';
-export { EllipseComponent } from './components/EllipseComponent.tsx';
-export { LineComponent } from './components/LineComponent.tsx';
-export { RectComponent } from './components/RectComponent.tsx';
-export type { ElementType } from './interfaces/element-type-variant.ts';
-
-export { ElementTypeSchema } from './interfaces/element-type-variant.ts';
+} from './interfaces/line-element.ts';
 export type {
 	RectElement,
 	RectElementDraft,
@@ -38,5 +38,10 @@ export {
 } from './interfaces/rect-element.ts';
 export type { ShapeBox } from './interfaces/shape-element.ts';
 export { ShapeBoxSchema } from './interfaces/shape-element.ts';
+export { getDistanceToBoardElement } from './lib/getDistanceToBoardElement';
 export { ElementsStore } from './model/ElementsStore.ts';
 export { InteractiveStore } from './model/InteractiveStore.ts';
+export { EllipseComponent } from './ui/EllipseComponent.tsx';
+export { LineComponent } from './ui/LineComponent.tsx';
+
+export { RectComponent } from './ui/RectComponent.tsx';

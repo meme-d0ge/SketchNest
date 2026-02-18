@@ -3,14 +3,10 @@ import type { Vector2d } from 'konva/lib/types';
 import { useCallback, useEffect, useRef } from 'react';
 import { useStore } from '@/app/providers/StoreProvider.tsx';
 import type { BoardElement } from '@/entities/elements';
-import { ElementsEnum } from '@/entities/elements/interfaces/element-type-variant.ts';
+import { getDistanceToBoardElement } from '@/entities/elements';
 import { isVector2d } from '@/shared/guards/isVector2d.ts';
-import { getDistanceToEllipse } from '@/shared/lib/math/getDistanceToEllipse.ts';
-import { getDistanceToLine } from '@/shared/lib/math/getDistanceToLine.ts';
-import { getDistanceToRect } from '@/shared/lib/math/getDistanceToRect.ts';
 
 const eraserRadius = 20;
-const radiusLine = 5;
 
 export const useEraser = () => {
 	const isDrawing = useRef<boolean>(false);
@@ -51,6 +47,7 @@ export const useEraser = () => {
 			if (stage === null || !isVector2d(absolutePos)) {
 				return;
 			}
+
 			const width = lastPosition.current.x - absolutePos.x;
 			const height = lastPosition.current.y - absolutePos.y;
 			const hypotenuse = Math.sqrt(width ** 2 + height ** 2) || 5;
@@ -82,26 +79,8 @@ export const useEraser = () => {
 				const y = absolutePos.y + i * sinA;
 
 				for (const item of allObjects) {
-					let flag = false;
-					if (item.type === ElementsEnum.Line) {
-						const position = { x, y };
-						if (
-							getDistanceToLine(position, item.data) >
-							radiusLine + eraserRadius
-						)
-							continue;
-						flag = true;
-					} else if (item.type === ElementsEnum.Rect) {
-						const position = { x, y };
-						if (getDistanceToRect(position, item.data) > eraserRadius) continue;
-						flag = true;
-					} else if (item.type === ElementsEnum.Ellipse) {
-						const position = { x, y };
-						if (getDistanceToEllipse(position, item.data) > eraserRadius)
-							continue;
-						flag = true;
-					}
-					if (flag) {
+					const distance = getDistanceToBoardElement({ x, y }, item);
+					if (distance !== null && distance < eraserRadius) {
 						if (isRestoreMode.current) {
 							entities.interactiveStore.removeFromPendingSoftDelete(item.id);
 							arrayIdToTrash.current.delete(item.id);

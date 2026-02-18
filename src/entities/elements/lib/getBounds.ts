@@ -6,7 +6,7 @@ import {
 	rotate,
 	translate,
 } from '@thi.ng/geom';
-import type { BoardElementDraft } from '@/entities/elements';
+import type { BoardElementDraft } from '@/entities/elements/interfaces/board-element';
 import { ElementsEnum } from '@/entities/elements/interfaces/element-type-variant.ts';
 
 export function getBounds(item: BoardElementDraft) {
