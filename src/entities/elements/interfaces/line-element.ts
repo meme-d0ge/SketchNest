@@ -1,3 +1,4 @@
+import { simplify } from '@thi.ng/geom-resample';
 import * as z from 'zod/v4';
 import {
 	BaseElementCreateSchema,
@@ -13,7 +14,27 @@ import { ElementsEnum } from './element-type-variant.ts';
 export const LineDataSchema = BaseElementDataSchema.extend({
 	x: z.number(),
 	y: z.number(),
-	points: z.array(z.number()),
+	points: z
+		.array(z.number())
+		.min(4, { message: 'At least 2 points required (4 coordinates)' })
+		.refine((arr) => arr.length % 2 === 0, {
+			message: 'The number of values in points must be even (x,y pairs)',
+		})
+		.transform((flatPoints: number[]): number[] => {
+			const vecs: number[][] = [];
+			for (let i = 0; i < flatPoints.length; i += 2) {
+				vecs.push([flatPoints[i], flatPoints[i + 1]]);
+			}
+
+			const simplifiedVecs = simplify(vecs, 1.0, false);
+
+			const result: number[] = [];
+			for (const [x, y] of simplifiedVecs) {
+				result.push(x, y);
+			}
+
+			return result;
+		}),
 	centerX: z.number(),
 	centerY: z.number(),
 });

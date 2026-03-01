@@ -1,15 +1,14 @@
-import { simplify } from '@thi.ng/geom-resample';
+// import { simplify } from '@thi.ng/geom-resample';
 import { distPolyline2 } from '@thi.ng/geom-sdf';
 import type { Vector2d } from 'konva/lib/types';
 import type { LineData } from '@/entities/elements/interfaces/line-element.ts';
 export function getDistanceToLine(point: Vector2d, data: LineData) {
 	if (data.points.length < 2 || data.points.length % 2 !== 0) return NaN;
 
-	let points = [];
+	const points = [];
 	for (let i = 0; i < data.points.length; i = i + 2) {
 		points.push([data.points[i], data.points[i + 1]]);
 	}
-	points = simplify(points);
 
 	let localPoint = [point.x - data.x, point.y - data.y];
 	if (data.rotation !== 0) {
