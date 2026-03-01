@@ -6,3 +6,6 @@ export const VisualDataSchema = z.object({
 	stroke: z.string(),
 });
 export type VisualData = z.infer<typeof VisualDataSchema>;
+
+export const VisualDataPartialSchema = VisualDataSchema.partial();
+export type VisualDataPartial = z.infer<typeof VisualDataPartialSchema>;

@@ -1,6 +1,13 @@
 import * as z from 'zod/v4';
-import { BaseElementSchema } from './base-element.ts';
-import { BaseElementDataSchema } from './base-geometry-data.ts';
+import {
+	BaseElementCreateSchema,
+	BaseElementSchema,
+	BaseElementUpdateSchema,
+} from './base-element.ts';
+import {
+	BaseElementDataPartialSchema,
+	BaseElementDataSchema,
+} from './base-geometry-data.ts';
 import { ElementsEnum } from './element-type-variant.ts';
 
 export const RectDataSchema = BaseElementDataSchema.extend({
@@ -11,15 +18,24 @@ export const RectDataSchema = BaseElementDataSchema.extend({
 });
 export type RectData = z.infer<typeof RectDataSchema>;
 
+export const RectDataPartialSchema = BaseElementDataPartialSchema.extend(
+	RectDataSchema.partial().shape,
+);
+export type RectDataPartial = z.infer<typeof RectDataPartialSchema>;
+
 export const RectElementSchema = BaseElementSchema.extend({
 	type: z.literal(ElementsEnum.Rect),
 	data: RectDataSchema,
 });
 export type RectElement = z.infer<typeof RectElementSchema>;
 
-export const RectElementDraftSchema = RectElementSchema.omit({
-	shapeBox: true,
-}).extend({
-	id: z.string().optional(),
+export const RectElementCreateSchema = BaseElementCreateSchema.extend({
+	type: z.literal(ElementsEnum.Rect),
+	data: RectDataSchema,
 });
-export type RectElementDraft = z.infer<typeof RectElementDraftSchema>;
+export type RectElementCreate = z.infer<typeof RectElementCreateSchema>;
+
+export const RectElementUpdateSchema = BaseElementUpdateSchema.extend({
+	data: RectDataPartialSchema.optional(),
+});
+export type RectElementUpdate = z.infer<typeof RectElementUpdateSchema>;

@@ -1,14 +1,14 @@
 import type Konva from 'konva';
 import { useCallback, useRef } from 'react';
 import { useStore } from '@/app/providers/StoreProvider.tsx';
-import type { EllipseElementDraft } from '@/entities/elements';
+import type { EllipseElementCreate } from '@/entities/elements';
 import { ElementsEnum } from '@/entities/elements';
 import { isVector2d } from '@/shared/guards/isVector2d.ts';
 
 export const useDrawEllipse = () => {
 	const { entities } = useStore();
 	const isDrawing = useRef(false);
-	const ellipse = useRef<EllipseElementDraft | null>(null);
+	const ellipse = useRef<EllipseElementCreate | null>(null);
 	const startPosition = useRef<{ x: number; y: number } | null>(null);
 	const startDrawEllipse = useCallback(
 		(e: Konva.KonvaEventObject<TouchEvent | MouseEvent>) => {
@@ -71,7 +71,7 @@ export const useDrawEllipse = () => {
 		isDrawing.current = false;
 		startPosition.current = null;
 		if (ellipse.current !== null) {
-			entities.elementsStore.add([ellipse.current]);
+			entities.elementsStore.create([ellipse.current]);
 			entities.interactiveStore.set(null);
 		}
 	}, [entities]);

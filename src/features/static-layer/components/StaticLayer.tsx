@@ -1,19 +1,23 @@
+import { toJS } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '@/app/providers/StoreProvider.tsx';
 import {
 	ElementsEnum,
 	EllipseComponent,
 	LineComponent,
+	REMOVE_ELEMENT_VERSION,
 	RectComponent,
 } from '@/entities/elements';
 
 export const StaticLayer = observer(() => {
 	const { entities } = useStore();
 	const elementsStore = entities.elementsStore;
+	console.log(toJS(elementsStore.elements));
 	const pendingSoftDelete = entities.interactiveStore.pendingSoftDelete;
+
 	return elementsStore.elements.map((value) => {
-		if (value.version !== -1) {
-			const current_version = value.history[value.version];
+		if (value.version !== REMOVE_ELEMENT_VERSION) {
+			const current_version = value.presentElement;
 			if (current_version.isDeleted) return null;
 			const opacity =
 				current_version.id in pendingSoftDelete

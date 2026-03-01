@@ -1,14 +1,14 @@
 import type Konva from 'konva';
 import { useCallback, useRef } from 'react';
 import { useStore } from '@/app/providers/StoreProvider.tsx';
-import type { RectElementDraft } from '@/entities/elements';
+import type { RectElementCreate } from '@/entities/elements';
 import { ElementsEnum } from '@/entities/elements';
 import { isVector2d } from '@/shared/guards/isVector2d.ts';
 
 export const useDrawRect = () => {
 	const isDrawing = useRef(false);
 	const startPosition = useRef<{ x: number; y: number } | null>(null);
-	const rect = useRef<RectElementDraft | null>(null);
+	const rect = useRef<RectElementCreate | null>(null);
 	const { entities } = useStore();
 	const startDrawRect = useCallback(
 		(e: Konva.KonvaEventObject<TouchEvent | MouseEvent>) => {
@@ -68,7 +68,7 @@ export const useDrawRect = () => {
 		isDrawing.current = false;
 		startPosition.current = null;
 		if (rect.current !== null) {
-			entities.elementsStore.add([rect.current]);
+			entities.elementsStore.create([rect.current]);
 			entities.interactiveStore.set(null);
 		}
 	}, [entities]);

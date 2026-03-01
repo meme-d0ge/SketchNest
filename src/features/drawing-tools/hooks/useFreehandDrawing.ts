@@ -1,13 +1,13 @@
 import type Konva from 'konva';
 import { useCallback, useRef } from 'react';
 import { useStore } from '@/app/providers/StoreProvider.tsx';
-import type { Bounds, LineElementDraft } from '@/entities/elements';
+import type { Bounds, LineElementCreate } from '@/entities/elements';
 import { ElementsEnum } from '@/entities/elements';
 import { isVector2d } from '@/shared/guards/isVector2d.ts';
 
 export const useFreehandDrawing = () => {
 	const isDrawing = useRef(false);
-	const line = useRef<LineElementDraft | null>(null);
+	const line = useRef<LineElementCreate | null>(null);
 	const localBounds = useRef<Bounds>({
 		minX: 0,
 		maxX: 0,
@@ -92,7 +92,7 @@ export const useFreehandDrawing = () => {
 	const endFreehandDraw = useCallback(() => {
 		isDrawing.current = false;
 		if (line.current !== null) {
-			entities.elementsStore.add([line.current]);
+			entities.elementsStore.create([line.current]);
 			entities.interactiveStore.set(null);
 			line.current = null;
 		}

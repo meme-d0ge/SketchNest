@@ -1,14 +1,14 @@
 import { makeAutoObservable } from 'mobx';
-import type { BoardElementDraft } from '@/entities/elements/interfaces/board-element';
+import type { BoardElementCreate } from '@/entities/elements/interfaces/board-element';
 
 export class InteractiveStore {
 	constructor() {
 		makeAutoObservable(this);
 	}
-	element: BoardElementDraft | null = null;
+	element: BoardElementCreate | null = null;
 	pendingSoftDelete: Record<string, null> = {};
 
-	set = (addElement: BoardElementDraft | null) => {
+	set = (addElement: BoardElementCreate | null) => {
 		this.element = addElement;
 	};
 

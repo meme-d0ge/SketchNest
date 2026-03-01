@@ -2,8 +2,13 @@ import type Konva from 'konva';
 import type { Vector2d } from 'konva/lib/types';
 import { useCallback, useEffect, useRef } from 'react';
 import { useStore } from '@/app/providers/StoreProvider.tsx';
-import type { BoardElement } from '@/entities/elements';
-import { getDistanceToBoardElement } from '@/entities/elements';
+import {
+	type BoardElement,
+	BoardElementUpdateSchema,
+	getDistanceToBoardElement,
+} from '@/entities/elements';
+import type { BoardElementUpdate } from '@/entities/elements/interfaces/board-element.ts';
+
 import { isVector2d } from '@/shared/guards/isVector2d.ts';
 
 const eraserRadius = 20;
@@ -11,7 +16,7 @@ const eraserRadius = 20;
 export const useEraser = () => {
 	const isDrawing = useRef<boolean>(false);
 	const isRestoreMode = useRef<boolean>(false);
-	const arrayIdToTrash = useRef<Set<string>>(new Set());
+	const setIdToTrash = useRef<Set<string>>(new Set());
 	const lastPosition = useRef<Vector2d | null>(null);
 	const { entities } = useStore();
 
@@ -71,8 +76,9 @@ export const useEraser = () => {
 						eraserRadius,
 				})
 				.map((item) => {
-					return entities.elementsStore.getActualVersion(item.ownerId);
-				});
+					return entities.elementsStore.getCopyPresentElement(item.ownerId);
+				})
+				.filter((item) => item !== undefined);
 
 			for (let i = hypotenuse; i >= 0; i = i - 5) {
 				const x = absolutePos.x + i * cosA;
@@ -83,10 +89,10 @@ export const useEraser = () => {
 					if (distance !== null && distance < eraserRadius) {
 						if (isRestoreMode.current) {
 							entities.interactiveStore.removeFromPendingSoftDelete(item.id);
-							arrayIdToTrash.current.delete(item.id);
+							setIdToTrash.current.delete(item.id);
 						} else {
 							entities.interactiveStore.addToPendingSoftDelete(item.id);
-							arrayIdToTrash.current.add(item.id);
+							setIdToTrash.current.add(item.id);
 						}
 					}
 				}
@@ -97,16 +103,23 @@ export const useEraser = () => {
 	);
 	const endEraser = useCallback(() => {
 		isDrawing.current = false;
-		const arrayElementToTrash = [];
-		for (const id of arrayIdToTrash.current) {
-			const historyElement = entities.elementsStore.getActualVersion(id);
-			historyElement.isDeleted = true;
-			arrayElementToTrash.push(historyElement);
-		}
-		if (arrayElementToTrash.length > 0) {
+		if (setIdToTrash.current.size > 0) {
 			entities.interactiveStore.clearPendingSoftDelete();
-			entities.elementsStore.add(arrayElementToTrash);
-			arrayIdToTrash.current = new Set();
+			const elements: {
+				id: BoardElement['id'];
+				element: BoardElementUpdate;
+			}[] = [];
+			setIdToTrash.current.forEach((id) => {
+				if (entities.elementsStore.hasId(id)) {
+					elements.push({
+						id: id,
+						element: BoardElementUpdateSchema.parse({ isDeleted: true }),
+					});
+				}
+			});
+
+			entities.elementsStore.update(elements);
+			setIdToTrash.current = new Set();
 		}
 	}, [entities]);
 
