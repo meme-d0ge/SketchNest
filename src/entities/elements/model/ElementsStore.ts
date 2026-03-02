@@ -46,7 +46,10 @@ export class ElementsStore {
 
 	create = (elements: BoardElementCreate[]) => {
 		this.actualStep++;
-		this.historySteps = this.historySteps.slice(0, this.actualStep);
+		if (this.actualStep < this.historySteps.length) {
+			this.cleaningProcedure();
+			this.historySteps.splice(this.actualStep);
+		}
 		const modifiedElements: BoardElement['id'][] = [];
 		for (const element of elements) {
 			try {
@@ -96,6 +99,10 @@ export class ElementsStore {
 		elements: { id: BoardElement['id']; element: BoardElementUpdate }[],
 	) => {
 		this.actualStep++;
+		if (this.actualStep < this.historySteps.length) {
+			this.cleaningProcedure();
+			this.historySteps.splice(this.actualStep);
+		}
 		this.historySteps = this.historySteps.slice(0, this.actualStep);
 		const modifiedElements: BoardElement['id'][] = [];
 		for (const item of elements) {
@@ -233,6 +240,18 @@ export class ElementsStore {
 			0,
 			this.elements[index].version + 1,
 		);
+	};
+	private cleaningProcedure = () => {
+		let leftP = 0;
+		for (let rightP = 0; rightP < this.elements.length; rightP++) {
+			const rightElement = this.elements[rightP];
+			const leftElement = this.elements[leftP];
+			if (rightElement.version === REMOVE_ELEMENT_VERSION) continue;
+			this.elements[leftP] = rightElement;
+			this.elementIndexMap[leftElement.presentElement.id] = rightP;
+			leftP++;
+		}
+		this.elements.splice(leftP);
 	};
 
 	getCopyPresentElement = (id: BoardElement['id']) => {
