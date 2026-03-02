@@ -48,7 +48,6 @@ export class ElementsStore {
 		this.actualStep++;
 		if (this.actualStep < this.historySteps.length) {
 			this.cleaningProcedure();
-			this.historySteps.splice(this.actualStep);
 		}
 		const modifiedElements: BoardElement['id'][] = [];
 		for (const element of elements) {
@@ -101,9 +100,7 @@ export class ElementsStore {
 		this.actualStep++;
 		if (this.actualStep < this.historySteps.length) {
 			this.cleaningProcedure();
-			this.historySteps.splice(this.actualStep);
 		}
-		this.historySteps = this.historySteps.slice(0, this.actualStep);
 		const modifiedElements: BoardElement['id'][] = [];
 		for (const item of elements) {
 			try {
@@ -251,7 +248,11 @@ export class ElementsStore {
 			this.elementIndexMap[leftElement.presentElement.id] = rightP;
 			leftP++;
 		}
-		this.elements.splice(leftP);
+		const removed = this.elements.splice(leftP);
+		removed.forEach((item) => {
+			delete this.elementIndexMap[item.presentElement.id]
+		})
+		this.historySteps.splice(this.actualStep);
 	};
 
 	getCopyPresentElement = (id: BoardElement['id']) => {

@@ -1,4 +1,3 @@
-import { toJS } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '@/app/providers/StoreProvider.tsx';
 import {
@@ -12,7 +11,6 @@ import {
 export const StaticLayer = observer(() => {
 	const { entities } = useStore();
 	const elementsStore = entities.elementsStore;
-	console.log(toJS(elementsStore.elements));
 	const pendingSoftDelete = entities.interactiveStore.pendingSoftDelete;
 
 	return elementsStore.elements.map((value) => {
