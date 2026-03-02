@@ -179,6 +179,7 @@ export class ElementsStore {
 		this.canRedo = true;
 		this.canUndo = this.actualStep >= 0;
 	};
+
 	redo = () => {
 		if (!this.canRedo) {
 			return;
@@ -188,15 +189,28 @@ export class ElementsStore {
 		for (const id of elementsId) {
 			const element = this.getHistoryElement(id);
 			if (element) {
-				if (
-					element.version !== REMOVE_ELEMENT_VERSION &&
-					element.history[element.version]
-				) {
+				if (element.version === REMOVE_ELEMENT_VERSION) {
+					if (!element.presentElement.isDeleted) {
+						this.rtree.insert(element.presentElement.shapeBox);
+					}
+				} else if (element.history[element.version]) {
 					const current = element.history[element.version].current;
+					this.rtree.remove(element.presentElement.shapeBox);
+					if (current.data !== undefined) {
+						const newData = {
+							...element.presentElement.data,
+							...current.data,
+						};
+						element.presentElement.shapeBox = ShapeBoxSchema.parse({
+							...getBounds(newData, element.presentElement.type),
+							ownerId: element.presentElement.id,
+						});
+					}
 					element.presentElement = applyPatch<BoardElement>(
 						element.presentElement,
 						current,
 					);
+
 					if (!element.presentElement.isDeleted) {
 						this.rtree.insert(element.presentElement.shapeBox);
 					}
