@@ -242,16 +242,15 @@ export class ElementsStore {
 		let leftP = 0;
 		for (let rightP = 0; rightP < this.elements.length; rightP++) {
 			const rightElement = this.elements[rightP];
-			const leftElement = this.elements[leftP];
-			if (rightElement.version === REMOVE_ELEMENT_VERSION) continue;
+			if (rightElement.version === REMOVE_ELEMENT_VERSION) {
+				delete this.elementIndexMap[rightElement.presentElement.id]
+				continue
+			}
 			this.elements[leftP] = rightElement;
-			this.elementIndexMap[leftElement.presentElement.id] = rightP;
+			this.elementIndexMap[rightElement.presentElement.id] = leftP;
 			leftP++;
 		}
-		const removed = this.elements.splice(leftP);
-		removed.forEach((item) => {
-			delete this.elementIndexMap[item.presentElement.id]
-		})
+		this.elements.splice(leftP);
 		this.historySteps.splice(this.actualStep);
 	};
 
