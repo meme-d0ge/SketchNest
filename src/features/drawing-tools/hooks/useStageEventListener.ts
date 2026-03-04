@@ -15,30 +15,22 @@ export const useStageEventListener = () => {
 	const { startDrawRect, drawRect, endDrawRect } = useDrawRect();
 	const { startEraser, moveEraser, endEraser } = useEraser();
 	const { entities } = useStore();
-	const handleMouseDown = useThrottleCallback(
-		useCallback(
-			(event: Konva.KonvaEventObject<TouchEvent | MouseEvent>) => {
-				if (entities.toolsStore.tool === ToolsEnum.Hand) {
-				} else if (entities.toolsStore.tool === ToolsEnum.Selection) {
-				} else if (entities.toolsStore.tool === ToolsEnum.Ellipse) {
-					startDrawEllipse(event);
-				} else if (entities.toolsStore.tool === ToolsEnum.Rect) {
-					startDrawRect(event);
-				} else if (entities.toolsStore.tool === ToolsEnum.Draw) {
-					startFreehandDraw(event);
-				} else if (entities.toolsStore.tool === ToolsEnum.Eraser) {
-					startEraser(event);
-				}
-			},
-			[
-				startFreehandDraw,
-				startDrawEllipse,
-				startDrawRect,
-				startEraser,
-				entities,
-			],
-		),
-		7,
+
+	const handleMouseDown = useCallback(
+		(event: Konva.KonvaEventObject<TouchEvent | MouseEvent>) => {
+			if (entities.toolsStore.tool === ToolsEnum.Hand) {
+			} else if (entities.toolsStore.tool === ToolsEnum.Selection) {
+			} else if (entities.toolsStore.tool === ToolsEnum.Ellipse) {
+				startDrawEllipse(event);
+			} else if (entities.toolsStore.tool === ToolsEnum.Rect) {
+				startDrawRect(event);
+			} else if (entities.toolsStore.tool === ToolsEnum.Draw) {
+				startFreehandDraw(event);
+			} else if (entities.toolsStore.tool === ToolsEnum.Eraser) {
+				startEraser(event);
+			}
+		},
+		[startFreehandDraw, startDrawEllipse, startDrawRect, startEraser, entities],
 	);
 	const handleMouseMove = useThrottleCallback(
 		useCallback(
@@ -59,22 +51,19 @@ export const useStageEventListener = () => {
 		),
 		7,
 	);
-	const handleMouseUp = useThrottleCallback(
-		useCallback(() => {
-			if (entities.toolsStore.tool === ToolsEnum.Hand) {
-			} else if (entities.toolsStore.tool === ToolsEnum.Selection) {
-			} else if (entities.toolsStore.tool === ToolsEnum.Ellipse) {
-				endDrawEllipse();
-			} else if (entities.toolsStore.tool === ToolsEnum.Rect) {
-				endDrawRect();
-			} else if (entities.toolsStore.tool === ToolsEnum.Draw) {
-				endFreehandDraw();
-			} else if (entities.toolsStore.tool === ToolsEnum.Eraser) {
-				endEraser();
-			}
-		}, [endFreehandDraw, endDrawEllipse, endDrawRect, endEraser, entities]),
-		7,
-	);
+	const handleMouseUp = useCallback(() => {
+		if (entities.toolsStore.tool === ToolsEnum.Hand) {
+		} else if (entities.toolsStore.tool === ToolsEnum.Selection) {
+		} else if (entities.toolsStore.tool === ToolsEnum.Ellipse) {
+			endDrawEllipse();
+		} else if (entities.toolsStore.tool === ToolsEnum.Rect) {
+			endDrawRect();
+		} else if (entities.toolsStore.tool === ToolsEnum.Draw) {
+			endFreehandDraw();
+		} else if (entities.toolsStore.tool === ToolsEnum.Eraser) {
+			endEraser();
+		}
+	}, [endFreehandDraw, endDrawEllipse, endDrawRect, endEraser, entities]);
 
 	return { handleMouseUp, handleMouseDown, handleMouseMove };
 };
