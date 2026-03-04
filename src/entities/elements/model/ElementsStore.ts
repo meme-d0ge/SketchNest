@@ -251,7 +251,7 @@ export class ElementsStore {
 			leftP++;
 		}
 		this.elements.splice(leftP);
-		this.historySteps.splice(this.actualStep);
+		this.historySteps.splice(this.actualStep + 1);
 	};
 
 	getCopyPresentElement = (id: BoardElement['id']) => {
