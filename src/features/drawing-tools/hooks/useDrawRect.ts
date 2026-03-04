@@ -75,7 +75,7 @@ export const useDrawRect = () => {
 		if (rect.current !== null) {
 			entities.elementsStore.create([rect.current]);
 			entities.interactiveStore.set(null);
-			rect.current = null
+			rect.current = null;
 		}
 	}, [entities]);
 	return { startDrawRect, drawRect, endDrawRect };

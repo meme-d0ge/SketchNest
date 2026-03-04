@@ -60,8 +60,8 @@ export const useDrawEllipse = () => {
 				ellipse.current.data.x = startPosition.current.x - radiusX;
 				ellipse.current.data.y = startPosition.current.y - radiusY;
 
-				const absRadiusX = Math.abs(radiusX)
-				const absRadiusY = Math.abs(radiusY)
+				const absRadiusX = Math.abs(radiusX);
+				const absRadiusY = Math.abs(radiusY);
 
 				ellipse.current.data.radiusX = absRadiusX < 0.5 ? 0.5 : absRadiusX;
 				ellipse.current.data.radiusY = absRadiusY < 0.5 ? 0.5 : absRadiusY;
@@ -77,7 +77,7 @@ export const useDrawEllipse = () => {
 		if (ellipse.current !== null) {
 			entities.elementsStore.create([ellipse.current]);
 			entities.interactiveStore.set(null);
-			ellipse.current = null
+			ellipse.current = null;
 		}
 	}, [entities]);
 	return {

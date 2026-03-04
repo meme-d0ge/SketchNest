@@ -10,6 +10,7 @@ import {
 import type { BoardElementUpdate } from '@/entities/elements/interfaces/board-element.ts';
 
 import { isVector2d } from '@/shared/guards/isVector2d.ts';
+import { useIsTabActive } from '@/shared/hooks/useIsTabActive.ts';
 
 const eraserRadius = 0;
 
@@ -18,7 +19,15 @@ export const useEraser = () => {
 	const isRestoreMode = useRef<boolean>(false);
 	const setIdToTrash = useRef<Set<string>>(new Set());
 	const lastPosition = useRef<Vector2d | null>(null);
+	const isActive = useIsTabActive();
 	const { entities } = useStore();
+
+	useEffect(() => {
+		if (!isActive) {
+			isDrawing.current = false;
+			isRestoreMode.current = false;
+		}
+	}, [isActive]);
 
 	const keyDown = useCallback((e: globalThis.KeyboardEvent) => {
 		if (e.altKey) {
