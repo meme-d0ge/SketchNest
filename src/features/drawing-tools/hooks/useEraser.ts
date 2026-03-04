@@ -11,7 +11,7 @@ import type { BoardElementUpdate } from '@/entities/elements/interfaces/board-el
 
 import { isVector2d } from '@/shared/guards/isVector2d.ts';
 
-const eraserRadius = 20;
+const eraserRadius = 0;
 
 export const useEraser = () => {
 	const isDrawing = useRef<boolean>(false);

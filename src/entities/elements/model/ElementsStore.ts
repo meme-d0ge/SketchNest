@@ -52,7 +52,7 @@ export class ElementsStore {
 		for (const element of elements) {
 			try {
 				const validatedElement = BoardElementCreateSchema.parse(element);
-				const bounds = getBounds(validatedElement.data, validatedElement.type);
+				const bounds = getBounds(validatedElement.data, validatedElement.visualData.strokeWidth, validatedElement.type);
 				if (bounds === null) {
 					continue;
 				}
@@ -114,13 +114,17 @@ export class ElementsStore {
 				);
 
 				this.rtree.remove(presentElement.shapeBox);
-				if (diff.current.data !== undefined) {
+				if (diff.current.data !== undefined || diff.current.visualData !== undefined) {
 					const newData = {
 						...presentElement.data,
 						...diff.current.data,
 					};
+					const newVisualData = {
+						...presentElement.visualData,
+						...diff.current.visualData
+					}
 					presentElement.shapeBox = ShapeBoxSchema.parse({
-						...getBounds(newData, presentElement.type),
+						...getBounds(newData, newVisualData.strokeWidth, presentElement.type),
 						ownerId: presentElement.id,
 					});
 				}
@@ -162,13 +166,17 @@ export class ElementsStore {
 				}
 				if (element.history[element.version]) {
 					const previous = element.history[element.version].previous;
-					if (previous.data !== undefined) {
+					if (previous.data !== undefined || previous.visualData !== undefined) {
 						const newData = {
 							...element.presentElement.data,
 							...previous.data,
 						};
+						const newVisualData = {
+							...element.presentElement.visualData,
+							...previous.visualData
+						}
 						element.presentElement.shapeBox = ShapeBoxSchema.parse({
-							...getBounds(newData, element.presentElement.type),
+							...getBounds(newData, newVisualData.strokeWidth, element.presentElement.type),
 							ownerId: element.presentElement.id,
 						});
 					}
@@ -203,13 +211,17 @@ export class ElementsStore {
 				} else if (element.history[element.version]) {
 					const current = element.history[element.version].current;
 					this.rtree.remove(element.presentElement.shapeBox);
-					if (current.data !== undefined) {
+					if (current.data !== undefined || current.visualData !== undefined) {
 						const newData = {
 							...element.presentElement.data,
 							...current.data,
 						};
+						const newVisualData = {
+							...element.presentElement.visualData,
+							...current.visualData
+						}
 						element.presentElement.shapeBox = ShapeBoxSchema.parse({
-							...getBounds(newData, element.presentElement.type),
+							...getBounds(newData, newVisualData.strokeWidth, element.presentElement.type),
 							ownerId: element.presentElement.id,
 						});
 					}

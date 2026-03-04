@@ -14,6 +14,7 @@ import { RectDataSchema } from '@/entities/elements/interfaces/rect-element.ts';
 
 export function getBounds(
 	data: BoardElement['data'],
+	outsideStrokeWidth: BoardElement['visualData']['strokeWidth'],
 	type: BoardElement['type'],
 ) {
 	switch (type) {
@@ -32,10 +33,10 @@ export function getBounds(
 
 			if (max === undefined || min === undefined) return null;
 			return {
-				maxX: max[0],
-				minX: min[0],
-				maxY: max[1],
-				minY: min[1],
+				maxX: max[0] + outsideStrokeWidth,
+				minX: min[0] - outsideStrokeWidth,
+				maxY: max[1] + outsideStrokeWidth,
+				minY: min[1] - outsideStrokeWidth,
 			};
 		}
 		case ElementsEnum.Line: {
@@ -62,10 +63,10 @@ export function getBounds(
 
 			if (max === undefined || min === undefined) return null;
 			return {
-				maxX: validData.x + max[0],
-				minX: validData.x + min[0],
-				maxY: validData.y + max[1],
-				minY: validData.y + min[1],
+				maxX: validData.x + max[0] + outsideStrokeWidth,
+				minX: validData.x + min[0] - outsideStrokeWidth,
+				maxY: validData.y + max[1] + outsideStrokeWidth,
+				minY: validData.y + min[1] - outsideStrokeWidth,
 			};
 		}
 		case ElementsEnum.Ellipse: {
@@ -83,10 +84,10 @@ export function getBounds(
 
 			if (max === undefined || min === undefined) return null;
 			return {
-				maxX: max[0],
-				minX: min[0],
-				maxY: max[1],
-				minY: min[1],
+				maxX: max[0] + outsideStrokeWidth,
+				minX: min[0] - outsideStrokeWidth,
+				maxY: max[1] + outsideStrokeWidth,
+				minY: min[1] - outsideStrokeWidth,
 			};
 		}
 		default:

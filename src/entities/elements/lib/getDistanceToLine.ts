@@ -1,4 +1,3 @@
-// import { simplify } from '@thi.ng/geom-resample';
 import { distPolyline2 } from '@thi.ng/geom-sdf';
 import type { Vector2d } from 'konva/lib/types';
 import type { LineData } from '@/entities/elements/interfaces/line-element.ts';

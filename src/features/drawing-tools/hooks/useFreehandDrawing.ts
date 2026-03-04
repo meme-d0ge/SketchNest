@@ -25,9 +25,9 @@ export const useFreehandDrawing = () => {
 				const { x: absoluteX, y: absoluteY } = pos;
 				localBounds.current = {
 					minX: 0,
-					maxX: 0.1,
+					maxX: 0.01,
 					minY: 0,
-					maxY: 0.1,
+					maxY: 0.01,
 				};
 				const centerX =
 					(localBounds.current.minX + localBounds.current.maxX) / 2;
@@ -44,7 +44,7 @@ export const useFreehandDrawing = () => {
 					data: {
 						x: absoluteX,
 						y: absoluteY,
-						points: [0, 0, 0.1, 0.1],
+						points: [0, 0, 0.01, 0.01],
 						centerX: centerX,
 						centerY: centerY,
 						rotation: 0,
