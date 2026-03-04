@@ -41,8 +41,8 @@ export class ElementsStore {
 	historySteps: BoardElement['id'][][] = [];
 	actualStep: number = -1;
 
-	canRedo: boolean = false;
-	canUndo: boolean = false;
+	get canUndo() { return this.actualStep >= 0; }
+	get canRedo() { return this.actualStep + 1 < this.historySteps.length; }
 
 	create = (elements: BoardElementCreate[]) => {
 		if (this.actualStep + 1 < this.historySteps.length) {
@@ -95,8 +95,6 @@ export class ElementsStore {
 		if (modifiedElements.length > 0) {
 			this.actualStep++;
 			this.historySteps.push(modifiedElements);
-			this.canUndo = this.actualStep >= 0;
-			this.canRedo = false;
 		}
 	};
 	update = (
@@ -158,8 +156,6 @@ export class ElementsStore {
 		if (modifiedElements.length > 0) {
 			this.actualStep++;
 			this.historySteps.push(modifiedElements);
-			this.canUndo = this.actualStep >= 0;
-			this.canRedo = false;
 		}
 	};
 	undo = () => {
@@ -209,8 +205,6 @@ export class ElementsStore {
 			}
 		}
 		this.actualStep--;
-		this.canRedo = true;
-		this.canUndo = this.actualStep >= 0;
 	};
 
 	redo = () => {
@@ -259,8 +253,6 @@ export class ElementsStore {
 				element.version++;
 			}
 		}
-		this.canUndo = true;
-		this.canRedo = this.actualStep + 1 < this.historySteps.length;
 	};
 
 	private getHistoryElement = (id: string) => {
