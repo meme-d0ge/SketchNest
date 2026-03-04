@@ -2,7 +2,7 @@ import type Konva from 'konva';
 import { useCallback } from 'react';
 import { useStore } from '@/app/providers/StoreProvider.tsx';
 import { ToolsEnum } from '@/entities/tools';
-import { useThrottleCallback } from '@/shared/lib/useThrottleCallback.ts';
+import { useThrottleCallback } from '@/shared/hooks/useThrottleCallback.ts';
 import { useDrawEllipse } from './useDrawEllipse.ts';
 import { useDrawRect } from './useDrawRect.ts';
 import { useEraser } from './useEraser.ts';

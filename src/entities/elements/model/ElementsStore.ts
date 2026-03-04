@@ -15,8 +15,8 @@ import {
 } from '@/entities/elements/interfaces/shape-element.ts';
 import { getBounds } from '@/entities/elements/lib/getBounds.ts';
 import { REMOVE_ELEMENT_VERSION } from '@/entities/elements/model/statuses.ts';
-import { applyPatch } from '@/shared/lib/applyPatch.ts';
-import { getDiff } from '@/shared/lib/getDiff.ts';
+import { applyPatch } from '@/shared/utils/applyPatch.ts';
+import { getDiff } from '@/shared/utils/getDiff.ts';
 
 const DiffPairSchema = z.object({
 	previous: BoardElementUpdateSchema,
@@ -232,15 +232,15 @@ export class ElementsStore {
 		return undefined;
 	};
 	private sliceFutureVersionByIndex = (index: number) => {
-		this.elements[index].history.splice(this.elements[index].version + 1)
+		this.elements[index].history.splice(this.elements[index].version + 1);
 	};
 	private cleaningProcedure = () => {
 		let leftP = 0;
 		for (let rightP = 0; rightP < this.elements.length; rightP++) {
 			const rightElement = this.elements[rightP];
 			if (rightElement.version === REMOVE_ELEMENT_VERSION) {
-				delete this.elementIndexMap[rightElement.presentElement.id]
-				continue
+				delete this.elementIndexMap[rightElement.presentElement.id];
+				continue;
 			}
 			this.elements[leftP] = rightElement;
 			this.elementIndexMap[rightElement.presentElement.id] = leftP;
