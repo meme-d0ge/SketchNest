@@ -57,8 +57,13 @@ export const useDrawRect = () => {
 				const { x: startX, y: startY } = startPosition.current;
 				rect.current.data.x = Math.min(startX, curX);
 				rect.current.data.y = Math.min(startY, curY);
-				rect.current.data.width = Math.abs(curX - startX);
-				rect.current.data.height = Math.abs(curY - startY);
+
+				const width = Math.abs(curX - startX);
+				const height = Math.abs(curY - startY);
+
+				rect.current.data.width = width === 0 ? 0.5 : width;
+				rect.current.data.height = height === 0 ? 0.5 : height;
+
 				entities.interactiveStore.set(rect.current);
 			}
 		},
@@ -70,6 +75,7 @@ export const useDrawRect = () => {
 		if (rect.current !== null) {
 			entities.elementsStore.create([rect.current]);
 			entities.interactiveStore.set(null);
+			rect.current = null
 		}
 	}, [entities]);
 	return { startDrawRect, drawRect, endDrawRect };

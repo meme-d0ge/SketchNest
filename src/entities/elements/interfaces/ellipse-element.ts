@@ -12,9 +12,9 @@ import { ElementsEnum } from './element-type-variant.ts';
 
 export const EllipseDataSchema = BaseElementDataSchema.extend({
 	x: z.number(),
-	radiusX: z.number(),
+	radiusX: z.number().positive('Must be positive'),
 	y: z.number(),
-	radiusY: z.number(),
+	radiusY: z.number().positive('Must be positive'),
 });
 export type EllipseData = z.infer<typeof EllipseDataSchema>;
 

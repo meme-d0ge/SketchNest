@@ -13,8 +13,8 @@ import { ElementsEnum } from './element-type-variant.ts';
 export const RectDataSchema = BaseElementDataSchema.extend({
 	x: z.number(),
 	y: z.number(),
-	width: z.number(),
-	height: z.number(),
+	width: z.number().positive('Must be positive'),
+	height: z.number().positive('Must be positive'),
 });
 export type RectData = z.infer<typeof RectDataSchema>;
 

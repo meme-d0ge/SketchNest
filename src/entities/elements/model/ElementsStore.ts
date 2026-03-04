@@ -45,8 +45,7 @@ export class ElementsStore {
 	canUndo: boolean = false;
 
 	create = (elements: BoardElementCreate[]) => {
-		this.actualStep++;
-		if (this.actualStep < this.historySteps.length) {
+		if (this.actualStep + 1 < this.historySteps.length) {
 			this.cleaningProcedure();
 		}
 		const modifiedElements: BoardElement['id'][] = [];
@@ -89,15 +88,17 @@ export class ElementsStore {
 				console.debug(err);
 			}
 		}
-		this.historySteps.push(modifiedElements);
-		this.canUndo = this.actualStep >= 0;
-		this.canRedo = false;
+		if (modifiedElements.length > 0) {
+			this.actualStep++;
+			this.historySteps.push(modifiedElements);
+			this.canUndo = this.actualStep >= 0;
+			this.canRedo = false;
+		}
 	};
 	update = (
 		elements: { id: BoardElement['id']; element: BoardElementUpdate }[],
 	) => {
-		this.actualStep++;
-		if (this.actualStep < this.historySteps.length) {
+		if (this.actualStep + 1 < this.historySteps.length) {
 			this.cleaningProcedure();
 		}
 		const modifiedElements: BoardElement['id'][] = [];
@@ -139,9 +140,12 @@ export class ElementsStore {
 				console.debug(err);
 			}
 		}
-		this.canUndo = this.actualStep >= 0;
-		this.canRedo = false;
-		this.historySteps.push(modifiedElements);
+		if (modifiedElements.length > 0) {
+			this.actualStep++;
+			this.historySteps.push(modifiedElements);
+			this.canUndo = this.actualStep >= 0;
+			this.canRedo = false;
+		}
 	};
 	undo = () => {
 		if (!this.canUndo) {
