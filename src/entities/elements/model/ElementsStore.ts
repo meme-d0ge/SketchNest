@@ -85,7 +85,6 @@ export class ElementsStore {
 				this.elementIndexMap[entireElement.id] = this.elements.length;
 				this.elements.push(historyElement);
 				this.rtree.insert(historyElement.presentElement.shapeBox);
-				this.canUndo = true;
 			} catch (err) {
 				console.debug(err);
 			}
@@ -233,10 +232,7 @@ export class ElementsStore {
 		return undefined;
 	};
 	private sliceFutureVersionByIndex = (index: number) => {
-		this.elements[index].history = this.elements[index].history.slice(
-			0,
-			this.elements[index].version + 1,
-		);
+		this.elements[index].history.splice(this.elements[index].version + 1)
 	};
 	private cleaningProcedure = () => {
 		let leftP = 0;
