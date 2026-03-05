@@ -1,6 +1,7 @@
 import { makeAutoObservable, makeObservable, observable, toJS } from 'mobx';
 import RBush from 'rbush';
 import * as z from 'zod/v4';
+import type { Bounds } from '@/entities/elements';
 import {
 	type BoardElement,
 	type BoardElementCreate,
@@ -9,12 +10,14 @@ import {
 	type BoardElementUpdate,
 	BoardElementUpdateSchema,
 } from '@/entities/elements/interfaces/board-element';
+import { BoundsSchema } from '@/entities/elements/interfaces/bounds.ts';
 import {
 	type ShapeBox,
 	ShapeBoxSchema,
 } from '@/entities/elements/interfaces/shape-element.ts';
 import { getBounds } from '@/entities/elements/lib/getBounds.ts';
-import { REMOVE_ELEMENT_VERSION } from '@/entities/elements/model/statuses.ts';
+import { PRE_CREATION_VERSION } from '@/entities/elements/model/statuses.ts';
+import type { DeepReadonly } from '@/shared/types/deepReadonly.ts';
 import { applyPatch } from '@/shared/utils/applyPatch.ts';
 import { getDiff } from '@/shared/utils/getDiff.ts';
 
@@ -34,19 +37,35 @@ export class ElementsStore {
 	constructor() {
 		makeAutoObservable(this);
 	}
-	elementIndexMap: Record<BoardElement['id'], number> = {};
-	rtree: RBush<ShapeBox> = new RBush();
+	private elementIndexMap: Record<BoardElement['id'], number> = {};
+	private rtree: RBush<ShapeBox> = new RBush();
 
-	elements: HistoryElement[] = [];
-	historySteps: BoardElement['id'][][] = [];
-	actualStep: number = -1;
+	private elements: HistoryElement[] = [];
+	private historySteps: BoardElement['id'][][] = [];
+	private actualStep: number = -1;
 
-	get canUndo() { return this.actualStep >= 0; }
-	get canRedo() { return this.actualStep + 1 < this.historySteps.length; }
+	get canUndo() {
+		return this.actualStep >= 0;
+	}
+	get canRedo() {
+		return this.actualStep + 1 < this.historySteps.length;
+	}
+	get visibleElements(): DeepReadonly<BoardElement>[] {
+		const visibleElements = [];
+		for (const elementHistory of this.elements) {
+			if (
+				!elementHistory.presentElement.isDeleted &&
+				elementHistory.version !== PRE_CREATION_VERSION
+			) {
+				visibleElements.push(elementHistory.presentElement);
+			}
+		}
+		return visibleElements;
+	}
 
 	create = (elements: BoardElementCreate[]) => {
 		if (this.actualStep + 1 < this.historySteps.length) {
-			this.cleaningProcedure();
+			this.pruneFutureSteps();
 		}
 		const modifiedElements: BoardElement['id'][] = [];
 		for (const element of elements) {
@@ -72,22 +91,11 @@ export class ElementsStore {
 					shapeBox: shapeBox,
 				});
 
-				const historyElement = makeObservable(
-					HistoryElementSchema.parse({
-						history: [],
-						version: 0,
-						presentElement: entireElement,
-					}),
-					{
-						history: false,
-						version: observable,
-						presentElement: observable,
-					},
-				);
+				const elementHistory = this.buildHistoryElement(entireElement);
 				modifiedElements.push(entireElement.id);
 				this.elementIndexMap[entireElement.id] = this.elements.length;
-				this.elements.push(historyElement);
-				this.rtree.insert(historyElement.presentElement.shapeBox);
+				this.elements.push(elementHistory);
+				this.rtree.insert(elementHistory.presentElement.shapeBox);
 			} catch (err) {
 				console.debug(err);
 			}
@@ -101,54 +109,49 @@ export class ElementsStore {
 		elements: { id: BoardElement['id']; element: BoardElementUpdate }[],
 	) => {
 		if (this.actualStep + 1 < this.historySteps.length) {
-			this.cleaningProcedure();
+			this.pruneFutureSteps();
 		}
 		const modifiedElements: BoardElement['id'][] = [];
-		for (const item of elements) {
+		for (const updateEntry of elements) {
 			try {
-				const validatedElement = BoardElementUpdateSchema.parse(item.element);
-				const index = this.elementIndexMap[item.id];
+				const validatedElement = BoardElementUpdateSchema.parse(
+					updateEntry.element,
+				);
+				const elementHistory = this.resolveHistoryElement(updateEntry.id);
+				if (elementHistory === undefined) {
+					continue;
+				}
 
-				const presentElement = this.elements[index].presentElement;
 				const diff = getDiff<BoardElementUpdate>(
-					presentElement,
+					elementHistory.presentElement,
 					validatedElement,
 				);
 
-				this.rtree.remove(presentElement.shapeBox);
+				this.rtree.remove(elementHistory.presentElement.shapeBox);
 				if (
 					diff.current.data !== undefined ||
 					diff.current.visualData !== undefined
 				) {
-					const newData = {
-						...presentElement.data,
-						...diff.current.data,
-					};
-					const newVisualData = {
-						...presentElement.visualData,
-						...diff.current.visualData,
-					};
-					presentElement.shapeBox = ShapeBoxSchema.parse({
-						...getBounds(
-							newData,
-							newVisualData.strokeWidth,
-							presentElement.type,
-						),
-						ownerId: presentElement.id,
-					});
+					const shapeBox = this.recalculateShapeBox(
+						elementHistory.presentElement,
+						validatedElement,
+					);
+					if (shapeBox) {
+						elementHistory.presentElement.shapeBox = shapeBox;
+					}
 				}
 
-				this.elements[index].presentElement = applyPatch<BoardElement>(
-					presentElement,
+				elementHistory.presentElement = applyPatch<BoardElement>(
+					elementHistory.presentElement,
 					diff.current,
 				);
-				if (!this.elements[index].presentElement.isDeleted) {
-					this.rtree.insert(this.elements[index].presentElement.shapeBox);
+				if (!elementHistory.presentElement.isDeleted) {
+					this.rtree.insert(elementHistory.presentElement.shapeBox);
 				}
-				this.sliceFutureVersionByIndex(index);
-				this.elements[index].history.push(diff);
-				this.elements[index].version++;
-				modifiedElements.push(item.id);
+				this.truncateElementHistory(elementHistory);
+				elementHistory.history.push(diff);
+				elementHistory.version++;
+				modifiedElements.push(updateEntry.id);
 			} catch (err) {
 				console.debug(err);
 			}
@@ -162,132 +165,175 @@ export class ElementsStore {
 		if (!this.canUndo) {
 			return;
 		}
-		const elementsId = this.historySteps[this.actualStep];
-		for (const id of elementsId) {
-			const element = this.getHistoryElement(id);
-			if (element) {
-				element.version--;
-				this.rtree.remove(element.presentElement.shapeBox);
-				if (element.version === REMOVE_ELEMENT_VERSION) {
+		const elementIds = this.historySteps[this.actualStep];
+		for (const id of elementIds) {
+			const elementHistory = this.resolveHistoryElement(id);
+			if (elementHistory) {
+				elementHistory.version--;
+				this.rtree.remove(elementHistory.presentElement.shapeBox);
+				if (elementHistory.version === PRE_CREATION_VERSION) {
 					continue;
 				}
-				if (element.history[element.version]) {
-					const previous = element.history[element.version].previous;
+				if (elementHistory.history[elementHistory.version]) {
+					const previous =
+						elementHistory.history[elementHistory.version].previous;
 					if (
 						previous.data !== undefined ||
 						previous.visualData !== undefined
 					) {
-						const newData = {
-							...element.presentElement.data,
-							...previous.data,
-						};
-						const newVisualData = {
-							...element.presentElement.visualData,
-							...previous.visualData,
-						};
-						element.presentElement.shapeBox = ShapeBoxSchema.parse({
-							...getBounds(
-								newData,
-								newVisualData.strokeWidth,
-								element.presentElement.type,
-							),
-							ownerId: element.presentElement.id,
-						});
+						const shapeBox = this.recalculateShapeBox(
+							elementHistory.presentElement,
+							previous,
+						);
+						if (shapeBox) {
+							elementHistory.presentElement.shapeBox = shapeBox;
+						}
 					}
-					element.presentElement = applyPatch<BoardElement>(
-						element.presentElement,
+					elementHistory.presentElement = applyPatch<BoardElement>(
+						elementHistory.presentElement,
 						previous,
 					);
-					if (!element.presentElement.isDeleted) {
-						this.rtree.insert(element.presentElement.shapeBox);
+					if (!elementHistory.presentElement.isDeleted) {
+						this.rtree.insert(elementHistory.presentElement.shapeBox);
 					}
 				}
 			}
 		}
 		this.actualStep--;
 	};
-
 	redo = () => {
 		if (!this.canRedo) {
 			return;
 		}
 		this.actualStep++;
-		const elementsId = this.historySteps[this.actualStep];
-		for (const id of elementsId) {
-			const element = this.getHistoryElement(id);
-			if (element) {
-				if (element.version === REMOVE_ELEMENT_VERSION) {
-					if (!element.presentElement.isDeleted) {
-						this.rtree.insert(element.presentElement.shapeBox);
+		const elementIds = this.historySteps[this.actualStep];
+		for (const id of elementIds) {
+			const elementHistory = this.resolveHistoryElement(id);
+			if (elementHistory) {
+				if (elementHistory.version === PRE_CREATION_VERSION) {
+					if (!elementHistory.presentElement.isDeleted) {
+						this.rtree.insert(elementHistory.presentElement.shapeBox);
 					}
-				} else if (element.history[element.version]) {
-					const current = element.history[element.version].current;
-					this.rtree.remove(element.presentElement.shapeBox);
+				} else if (elementHistory.history[elementHistory.version]) {
+					const current =
+						elementHistory.history[elementHistory.version].current;
+					this.rtree.remove(elementHistory.presentElement.shapeBox);
 					if (current.data !== undefined || current.visualData !== undefined) {
-						const newData = {
-							...element.presentElement.data,
-							...current.data,
-						};
-						const newVisualData = {
-							...element.presentElement.visualData,
-							...current.visualData,
-						};
-						element.presentElement.shapeBox = ShapeBoxSchema.parse({
-							...getBounds(
-								newData,
-								newVisualData.strokeWidth,
-								element.presentElement.type,
-							),
-							ownerId: element.presentElement.id,
-						});
+						const shapeBox = this.recalculateShapeBox(
+							elementHistory.presentElement,
+							current,
+						);
+						if (shapeBox) {
+							elementHistory.presentElement.shapeBox = shapeBox;
+						}
 					}
-					element.presentElement = applyPatch<BoardElement>(
-						element.presentElement,
+					elementHistory.presentElement = applyPatch<BoardElement>(
+						elementHistory.presentElement,
 						current,
 					);
 
-					if (!element.presentElement.isDeleted) {
-						this.rtree.insert(element.presentElement.shapeBox);
+					if (!elementHistory.presentElement.isDeleted) {
+						this.rtree.insert(elementHistory.presentElement.shapeBox);
 					}
 				}
-				element.version++;
+				elementHistory.version++;
 			}
 		}
 	};
 
-	private getHistoryElement = (id: string) => {
+	has = (id: BoardElement['id']) => {
+		return id in this.elementIndexMap;
+	};
+	getElement = (
+		id: BoardElement['id'],
+	): DeepReadonly<BoardElement> | undefined => {
 		if (id in this.elementIndexMap) {
-			return this.elements[this.elementIndexMap[id]];
+			return this.elements[this.elementIndexMap[id]].presentElement;
 		}
 		return undefined;
 	};
-	private sliceFutureVersionByIndex = (index: number) => {
-		this.elements[index].history.splice(this.elements[index].version + 1);
-	};
-	private cleaningProcedure = () => {
-		let leftP = 0;
-		for (let rightP = 0; rightP < this.elements.length; rightP++) {
-			const rightElement = this.elements[rightP];
-			if (rightElement.version === REMOVE_ELEMENT_VERSION) {
-				delete this.elementIndexMap[rightElement.presentElement.id];
-				continue;
-			}
-			this.elements[leftP] = rightElement;
-			this.elementIndexMap[rightElement.presentElement.id] = leftP;
-			leftP++;
-		}
-		this.elements.splice(leftP);
-		this.historySteps.splice(this.actualStep + 1);
-	};
-
-	getCopyPresentElement = (id: BoardElement['id']) => {
+	getElementSnapshot = (id: BoardElement['id']): BoardElement | undefined => {
 		if (id in this.elementIndexMap) {
 			const index = this.elementIndexMap[id];
 			return toJS(this.elements[index].presentElement);
 		}
 		return undefined;
 	};
-	hasId = (id: BoardElement['id']) => {
-		return id in this.elementIndexMap;
+	searchByBounds = (bounds: Bounds): DeepReadonly<BoardElement>[] => {
+		try {
+			const validBounds = BoundsSchema.parse(bounds);
+			const shapeBoxes = this.rtree.search(validBounds);
+			const elements = [];
+			for (const box of shapeBoxes) {
+				const element = this.getElement(box.ownerId);
+				if (element !== undefined) {
+					elements.push(element);
+				}
+			}
+			return elements;
+		} catch (err) {
+			console.debug(err);
+			return [];
+		}
+	};
+
+	private buildHistoryElement = (element: BoardElement) => {
+		return makeObservable(
+			HistoryElementSchema.parse({
+				history: [],
+				version: 0,
+				presentElement: element,
+			}),
+			{
+				history: false,
+				version: observable,
+				presentElement: observable,
+			},
+		);
+	};
+	private recalculateShapeBox = (
+		element: BoardElement,
+		patch: DeepReadonly<BoardElementUpdate>,
+	): ShapeBox | null => {
+		const newData = {
+			...element.data,
+			...patch.data,
+		};
+		const newVisualData = {
+			...element.visualData,
+			...patch.visualData,
+		};
+		const result = ShapeBoxSchema.safeParse({
+			...getBounds(newData, newVisualData.strokeWidth, element.type),
+			ownerId: element.id,
+		});
+		if (result.success) {
+			return result.data;
+		}
+		return null;
+	};
+	private resolveHistoryElement = (id: string) => {
+		if (id in this.elementIndexMap) {
+			return this.elements[this.elementIndexMap[id]];
+		}
+		return undefined;
+	};
+	private truncateElementHistory = (elementHistory: HistoryElement) => {
+		elementHistory.history.splice(elementHistory.version + 1);
+	};
+	private pruneFutureSteps = () => {
+		let leftP = 0;
+		for (let rightP = 0; rightP < this.elements.length; rightP++) {
+			const elementHistory = this.elements[rightP];
+			if (elementHistory.version === PRE_CREATION_VERSION) {
+				delete this.elementIndexMap[elementHistory.presentElement.id];
+				continue;
+			}
+			this.elements[leftP] = elementHistory;
+			this.elementIndexMap[elementHistory.presentElement.id] = leftP;
+			leftP++;
+		}
+		this.elements.splice(leftP);
+		this.historySteps.splice(this.actualStep + 1);
 	};
 }

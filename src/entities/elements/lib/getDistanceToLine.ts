@@ -1,7 +1,11 @@
 import { distPolyline2 } from '@thi.ng/geom-sdf';
 import type { Vector2d } from 'konva/lib/types';
 import type { LineData } from '@/entities/elements/interfaces/line-element.ts';
-export function getDistanceToLine(point: Vector2d, data: LineData) {
+import type { DeepReadonly } from '@/shared/types/deepReadonly.ts';
+export function getDistanceToLine(
+	point: Vector2d,
+	data: DeepReadonly<LineData>,
+) {
 	if (data.points.length < 2 || data.points.length % 2 !== 0) return NaN;
 
 	const points = [];

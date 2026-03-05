@@ -69,25 +69,21 @@ export const useEraser = () => {
 			const sinA = height / hypotenuse;
 			const cosA = width / hypotenuse;
 
-			const allObjects: BoardElement[] = entities.elementsStore.rtree
-				.search({
-					maxX:
-						Math.max(absolutePos.x + hypotenuse * cosA, absolutePos.x) +
-						eraserRadius,
-					minX:
-						Math.min(absolutePos.x + hypotenuse * cosA, absolutePos.x) -
-						eraserRadius,
-					maxY:
-						Math.max(absolutePos.y + hypotenuse * sinA, absolutePos.y) +
-						eraserRadius,
-					minY:
-						Math.min(absolutePos.y + hypotenuse * sinA, absolutePos.y) -
-						eraserRadius,
-				})
-				.map((item) => {
-					return entities.elementsStore.getCopyPresentElement(item.ownerId);
-				})
-				.filter((item) => item !== undefined);
+			const bound = {
+				maxX:
+					Math.max(absolutePos.x + hypotenuse * cosA, absolutePos.x) +
+					eraserRadius,
+				minX:
+					Math.min(absolutePos.x + hypotenuse * cosA, absolutePos.x) -
+					eraserRadius,
+				maxY:
+					Math.max(absolutePos.y + hypotenuse * sinA, absolutePos.y) +
+					eraserRadius,
+				minY:
+					Math.min(absolutePos.y + hypotenuse * sinA, absolutePos.y) -
+					eraserRadius,
+			};
+			const allObjects = entities.elementsStore.searchByBounds(bound);
 
 			for (let i = hypotenuse; i >= 0; i = i - 5) {
 				const x = absolutePos.x + i * cosA;
@@ -119,7 +115,7 @@ export const useEraser = () => {
 				element: BoardElementUpdate;
 			}[] = [];
 			setIdToTrash.current.forEach((id) => {
-				if (entities.elementsStore.hasId(id)) {
+				if (entities.elementsStore.has(id)) {
 					elements.push({
 						id: id,
 						element: BoardElementUpdateSchema.parse({ isDeleted: true }),

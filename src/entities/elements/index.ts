@@ -42,7 +42,7 @@ export { ShapeBoxSchema } from './interfaces/shape-element.ts';
 export { getDistanceToBoardElement } from './lib/getDistanceToBoardElement';
 export { ElementsStore } from './model/ElementsStore.ts';
 export { InteractiveStore } from './model/InteractiveStore.ts';
-export { REMOVE_ELEMENT_VERSION } from './model/statuses.ts';
+export { PRE_CREATION_VERSION } from './model/statuses.ts';
 export { EllipseComponent } from './ui/EllipseComponent.tsx';
 export { LineComponent } from './ui/LineComponent.tsx';
 
