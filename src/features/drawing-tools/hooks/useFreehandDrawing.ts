@@ -40,6 +40,7 @@ export const useFreehandDrawing = () => {
 						opacity: 1,
 						strokeWidth: 5,
 						stroke: 'red',
+						fill: 'red'
 					},
 					data: {
 						x: absoluteX,

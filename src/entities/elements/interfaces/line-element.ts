@@ -10,6 +10,20 @@ import {
 	BaseElementDataSchema,
 } from './base-geometry-data.ts';
 import { ElementsEnum } from './element-type-variant.ts';
+import {
+	BaseElementVisualDataPartialSchema,
+	BaseElementVisualDataSchema
+} from "@/entities/elements/interfaces/visual-data.ts";
+
+export const LineVisualDataSchema = BaseElementVisualDataSchema.extend({
+	fill: z.string()
+})
+export type LineVisualData = z.infer<typeof LineVisualDataSchema>
+
+export const LineVisualDataPartialSchema = BaseElementVisualDataPartialSchema.extend(
+	LineVisualDataSchema.partial().shape
+)
+export type LineVisualDataPartial = z.infer<typeof LineVisualDataPartialSchema>
 
 export const LineDataSchema = BaseElementDataSchema.extend({
 	x: z.number(),
@@ -48,16 +62,34 @@ export type LineDataPartial = z.infer<typeof LineDataPartialSchema>;
 export const LineElementSchema = BaseElementSchema.extend({
 	type: z.literal(ElementsEnum.Line),
 	data: LineDataSchema,
+	visualData: LineVisualDataSchema,
+}).transform((element) => {
+	const firstX = element.data.points[1];
+	const firstY = element.data.points[1];
+	const lastX = element.data.points[element.data.points.length - 2];
+	const lastY = element.data.points[element.data.points.length - 1];
+
+	const isClosed = Math.abs(firstX - lastX) < element.visualData.strokeWidth && Math.abs(firstY - lastY) < element.visualData.strokeWidth;
+
+	return {
+		...element,
+		visualData: {
+			...element.visualData,
+			closed: isClosed
+		}
+	};
 });
 export type LineElement = z.infer<typeof LineElementSchema>;
 
 export const LineElementCreateSchema = BaseElementCreateSchema.extend({
 	type: z.literal(ElementsEnum.Line),
 	data: LineDataSchema,
+	visualData: LineVisualDataSchema,
 });
 export type LineElementCreate = z.infer<typeof LineElementCreateSchema>;
 
 export const LineElementUpdateSchema = BaseElementUpdateSchema.extend({
 	data: LineDataPartialSchema.optional(),
+	visualData: LineVisualDataPartialSchema.optional(),
 });
 export type LineElementUpdate = z.infer<typeof LineElementUpdateSchema>;

@@ -33,6 +33,8 @@ export const StaticLayer = observer(() => {
 					opacity={opacity}
 					stroke={element.visualData.stroke}
 					strokeWidth={element.visualData.strokeWidth}
+					fill={element.visualData.fill}
+					closed={element.visualData.closed}
 				/>
 			);
 		}
@@ -49,6 +51,7 @@ export const StaticLayer = observer(() => {
 					opacity={opacity}
 					stroke={element.visualData.stroke}
 					strokeWidth={element.visualData.strokeWidth}
+					fill={element.visualData.fill}
 				/>
 			);
 		}
@@ -67,6 +70,7 @@ export const StaticLayer = observer(() => {
 					opacity={opacity}
 					stroke={element.visualData.stroke}
 					strokeWidth={element.visualData.strokeWidth}
+					fill={element.visualData.fill}
 				/>
 			);
 		}

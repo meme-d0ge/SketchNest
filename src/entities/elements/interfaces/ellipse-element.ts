@@ -9,6 +9,20 @@ import {
 	BaseElementDataSchema,
 } from './base-geometry-data.ts';
 import { ElementsEnum } from './element-type-variant.ts';
+import {
+	BaseElementVisualDataPartialSchema,
+	BaseElementVisualDataSchema
+} from "@/entities/elements/interfaces/visual-data.ts";
+
+export const EllipseVisualDataSchema = BaseElementVisualDataSchema.extend({
+	fill: z.string()
+})
+export type EllipseVisualData = z.infer<typeof EllipseVisualDataSchema>
+
+export const EllipseVisualDataPartialSchema = BaseElementVisualDataPartialSchema.extend(
+	EllipseVisualDataSchema.partial().shape
+)
+export type EllipseVisualDataPartial = z.infer<typeof EllipseVisualDataPartialSchema>
 
 export const EllipseDataSchema = BaseElementDataSchema.extend({
 	x: z.number(),
@@ -26,16 +40,19 @@ export type EllipseDataPartial = z.infer<typeof EllipseDataPartialSchema>;
 export const EllipseElementSchema = BaseElementSchema.extend({
 	type: z.literal(ElementsEnum.Ellipse),
 	data: EllipseDataSchema,
+	visualData: EllipseVisualDataSchema,
 });
 export type EllipseElement = z.infer<typeof EllipseElementSchema>;
 
 export const EllipseElementCreateSchema = BaseElementCreateSchema.extend({
 	type: z.literal(ElementsEnum.Ellipse),
 	data: EllipseDataSchema,
+	visualData: EllipseVisualDataSchema,
 });
 export type EllipseElementCreate = z.infer<typeof EllipseElementCreateSchema>;
 
 export const EllipseElementUpdateSchema = BaseElementUpdateSchema.extend({
 	data: EllipseDataPartialSchema.optional(),
+	visualData: EllipseVisualDataPartialSchema.optional(),
 });
 export type EllipseElementUpdate = z.infer<typeof EllipseElementUpdateSchema>;

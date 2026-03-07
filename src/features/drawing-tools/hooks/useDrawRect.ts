@@ -28,6 +28,7 @@ export const useDrawRect = () => {
 						opacity: 1,
 						strokeWidth: 4,
 						stroke: 'black',
+						fill: ''
 					},
 					data: {
 						x: absoluteX,

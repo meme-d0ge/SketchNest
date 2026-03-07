@@ -28,6 +28,7 @@ export const useDrawEllipse = () => {
 						opacity: 1,
 						strokeWidth: 4,
 						stroke: 'black',
+						fill: 'red'
 					},
 					data: {
 						x: absoluteX,

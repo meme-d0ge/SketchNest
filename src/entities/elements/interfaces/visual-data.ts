@@ -1,6 +1,6 @@
 import * as z from 'zod/v4';
 
-export const VisualDataSchema = z.object({
+export const BaseElementVisualDataSchema = z.object({
 	opacity: z
 		.number()
 		.min(0, 'Must be no less than 0.')
@@ -8,7 +8,7 @@ export const VisualDataSchema = z.object({
 	strokeWidth: z.number().min(1, 'The value must be at least 1.'),
 	stroke: z.string(),
 });
-export type VisualData = z.infer<typeof VisualDataSchema>;
+export type BaseElementVisualData = z.infer<typeof BaseElementVisualDataSchema>;
 
-export const VisualDataPartialSchema = VisualDataSchema.partial();
-export type VisualDataPartial = z.infer<typeof VisualDataPartialSchema>;
+export const BaseElementVisualDataPartialSchema = BaseElementVisualDataSchema.partial();
+export type BaseElementVisualDataPartial = z.infer<typeof BaseElementVisualDataPartialSchema>;
