@@ -12,7 +12,7 @@ import type { BoardElementUpdate } from '@/entities/elements/interfaces/board-el
 import { isVector2d } from '@/shared/guards/isVector2d.ts';
 import { useIsTabActive } from '@/shared/hooks/useIsTabActive.ts';
 
-const eraserRadius = 5;
+const eraserRadius = 0;
 
 export const useEraser = () => {
 	const isDrawing = useRef<boolean>(false);
@@ -92,6 +92,7 @@ export const useEraser = () => {
 				for (const item of allObjects) {
 					const distance = getDistanceToBoardElement({ x, y }, item);
 
+					console.log(distance)
 					if (distance !== null && ((item.visualData.fill !== '' && distance < eraserRadius) || (item.visualData.fill === '' && distance < eraserRadius && distance > -item.visualData.strokeWidth - eraserRadius ))) {
 						if (isRestoreMode.current) {
 							entities.interactiveStore.removeFromPendingSoftDelete(item.id);

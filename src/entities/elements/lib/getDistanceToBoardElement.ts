@@ -18,7 +18,7 @@ export function getDistanceToBoardElement(
 	}
 	if (element.type === ElementsEnum.Line) {
 		return (
-			getDistanceToLine(position, element.data) -
+			getDistanceToLine(position, element.data, element.visualData.strokeWidth) -
 			element.visualData.strokeWidth / 2
 		);
 	}
