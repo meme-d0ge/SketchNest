@@ -16,7 +16,7 @@ export const useStageEventListener = () => {
 	const { startEraser, moveEraser, endEraser } = useEraser();
 	const { entities } = useStore();
 
-	const handleMouseDown = useCallback(
+	const handlePointerDown = useCallback(
 		(event: Konva.KonvaEventObject<TouchEvent | MouseEvent>) => {
 			if (entities.toolsStore.tool === ToolsEnum.Hand) {
 			} else if (entities.toolsStore.tool === ToolsEnum.Selection) {
@@ -32,7 +32,7 @@ export const useStageEventListener = () => {
 		},
 		[startFreehandDraw, startDrawEllipse, startDrawRect, startEraser, entities],
 	);
-	const handleMouseMove = useThrottleCallback(
+	const handlePointerMove = useThrottleCallback(
 		useCallback(
 			(event: Konva.KonvaEventObject<TouchEvent | MouseEvent>) => {
 				if (entities.toolsStore.tool === ToolsEnum.Hand) {
@@ -51,7 +51,7 @@ export const useStageEventListener = () => {
 		),
 		7,
 	);
-	const handleMouseUp = useCallback(() => {
+	const handlePointerUp = useCallback(() => {
 		if (entities.toolsStore.tool === ToolsEnum.Hand) {
 		} else if (entities.toolsStore.tool === ToolsEnum.Selection) {
 		} else if (entities.toolsStore.tool === ToolsEnum.Ellipse) {
@@ -65,5 +65,5 @@ export const useStageEventListener = () => {
 		}
 	}, [endFreehandDraw, endDrawEllipse, endDrawRect, endEraser, entities]);
 
-	return { handleMouseUp, handleMouseDown, handleMouseMove };
+	return { handlePointerUp, handlePointerDown, handlePointerMove };
 };

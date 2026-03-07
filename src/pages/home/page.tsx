@@ -1,7 +1,7 @@
 import type Konva from 'konva';
 import { observer } from 'mobx-react-lite';
-import { useRef } from 'react';
-import { FastLayer, Layer, Stage } from 'react-konva';
+import { useEffect, useRef } from 'react';
+import { Layer, Stage } from 'react-konva';
 import { useStore } from '@/app/providers/StoreProvider.tsx';
 import { ToolsEnum } from '@/entities/tools';
 import { CanvasMenu } from '@/features/canvas-menu';
@@ -14,10 +14,23 @@ import { StaticLayer } from '@/features/static-layer';
 
 export const HomePage = observer(() => {
 	const stageRef = useRef<Konva.Stage | null>(null);
-	const { handleMouseUp, handleMouseMove, handleMouseDown } =
+	const staticRef = useRef<Konva.Layer | null>(null);
+
+	const { handlePointerDown, handlePointerMove, handlePointerUp } =
 		useStageEventListener();
 	const { windowWidth, windowHeight } = useResize();
 	useZoom(stageRef);
+
+	useEffect(() => {
+		const stage = stageRef.current;
+		if (stage !== null) {
+			stage.on('pointerdown', (e) => {
+				const nativePointerEvent = e.evt;
+				stage.content.setPointerCapture(nativePointerEvent.pointerId);
+			});
+		}
+	}, []);
+
 	const { entities } = useStore();
 	return (
 		<div className="relative">
@@ -26,19 +39,18 @@ export const HomePage = observer(() => {
 				draggable={entities.toolsStore.tool === ToolsEnum.Hand}
 				width={windowWidth}
 				height={windowHeight}
-				onMouseDown={handleMouseDown}
-				onMousemove={handleMouseMove}
-				onMouseup={handleMouseUp}
-				onTouchStart={handleMouseDown}
-				onTouchMove={handleMouseMove}
-				onTouchEnd={handleMouseUp}
+				onPointerDown={handlePointerDown}
+				onPointerMove={handlePointerMove}
+				onPointerUp={handlePointerUp}
+				onPointerCancel={handlePointerUp}
+				onLostPointerCapture={handlePointerUp}
 			>
-				<Layer>
+				<Layer ref={staticRef}>
 					<StaticLayer />
 				</Layer>
-				<FastLayer>
+				<Layer listening={false}>
 					<InteractiveLayer />
-				</FastLayer>
+				</Layer>
 			</Stage>
 			<CanvasMenu className="cursor-pointer absolute max-w-max h-9 top-4 left-4 z-50" />
 			<HistoryPanel className="absolute max-w-max h-9 bottom-4 left-4 z-50" />
