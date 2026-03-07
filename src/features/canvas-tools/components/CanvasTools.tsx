@@ -26,8 +26,9 @@ export const CanvasTools = observer(({ className }: { className?: string }) => {
 	);
 	return (
 		<ToggleGroup
+			spacing={0.5}
 			type="single"
-			variant="outline"
+			variant="sidebar"
 			className={className}
 			onValueChange={handleValueChange}
 			value={tool}
