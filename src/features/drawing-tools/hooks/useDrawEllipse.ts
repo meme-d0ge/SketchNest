@@ -28,7 +28,7 @@ export const useDrawEllipse = () => {
 						opacity: 1,
 						strokeWidth: 4,
 						stroke: 'black',
-						fill: 'red'
+						fill: 'red',
 					},
 					data: {
 						x: absoluteX,
@@ -77,7 +77,7 @@ export const useDrawEllipse = () => {
 		startPosition.current = null;
 		if (ellipse.current !== null) {
 			entities.elementsStore.create([ellipse.current]);
-			entities.interactiveStore.set(null);
+			entities.interactiveStore.clear();
 			ellipse.current = null;
 		}
 	}, [entities]);

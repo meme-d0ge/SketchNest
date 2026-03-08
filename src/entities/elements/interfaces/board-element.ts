@@ -2,16 +2,19 @@ import * as z from 'zod/v4';
 
 import {
 	EllipseElementCreateSchema,
+	EllipseElementInteractiveSchema,
 	EllipseElementSchema,
 	EllipseElementUpdateSchema,
 } from './ellipse-element.ts';
 import {
 	LineElementCreateSchema,
+	LineElementInteractiveSchema,
 	LineElementSchema,
 	LineElementUpdateSchema,
 } from './line-element.ts';
 import {
 	RectElementCreateSchema,
+	RectElementInteractiveSchema,
 	RectElementSchema,
 	RectElementUpdateSchema,
 } from './rect-element.ts';
@@ -36,3 +39,12 @@ export const BoardElementUpdateSchema = z.union([
 	RectElementUpdateSchema,
 ]);
 export type BoardElementUpdate = z.infer<typeof BoardElementUpdateSchema>;
+
+export const BoardElementInteractiveSchema = z.discriminatedUnion('type', [
+	LineElementInteractiveSchema,
+	RectElementInteractiveSchema,
+	EllipseElementInteractiveSchema,
+]);
+export type BoardElementInteractive = z.infer<
+	typeof BoardElementInteractiveSchema
+>;

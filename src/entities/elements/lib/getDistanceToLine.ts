@@ -1,12 +1,12 @@
+import { pointInside, polygon } from '@thi.ng/geom';
 import { distPolyline2 } from '@thi.ng/geom-sdf';
 import type { Vector2d } from 'konva/lib/types';
-import type {LineData} from '@/entities/elements/interfaces/line-element.ts';
+import type { LineData } from '@/entities/elements/interfaces/line-element.ts';
 import type { DeepReadonly } from '@/shared/types/deepReadonly.ts';
-import {pointInside, polygon} from "@thi.ng/geom";
 export function getDistanceToLine(
 	point: Vector2d,
 	data: DeepReadonly<LineData>,
-	closed: boolean
+	closed: boolean,
 ) {
 	if (data.points.length < 2 || data.points.length % 2 !== 0) return NaN;
 
@@ -32,9 +32,11 @@ export function getDistanceToLine(
 
 	if (closed) {
 		const first = points[0];
-		points.push(first)
-		const polyline_ = polygon(points)
-		return pointInside(polyline_, localPoint) ? -distPolyline2(localPoint, polyline_.points) : distPolyline2(localPoint, polyline_.points)
+		points.push(first);
+		const polyline_ = polygon(points);
+		return pointInside(polyline_, localPoint)
+			? -distPolyline2(localPoint, polyline_.points)
+			: distPolyline2(localPoint, polyline_.points);
 	}
-	return distPolyline2(localPoint, points)
+	return distPolyline2(localPoint, points);
 }

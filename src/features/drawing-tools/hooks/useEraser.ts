@@ -92,8 +92,13 @@ export const useEraser = () => {
 				for (const item of allObjects) {
 					const distance = getDistanceToBoardElement({ x, y }, item);
 
-					console.log(distance)
-					if (distance !== null && ((item.visualData.fill !== '' && distance < eraserRadius) || (item.visualData.fill === '' && distance < eraserRadius && distance > -item.visualData.strokeWidth - eraserRadius ))) {
+					if (
+						distance !== null &&
+						((item.visualData.fill !== '' && distance < eraserRadius) ||
+							(item.visualData.fill === '' &&
+								distance < eraserRadius &&
+								distance > -item.visualData.strokeWidth - eraserRadius))
+					) {
 						if (isRestoreMode.current) {
 							entities.interactiveStore.removeFromPendingSoftDelete(item.id);
 							setIdToTrash.current.delete(item.id);

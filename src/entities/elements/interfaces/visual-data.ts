@@ -10,5 +10,8 @@ export const BaseElementVisualDataSchema = z.object({
 });
 export type BaseElementVisualData = z.infer<typeof BaseElementVisualDataSchema>;
 
-export const BaseElementVisualDataPartialSchema = BaseElementVisualDataSchema.partial();
-export type BaseElementVisualDataPartial = z.infer<typeof BaseElementVisualDataPartialSchema>;
+export const BaseElementVisualDataPartialSchema =
+	BaseElementVisualDataSchema.partial();
+export type BaseElementVisualDataPartial = z.infer<
+	typeof BaseElementVisualDataPartialSchema
+>;

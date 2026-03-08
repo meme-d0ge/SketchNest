@@ -1,6 +1,10 @@
 import { simplify } from '@thi.ng/geom-resample';
 import * as z from 'zod/v4';
 import {
+	BaseElementVisualDataPartialSchema,
+	BaseElementVisualDataSchema,
+} from '@/entities/elements/interfaces/visual-data.ts';
+import {
 	BaseElementCreateSchema,
 	BaseElementSchema,
 	BaseElementUpdateSchema,
@@ -10,21 +14,40 @@ import {
 	BaseElementDataSchema,
 } from './base-geometry-data.ts';
 import { ElementsEnum } from './element-type-variant.ts';
-import {
-	BaseElementVisualDataPartialSchema,
-	BaseElementVisualDataSchema
-} from "@/entities/elements/interfaces/visual-data.ts";
 
+const addClosedFlag = <T extends LineElementCreate>(element: T) => {
+	const firstX = element.data.points[0];
+	const firstY = element.data.points[1];
+	const lastX = element.data.points[element.data.points.length - 2];
+	const lastY = element.data.points[element.data.points.length - 1];
+
+	const isClosed =
+		Math.abs(firstX - lastX) < element.visualData.strokeWidth &&
+		Math.abs(firstY - lastY) < element.visualData.strokeWidth;
+
+	return {
+		...element,
+		visualData: {
+			...element.visualData,
+			closed: isClosed,
+		},
+	};
+};
+//ElementsStore
+
+//Line Visual Data
 export const LineVisualDataSchema = BaseElementVisualDataSchema.extend({
-	fill: z.string()
-})
-export type LineVisualData = z.infer<typeof LineVisualDataSchema>
+	fill: z.string(),
+});
+export type LineVisualData = z.infer<typeof LineVisualDataSchema>;
 
-export const LineVisualDataPartialSchema = BaseElementVisualDataPartialSchema.extend(
-	LineVisualDataSchema.partial().shape
-)
-export type LineVisualDataPartial = z.infer<typeof LineVisualDataPartialSchema>
+export const LineVisualDataPartialSchema =
+	BaseElementVisualDataPartialSchema.extend(
+		LineVisualDataSchema.partial().shape,
+	);
+export type LineVisualDataPartial = z.infer<typeof LineVisualDataPartialSchema>;
 
+//Line Data
 export const LineDataSchema = BaseElementDataSchema.extend({
 	x: z.number(),
 	y: z.number(),
@@ -59,26 +82,12 @@ export const LineDataPartialSchema = BaseElementDataPartialSchema.extend(
 );
 export type LineDataPartial = z.infer<typeof LineDataPartialSchema>;
 
+//Element
 export const LineElementSchema = BaseElementSchema.extend({
 	type: z.literal(ElementsEnum.Line),
 	data: LineDataSchema,
 	visualData: LineVisualDataSchema,
-}).transform((element) => {
-	const firstX = element.data.points[1];
-	const firstY = element.data.points[1];
-	const lastX = element.data.points[element.data.points.length - 2];
-	const lastY = element.data.points[element.data.points.length - 1];
-
-	const isClosed = Math.abs(firstX - lastX) < element.visualData.strokeWidth && Math.abs(firstY - lastY) < element.visualData.strokeWidth;
-
-	return {
-		...element,
-		visualData: {
-			...element.visualData,
-			closed: isClosed
-		}
-	};
-});
+}).transform(addClosedFlag);
 export type LineElement = z.infer<typeof LineElementSchema>;
 
 export const LineElementCreateSchema = BaseElementCreateSchema.extend({
@@ -93,3 +102,21 @@ export const LineElementUpdateSchema = BaseElementUpdateSchema.extend({
 	visualData: LineVisualDataPartialSchema.optional(),
 });
 export type LineElementUpdate = z.infer<typeof LineElementUpdateSchema>;
+
+//InteractiveStore
+export const LineDataInteractiveSchema = LineDataSchema.extend({
+	points: z
+		.array(z.number())
+		.min(4, { message: 'At least 2 points required (4 coordinates)' })
+		.refine((arr) => arr.length % 2 === 0, {
+			message: 'The number of values in points must be even (x,y pairs)',
+		}),
+});
+export type LineDataInteractive = z.infer<typeof LineElementUpdateSchema>;
+
+export const LineElementInteractiveSchema = LineElementCreateSchema.extend({
+	data: LineDataInteractiveSchema,
+}).transform(addClosedFlag);
+export type LineElementInteractive = z.infer<
+	typeof LineElementInteractiveSchema
+>;

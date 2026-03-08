@@ -28,7 +28,7 @@ export const useDrawRect = () => {
 						opacity: 1,
 						strokeWidth: 4,
 						stroke: 'black',
-						fill: ''
+						fill: '',
 					},
 					data: {
 						x: absoluteX,
@@ -75,7 +75,7 @@ export const useDrawRect = () => {
 		startPosition.current = null;
 		if (rect.current !== null) {
 			entities.elementsStore.create([rect.current]);
-			entities.interactiveStore.set(null);
+			entities.interactiveStore.clear();
 			rect.current = null;
 		}
 	}, [entities]);

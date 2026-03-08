@@ -3,6 +3,7 @@ import { useCallback, useRef } from 'react';
 import { useStore } from '@/app/providers/StoreProvider.tsx';
 import type { Bounds, LineElementCreate } from '@/entities/elements';
 import { ElementsEnum } from '@/entities/elements';
+import { LineElementInteractiveSchema } from '@/entities/elements/interfaces/line-element.ts';
 import { isVector2d } from '@/shared/guards/isVector2d.ts';
 
 export const useFreehandDrawing = () => {
@@ -40,7 +41,7 @@ export const useFreehandDrawing = () => {
 						opacity: 1,
 						strokeWidth: 5,
 						stroke: 'red',
-						fill: 'red'
+						fill: 'red',
 					},
 					data: {
 						x: absoluteX,
@@ -51,7 +52,9 @@ export const useFreehandDrawing = () => {
 						rotation: 0,
 					},
 				};
-				entities.interactiveStore.set(line.current);
+				entities.interactiveStore.set(
+					LineElementInteractiveSchema.parse(line.current),
+				);
 			}
 		},
 		[entities],
@@ -85,7 +88,9 @@ export const useFreehandDrawing = () => {
 
 				line.current.data.centerX = centerX;
 				line.current.data.centerY = centerY;
-				entities.interactiveStore.set(line.current);
+				entities.interactiveStore.set(
+					LineElementInteractiveSchema.parse(line.current),
+				);
 			}
 		},
 		[entities],
@@ -94,7 +99,7 @@ export const useFreehandDrawing = () => {
 		isDrawing.current = false;
 		if (line.current !== null) {
 			entities.elementsStore.create([line.current]);
-			entities.interactiveStore.set(null);
+			entities.interactiveStore.clear();
 			line.current = null;
 		}
 	}, [entities]);

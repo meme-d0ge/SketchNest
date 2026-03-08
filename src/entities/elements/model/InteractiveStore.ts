@@ -1,15 +1,25 @@
 import { makeAutoObservable } from 'mobx';
-import type { BoardElementCreate } from '@/entities/elements/interfaces/board-element';
+import {
+	type BoardElementInteractive,
+	BoardElementInteractiveSchema,
+} from '@/entities/elements/interfaces/board-element';
 
 export class InteractiveStore {
 	constructor() {
 		makeAutoObservable(this);
 	}
-	element: BoardElementCreate | null = null;
+	element: BoardElementInteractive | null = null;
 	pendingSoftDelete: Record<string, null> = {};
 
-	set = (addElement: BoardElementCreate | null) => {
-		this.element = addElement;
+	set = (addElement: BoardElementInteractive | null) => {
+		try {
+			this.element = BoardElementInteractiveSchema.parse(addElement);
+		} catch (e) {
+			console.debug(e);
+		}
+	};
+	clear = () => {
+		this.element = null;
 	};
 
 	addToPendingSoftDelete = (id: string) => {

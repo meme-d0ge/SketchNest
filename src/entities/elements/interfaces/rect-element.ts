@@ -1,5 +1,9 @@
 import * as z from 'zod/v4';
 import {
+	BaseElementVisualDataPartialSchema,
+	BaseElementVisualDataSchema,
+} from '@/entities/elements/interfaces/visual-data.ts';
+import {
 	BaseElementCreateSchema,
 	BaseElementSchema,
 	BaseElementUpdateSchema,
@@ -9,20 +13,17 @@ import {
 	BaseElementDataSchema,
 } from './base-geometry-data.ts';
 import { ElementsEnum } from './element-type-variant.ts';
-import {
-	BaseElementVisualDataPartialSchema,
-	BaseElementVisualDataSchema
-} from "@/entities/elements/interfaces/visual-data.ts";
 
 export const RectVisualDataSchema = BaseElementVisualDataSchema.extend({
-	fill: z.string()
-})
-export type RectVisualData = z.infer<typeof RectVisualDataSchema>
+	fill: z.string(),
+});
+export type RectVisualData = z.infer<typeof RectVisualDataSchema>;
 
-export const RectVisualDataPartialSchema = BaseElementVisualDataPartialSchema.extend(
-	RectVisualDataSchema.partial().shape
-)
-export type RectVisualDataPartial = z.infer<typeof RectVisualDataPartialSchema>
+export const RectVisualDataPartialSchema =
+	BaseElementVisualDataPartialSchema.extend(
+		RectVisualDataSchema.partial().shape,
+	);
+export type RectVisualDataPartial = z.infer<typeof RectVisualDataPartialSchema>;
 
 export const RectDataSchema = BaseElementDataSchema.extend({
 	x: z.number(),
@@ -56,3 +57,9 @@ export const RectElementUpdateSchema = BaseElementUpdateSchema.extend({
 	visualData: RectVisualDataPartialSchema.optional(),
 });
 export type RectElementUpdate = z.infer<typeof RectElementUpdateSchema>;
+
+//InteractiveStore
+export const RectElementInteractiveSchema = RectElementCreateSchema.extend({});
+export type RectElementInteractive = z.infer<
+	typeof RectElementInteractiveSchema
+>;
