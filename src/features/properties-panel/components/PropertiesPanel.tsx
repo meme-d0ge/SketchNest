@@ -15,8 +15,8 @@ interface PropertiesPanelProps {
 export const PropertiesPanel = observer(
 	({
 		className,
-		showStroke = false,
-		showFill = false,
+		// showStroke = false,
+		// showFill = false,
 		showStrokeWidth = false,
 		showOpacity = false,
 	}: PropertiesPanelProps) => {
