@@ -31,10 +31,20 @@ export const HistoryPanel = observer(
 
 		return (
 			<div className={`flex flex-row gap-2 ${className}`}>
-				<Button onClick={undo} className="cursor-pointer" disabled={!canUndo}>
+				<Button
+					variant="outline"
+					onClick={undo}
+					className="cursor-pointer"
+					disabled={!canUndo}
+				>
 					<Undo />
 				</Button>
-				<Button onClick={redo} className="cursor-pointer" disabled={!canRedo}>
+				<Button
+					variant="outline"
+					onClick={redo}
+					className="cursor-pointer"
+					disabled={!canRedo}
+				>
 					<Redo />
 				</Button>
 			</div>

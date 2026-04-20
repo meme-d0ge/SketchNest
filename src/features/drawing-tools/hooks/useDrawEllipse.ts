@@ -25,10 +25,10 @@ export const useDrawEllipse = () => {
 					type: ElementsEnum.Ellipse,
 					isDeleted: false,
 					visualData: {
-						opacity: 1,
-						strokeWidth: 4,
-						stroke: 'black',
-						fill: 'red',
+						opacity: entities.propertiesStore.opacity,
+						strokeWidth: entities.propertiesStore.strokeWidth,
+						stroke: entities.propertiesStore.stroke,
+						fill: entities.propertiesStore.fill,
 					},
 					data: {
 						x: absoluteX,

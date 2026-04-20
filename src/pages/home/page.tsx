@@ -10,6 +10,7 @@ import { useResize, useZoom } from '@/features/canvas-viewport';
 import { useStageEventListener } from '@/features/drawing-tools';
 import { HistoryPanel } from '@/features/history-panel';
 import { InteractiveLayer } from '@/features/interactive-layer';
+import { PropertiesPanel } from '@/features/properties-panel';
 import { StaticLayer } from '@/features/static-layer';
 
 export const HomePage = observer(() => {
@@ -52,9 +53,14 @@ export const HomePage = observer(() => {
 					<InteractiveLayer />
 				</Layer>
 			</Stage>
+			<PropertiesPanel
+				className="absolute left-4 top-20 z-10 w-50 p-4"
+				showStrokeWidth={true}
+				showOpacity={true}
+			/>
 			<CanvasMenu className="cursor-pointer absolute max-w-max h-9 top-4 left-4 z-50" />
 			<HistoryPanel className="absolute max-w-max h-9 bottom-4 left-4 z-50" />
-			<CanvasTools className="absolute top-3 right-1/2 left-1/2 -translate-x-1/2 z-50 p-1 bg-primary" />
+			<CanvasTools className="absolute top-3 right-1/2 left-1/2 -translate-x-1/2 z-50 p-1 w-fit" />
 		</div>
 	);
 });

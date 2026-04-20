@@ -38,10 +38,10 @@ export const useFreehandDrawing = () => {
 					type: ElementsEnum.Line,
 					isDeleted: false,
 					visualData: {
-						opacity: 1,
-						strokeWidth: 5,
-						stroke: 'red',
-						fill: 'red',
+						opacity: entities.propertiesStore.opacity,
+						strokeWidth: entities.propertiesStore.strokeWidth,
+						stroke: entities.propertiesStore.stroke,
+						fill: entities.propertiesStore.fill,
 					},
 					data: {
 						x: absoluteX,

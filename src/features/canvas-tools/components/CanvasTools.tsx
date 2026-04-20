@@ -10,6 +10,7 @@ import { observer } from 'mobx-react-lite';
 import { useCallback } from 'react';
 import { useStore } from '@/app/providers/StoreProvider.tsx';
 import { ToolsEnum, type ToolType } from '@/entities/tools';
+import { Card } from '@/shared/components/ui/card.tsx';
 import {
 	ToggleGroup,
 	ToggleGroupItem,
@@ -25,62 +26,63 @@ export const CanvasTools = observer(({ className }: { className?: string }) => {
 		[setTool],
 	);
 	return (
-		<ToggleGroup
-			spacing={0.5}
-			type="single"
-			variant="sidebar"
-			className={className}
-			onValueChange={handleValueChange}
-			value={tool}
-		>
-			<ToggleGroupItem
-				value={ToolsEnum.Hand}
-				aria-label="Toggle hand"
-				disabled={tool === ToolsEnum.Hand}
-				className="cursor-pointer"
+		<Card className={className}>
+			<ToggleGroup
+				spacing={0.5}
+				type="single"
+				variant="sidebar"
+				onValueChange={handleValueChange}
+				value={tool}
 			>
-				<Hand className="h-4 w-4" />
-			</ToggleGroupItem>
-			<ToggleGroupItem
-				value={ToolsEnum.Selection}
-				aria-label="Toggle mouse pointer"
-				disabled={tool === ToolsEnum.Selection}
-				className="cursor-pointer"
-			>
-				<MousePointer2 className="h-4 w-4" />
-			</ToggleGroupItem>
-			<ToggleGroupItem
-				value={ToolsEnum.Rect}
-				aria-label="Toggle rectangle"
-				disabled={tool === ToolsEnum.Rect}
-				className="cursor-pointer"
-			>
-				<Square className="h-4 w-4" />
-			</ToggleGroupItem>
-			<ToggleGroupItem
-				value={ToolsEnum.Ellipse}
-				aria-label="Toggle ellipse"
-				disabled={tool === ToolsEnum.Ellipse}
-				className="cursor-pointer"
-			>
-				<Circle className="h-4 w-4" />
-			</ToggleGroupItem>
-			<ToggleGroupItem
-				value={ToolsEnum.Draw}
-				aria-label="Toggle draw"
-				disabled={tool === ToolsEnum.Draw}
-				className="cursor-pointer"
-			>
-				<Pencil className="h-4 w-4" />
-			</ToggleGroupItem>
-			<ToggleGroupItem
-				value={ToolsEnum.Eraser}
-				aria-label="Toggle eraser"
-				disabled={tool === ToolsEnum.Eraser}
-				className="cursor-pointer"
-			>
-				<Eraser className="h-4 w-4" />
-			</ToggleGroupItem>
-		</ToggleGroup>
+				<ToggleGroupItem
+					value={ToolsEnum.Hand}
+					aria-label="Toggle hand"
+					disabled={tool === ToolsEnum.Hand}
+					className="cursor-pointer"
+				>
+					<Hand className="h-4 w-4" />
+				</ToggleGroupItem>
+				<ToggleGroupItem
+					value={ToolsEnum.Selection}
+					aria-label="Toggle mouse pointer"
+					disabled={tool === ToolsEnum.Selection}
+					className="cursor-pointer"
+				>
+					<MousePointer2 className="h-4 w-4" />
+				</ToggleGroupItem>
+				<ToggleGroupItem
+					value={ToolsEnum.Rect}
+					aria-label="Toggle rectangle"
+					disabled={tool === ToolsEnum.Rect}
+					className="cursor-pointer"
+				>
+					<Square className="h-4 w-4" />
+				</ToggleGroupItem>
+				<ToggleGroupItem
+					value={ToolsEnum.Ellipse}
+					aria-label="Toggle ellipse"
+					disabled={tool === ToolsEnum.Ellipse}
+					className="cursor-pointer"
+				>
+					<Circle className="h-4 w-4" />
+				</ToggleGroupItem>
+				<ToggleGroupItem
+					value={ToolsEnum.Draw}
+					aria-label="Toggle draw"
+					disabled={tool === ToolsEnum.Draw}
+					className="cursor-pointer"
+				>
+					<Pencil className="h-4 w-4" />
+				</ToggleGroupItem>
+				<ToggleGroupItem
+					value={ToolsEnum.Eraser}
+					aria-label="Toggle eraser"
+					disabled={tool === ToolsEnum.Eraser}
+					className="cursor-pointer"
+				>
+					<Eraser className="h-4 w-4" />
+				</ToggleGroupItem>
+			</ToggleGroup>
+		</Card>
 	);
 });

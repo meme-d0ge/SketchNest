@@ -1,4 +1,5 @@
 import { ElementsStore, InteractiveStore } from '@/entities/elements';
+import { PropertiesStore } from '@/entities/properties';
 import { ToolsStore } from '@/entities/tools';
 
 export class RootStore {
@@ -10,6 +11,7 @@ export class RootStore {
 		toolsStore: ToolsStore;
 		elementsStore: ElementsStore;
 		interactiveStore: InteractiveStore;
+		propertiesStore: PropertiesStore;
 	};
 
 	constructor() {
@@ -21,6 +23,7 @@ export class RootStore {
 			toolsStore: new ToolsStore(),
 			elementsStore: new ElementsStore(),
 			interactiveStore: new InteractiveStore(),
+			propertiesStore: new PropertiesStore(),
 		};
 	}
 }

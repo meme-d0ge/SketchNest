@@ -17,7 +17,7 @@ export const CanvasMenu = memo(({ className }: { className?: string }) => {
 				onOpenChange={(value) => setOpen(value)}
 			>
 				<DropdownMenuTrigger asChild>
-					<Button className="cursor-pointer">
+					<Button variant="outline" className="cursor-pointer">
 						<TextAlignJustify />
 					</Button>
 				</DropdownMenuTrigger>

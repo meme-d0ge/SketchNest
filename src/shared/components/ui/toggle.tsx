@@ -23,10 +23,11 @@ const toggleVariants = cva(
 
 				sidebar: `				
 					rounded-md
-					bg-primary
-					text-background
-					hover:bg-sidebar-primary
-					disabled:bg-sidebar-accent-foreground
+					bg-sidebar
+					text-sidebar-foreground
+					hover:bg-sidebar-primary-foreground
+					disabled:bg-sidebar-accent
+					disabled:text-sidebar-accent-foreground
 				`,
 			},
 			size: {
