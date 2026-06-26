@@ -1,3 +1,5 @@
+import { isPlainObject } from '@/shared/guards/isPlainObject.ts';
+
 export type DiffPair<T> = {
 	previous: Partial<T>;
 	current: Partial<T>;
@@ -20,20 +22,15 @@ export function getDiff<T extends object>(oldObj: T, newObj: T): DiffPair<T> {
 			continue;
 		}
 
-		if (
-			oldVal === null ||
-			newVal === null ||
-			typeof oldVal !== 'object' ||
-			typeof newVal !== 'object'
-		) {
+		if (!isPlainObject(oldVal) || !isPlainObject(newVal)) {
 			previous[key as keyof T] = oldVal;
 			current[key as keyof T] = newVal;
 			continue;
 		}
 
 		const nested = getDiff(oldVal as object, newVal as object);
-
-		if (Object.keys(nested.previous).length > 0) {
+		
+		if (Object.keys(nested.current).length > 0) {
 			previous[key as keyof T] = nested.previous as any;
 			current[key as keyof T] = nested.current as any;
 		}
