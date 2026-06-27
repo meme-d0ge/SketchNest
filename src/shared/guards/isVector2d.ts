@@ -1,11 +1,12 @@
+import * as z from 'zod/v4';
+
 import type { Vector2d } from 'konva/lib/types';
+
+const Vector2dSchema: z.ZodSchema<Vector2d> = z.strictObject({
+	x: z.number(),
+	y: z.number(),
+})
+
 export function isVector2d(obj: unknown): obj is Vector2d {
-	return (
-		obj !== null &&
-		typeof obj === 'object' &&
-		'x' in obj &&
-		'y' in obj &&
-		typeof obj.x === 'number' &&
-		typeof obj.y === 'number'
-	);
+	return Vector2dSchema.safeParse(obj).success
 }

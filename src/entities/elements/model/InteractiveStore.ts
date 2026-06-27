@@ -11,7 +11,7 @@ export class InteractiveStore {
 	element: BoardElementInteractive | null = null;
 	pendingSoftDelete: Record<string, null> = {};
 
-	set = (addElement: BoardElementInteractive | null) => {
+	set = (addElement: BoardElementInteractive) => {
 		try {
 			this.element = BoardElementInteractiveSchema.parse(addElement);
 		} catch (e) {
