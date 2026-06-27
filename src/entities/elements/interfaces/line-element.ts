@@ -112,7 +112,7 @@ export const LineDataInteractiveSchema = LineDataSchema.extend({
 			message: 'The number of values in points must be even (x,y pairs)',
 		}),
 });
-export type LineDataInteractive = z.infer<typeof LineElementUpdateSchema>;
+export type LineDataInteractive = z.infer<typeof LineDataInteractiveSchema>;
 
 export const LineElementInteractiveSchema = LineElementCreateSchema.extend({
 	data: LineDataInteractiveSchema,
