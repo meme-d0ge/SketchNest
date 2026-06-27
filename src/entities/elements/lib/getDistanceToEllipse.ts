@@ -8,14 +8,17 @@ export function getDistanceToEllipse(
 	data: DeepReadonly<EllipseData>,
 ) {
 	let localPosition = [point.x - data.x, point.y - data.y];
-	if (data.rotation !== 0) {
-		const angle = -(data.rotation * Math.PI) / 180;
-		const sin = Math.sin(angle);
-		const cos = Math.cos(angle);
-		localPosition = [
-			cos * localPosition[0] - sin * localPosition[1],
-			sin * localPosition[0] + cos * localPosition[1],
-		];
+	if (data.radiusX !== data.radiusY) {
+		if (data.rotation !== 0) {
+			const angle = -(data.rotation * Math.PI) / 180;
+			const sin = Math.sin(angle);
+			const cos = Math.cos(angle);
+			localPosition = [
+				cos * localPosition[0] - sin * localPosition[1],
+				sin * localPosition[0] + cos * localPosition[1],
+			];
+		}
+		return distEllipse2(localPosition, [data.radiusX, data.radiusY]);
 	}
-	return distEllipse2(localPosition, [data.radiusX, data.radiusY]);
+	return Math.sqrt(localPosition[0]**2 + localPosition[1]**2) - data.radiusX;
 }
