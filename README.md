@@ -9,6 +9,7 @@
 ![Konva](https://img.shields.io/badge/Konva-10-0D83CD)
 ![TailwindCSS](https://img.shields.io/badge/TailwindCSS-4-38BDF8?logo=tailwindcss&logoColor=white)
 ![Biome](https://img.shields.io/badge/Biome-2-60A5FA?logo=biome&logoColor=white)
+![Vitest](https://img.shields.io/badge/Vitest-4-6E9F18?logo=vitest&logoColor=white)
 
 ---
 
@@ -19,6 +20,7 @@
 - [Tech stack](#tech-stack)
 - [Architecture](#architecture)
 - [Technical highlights](#technical-highlights)
+- [Testing](#testing)
 - [Project structure](#project-structure)
 - [Getting started](#getting-started)
 - [Scripts](#scripts)
@@ -41,8 +43,9 @@ The project is intentionally built from first principles — not as a wrapper ar
 - **Per-element properties panel**: stroke color, fill, stroke width and opacity.
 - **Pointer Events** for unified mouse, pen and touch input (including pointer capture).
 - **Validated state**: every element, update and interactive draft is parsed through a Zod schema before it enters the store.
-- **Spatial queries**: R-tree powers eraser hit-detection and viewport culling primitives in O(log n).
+- **Spatial queries**: an R-tree (RBush) powers eraser hit-detection in O(log n); the same bounding-box index exposes a `searchByBounds` primitive ready to back viewport culling.
 - **Responsive UI** built on Radix primitives and a custom shadcn-style component layer.
+- **Tested core**: the domain model, geometry/SDF math and diff engine are covered by a Vitest suite, including a seeded-fuzz invariant test and a diff/patch round-trip property test (see [Testing](#testing)).
 
 ## Tech stack
 
@@ -56,10 +59,11 @@ The project is intentionally built from first principles — not as a wrapper ar
 | Rendering | **Konva 10** + **react-konva 19** | Imperative 2D scene graph with retained-mode performance. |
 | Validation | **Zod 4** | Runtime schemas for every domain entity (`BoardElement`, updates, interactive drafts). |
 | Geometry | **@thi.ng/geom**, **@thi.ng/geom-sdf**, **@thi.ng/geom-resample** | Robust shape math, bounding boxes, rotation, signed-distance fields. |
-| Spatial index | **RBush** (R-tree) | Sub-linear bounding-box queries for the eraser and selection. |
+| Spatial index | **RBush** (R-tree) | Sub-linear bounding-box queries for the eraser (and, ahead, viewport culling). |
 | Styling | **Tailwind CSS 4** + **tw-animate-css** | Zero-config v4 engine with the `@tailwindcss/vite` plugin. |
 | Components | **Radix UI**, **lucide-react**, **class-variance-authority**, **tailwind-merge** | Accessible, unstyled primitives + an in-house shadcn-style layer. |
 | Tooling | **Biome 2** | Unified linter + formatter with a single config (replaces ESLint + Prettier). |
+| Testing | **Vitest 4** | Vite-native runner that reuses the app's config and `@` aliases; fast unit, invariant and property tests for the domain, geometry and diff engine. |
 
 ## Architecture
 
@@ -79,7 +83,7 @@ Each layer is only allowed to import from layers below it, which makes the depen
 ### State containers
 
 - `RootStore` composes four MobX stores and is injected via a React `StoreProvider`:
-  - `ToolsStore` — the currently selected tool (`hand`, `selection`, `rect`, `ellipse`, `draw`, `eraser`).
+  - `ToolsStore` — the currently selected tool (`hand`, `rect`, `ellipse`, `draw`, `eraser`; a `selection` slot is wired into the toolbar but reserved for upcoming work — see [Roadmap](#roadmap)).
   - `PropertiesStore` — stroke, fill, stroke width, opacity.
   - `ElementsStore` — the source of truth for every element on the board, plus history.
   - `InteractiveStore` — the ephemeral element being drawn right now and a pending soft-delete set used by the eraser.
@@ -131,8 +135,27 @@ Mouse, stylus and touch go through a single `useStageEventListener` pipeline usi
 
 - Two Konva layers — `listening={false}` on the interactive overlay so Konva skips event hit-testing for in-progress strokes.
 - `babel-plugin-react-compiler` enabled in Vite → components are auto-memoized without manual hooks.
-- `searchByBounds` powers viewport culling in O(log n).
+- `searchByBounds` exposes O(log n) bounding-box queries over the R-tree — today it backs the eraser, and it is the primitive viewport culling will build on.
 - `useIsTabActive` cancels long-running eraser/draw sessions when the tab loses focus, preventing stuck pointers after `Alt+Tab`.
+
+## Testing
+
+The hard parts of SketchNest — the schema-validated domain, the geometry/SDF math and the diff-based history — are covered by a **Vitest** suite that runs in a fast `node` environment (no browser needed). Tests live next to the code they exercise as colocated `*.test.ts` files.
+
+What is covered:
+
+- **Schemas** — every Zod entity and its discriminated union (`BoardElementCreateSchema`, line / rect / ellipse), including rejection of malformed payloads.
+- **Geometry & SDF** — `getBounds` and the signed/unsigned distance functions (`getDistanceToRect`, `getDistanceToLine`, `getDistanceToEllipse`), asserting correct inside/outside behaviour the eraser relies on.
+- **Stores** — `ElementsStore` (create / update / undo / redo), `InteractiveStore`, `PropertiesStore`, `ToolsStore`, plus a **seeded-fuzz invariant suite** that hammers the history with randomised actions and asserts the store never corrupts.
+- **Diff engine** — `getDiff` and `applyPatch` unit tests plus a **round-trip property test** proving `applyPatch(getDiff(a, b)) === b`.
+- **Guards** — `isPlainObject`, `hasObjectPrototype`, `isVector2d`.
+
+Shared test helpers (minimal valid `create*` factories and a Vitest setup) live in `src/shared/testing/`.
+
+```bash
+bun run test         # run once
+bun run test:watch   # watch mode
+```
 
 ## Project structure
 
@@ -167,10 +190,13 @@ src/
 │   ├── guards/          # isPlainObject, hasObjectPrototype, isVector2d
 │   ├── hooks/           # useIsTabActive, useThrottleCallback
 │   ├── lib/             # cn()
+│   ├── testing/         # test factories + Vitest setup
 │   ├── types/           # DeepReadonly
 │   └── utils/           # getDiff, applyPatch
 └── main.tsx
 ```
+
+> Tests are colocated with the code they cover as `*.test.ts` files (schemas, geometry, stores, guards and the diff engine).
 
 ## Getting started
 
@@ -209,6 +235,8 @@ bun run preview
 | `dev` | Start Vite dev server with HMR. |
 | `build` | Type-check the project (`tsc -b`) and produce a production bundle. |
 | `preview` | Serve the production build locally. |
+| `test` | Run the Vitest suite once. |
+| `test:watch` | Run Vitest in watch mode. |
 | `format` | Format the codebase with Biome. |
 | `lint` | Lint and auto-fix with Biome. |
 | `check` | Run Biome `check --write` (format + lint + organize imports). |
@@ -222,7 +250,7 @@ Planned / in-progress work:
 - Text elements with inline editing.
 - Image import (drag-and-drop + paste).
 - Board persistence (IndexedDB) and JSON import / export.
-- Real-time collaboration via CRDTs (Yjs) over WebSocket.
+- Real-time multiplayer collaboration — a sync layer built on top of the existing per-element diff/patch stream.
 - Export to PNG / SVG.
 
 ---
