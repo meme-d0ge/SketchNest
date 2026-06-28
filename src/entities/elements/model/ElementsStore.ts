@@ -319,7 +319,7 @@ export class ElementsStore {
 		return undefined;
 	};
 	private truncateElementHistory = (elementHistory: HistoryElement) => {
-		elementHistory.history.splice(elementHistory.version + 1);
+		elementHistory.history.splice(elementHistory.version);
 	};
 	private pruneFutureSteps = () => {
 		let leftP = 0;
