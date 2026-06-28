@@ -4,7 +4,7 @@ export class PropertiesStore {
 	constructor() {
 		makeAutoObservable(this);
 	}
-	stroke = 'red';
+	stroke = '#1e1e1e';
 	opacity = 1;
 	strokeWidth = 4;
 	fill = '';

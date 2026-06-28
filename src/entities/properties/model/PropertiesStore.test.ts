@@ -4,7 +4,7 @@ import { PropertiesStore } from './PropertiesStore.ts';
 describe('PropertiesStore', () => {
 	it('exposes sensible defaults', () => {
 		const store = new PropertiesStore();
-		expect(store.stroke).toBe('red');
+		expect(store.stroke).toBe('#1e1e1e');
 		expect(store.opacity).toBe(1);
 		expect(store.strokeWidth).toBe(4);
 		expect(store.fill).toBe('');

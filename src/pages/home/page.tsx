@@ -53,11 +53,7 @@ export const HomePage = observer(() => {
 					<InteractiveLayer />
 				</Layer>
 			</Stage>
-			<PropertiesPanel
-				className="absolute left-4 top-20 z-10 w-50 p-4"
-				showStrokeWidth={true}
-				showOpacity={true}
-			/>
+			<PropertiesPanel className="absolute left-4 top-20 z-10 w-60" />
 			<CanvasMenu className="cursor-pointer absolute max-w-max h-9 top-4 left-4 z-50" />
 			<HistoryPanel className="absolute max-w-max h-9 bottom-4 left-4 z-50" />
 			<CanvasTools className="absolute top-3 right-1/2 left-1/2 -translate-x-1/2 z-50 p-1 w-fit" />
