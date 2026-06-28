@@ -29,7 +29,7 @@ export function getDiff<T extends object>(oldObj: T, newObj: T): DiffPair<T> {
 		}
 
 		const nested = getDiff(oldVal as object, newVal as object);
-		
+
 		if (Object.keys(nested.current).length > 0) {
 			previous[key as keyof T] = nested.previous as any;
 			current[key as keyof T] = nested.current as any;

@@ -25,7 +25,6 @@ describe('InteractiveStore — draft element', () => {
 		expect(() => store.set({ type: 'rect' } as never)).not.toThrow();
 		expect(store.element).toBeNull();
 	});
-
 });
 
 describe('InteractiveStore — pending soft-delete set', () => {

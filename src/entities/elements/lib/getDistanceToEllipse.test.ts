@@ -49,4 +49,3 @@ describe('getDistanceToEllipse (circle case: radiusX === radiusY)', () => {
 		expect(getDistanceToEllipse({ x: 5, y: 12 }, circle as never)).toBe(8);
 	});
 });
-

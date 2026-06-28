@@ -20,5 +20,7 @@ export function getDistanceToEllipse(
 		}
 		return distEllipse2(localPosition, [data.radiusX, data.radiusY]);
 	}
-	return Math.sqrt(localPosition[0]**2 + localPosition[1]**2) - data.radiusX;
+	return (
+		Math.sqrt(localPosition[0] ** 2 + localPosition[1] ** 2) - data.radiusX
+	);
 }
