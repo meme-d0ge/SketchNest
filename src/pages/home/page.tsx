@@ -57,7 +57,10 @@ export const HomePage = observer(() => {
 			entities.toolsStore.tool !== ToolsEnum.Eraser ? (
 				<PropertiesPanel className="absolute left-4 top-20 z-10 w-60" />
 			) : null}
-			<CanvasMenu className="cursor-pointer absolute max-w-max h-9 top-4 left-4 z-50" />
+			<CanvasMenu
+				className="cursor-pointer absolute max-w-max h-9 top-4 left-4 z-50"
+				stageRef={stageRef}
+			/>
 			<HistoryPanel className="absolute max-w-max h-9 bottom-4 left-4 z-50" />
 			<CanvasTools className="absolute top-3 right-1/2 left-1/2 -translate-x-1/2 z-50 p-1 w-fit" />
 		</div>

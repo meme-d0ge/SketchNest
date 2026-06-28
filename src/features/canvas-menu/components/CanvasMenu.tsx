@@ -1,19 +1,30 @@
-import { Monitor, Moon, Sun, TextAlignJustify } from 'lucide-react';
-import { memo, useState } from 'react';
+import type Konva from 'konva';
+import { Download, Monitor, Moon, Sun, TextAlignJustify } from 'lucide-react';
+import { memo, type RefObject, useState } from 'react';
 import { Button } from '@/shared/components/ui/button.tsx';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
+	DropdownMenuItem,
 	DropdownMenuLabel,
 	DropdownMenuRadioGroup,
 	DropdownMenuRadioItem,
+	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from '@/shared/components/ui/dropdown-menu.tsx';
 import { type Theme, useTheme } from '@/shared/hooks/useTheme.ts';
+import { ExportImageDialog } from './ExportImageDialog.tsx';
 
-export const CanvasMenu = memo(({ className }: { className?: string }) => {
+interface CanvasMenuProps {
+	className?: string;
+	stageRef: RefObject<Konva.Stage | null>;
+}
+
+export const CanvasMenu = memo(({ className, stageRef }: CanvasMenuProps) => {
 	const [open, setOpen] = useState(false);
+	const [exportOpen, setExportOpen] = useState(false);
 	const { theme, setTheme } = useTheme();
+
 	return (
 		<div className={className}>
 			<DropdownMenu modal={false} open={open} onOpenChange={setOpen}>
@@ -23,6 +34,15 @@ export const CanvasMenu = memo(({ className }: { className?: string }) => {
 					</Button>
 				</DropdownMenuTrigger>
 				<DropdownMenuContent align="start" className="w-44">
+					<DropdownMenuLabel>Canvas</DropdownMenuLabel>
+					<DropdownMenuItem
+						className="cursor-pointer"
+						onSelect={() => setExportOpen(true)}
+					>
+						<Download />
+						Export as PNG
+					</DropdownMenuItem>
+					<DropdownMenuSeparator />
 					<DropdownMenuLabel>Theme</DropdownMenuLabel>
 					<DropdownMenuRadioGroup
 						value={theme}
@@ -43,6 +63,11 @@ export const CanvasMenu = memo(({ className }: { className?: string }) => {
 					</DropdownMenuRadioGroup>
 				</DropdownMenuContent>
 			</DropdownMenu>
+			<ExportImageDialog
+				stageRef={stageRef}
+				open={exportOpen}
+				onOpenChange={setExportOpen}
+			/>
 		</div>
 	);
 });
